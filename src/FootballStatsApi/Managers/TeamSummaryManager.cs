@@ -10,41 +10,41 @@ using System.Threading.Tasks;
 
 namespace FootballStatsApi.Managers
 {
-    public class PlayerSummaryManager : IPlayerSummaryManager
+    public class TeamSummaryManager : ITeamSummaryManager
     {
-        private readonly ILogger<PlayerSummaryManager> _logger;
-        private readonly IPlayerSummaryRepository _playerSummaryRepository;
+        private readonly ILogger<TeamSummaryManager> _logger;
+        private readonly ITeamSummaryRepository _teamSummaryRepository;
         private readonly IConnectionProvider _connectionProvider;
 
-        public PlayerSummaryManager(
-            ILogger<PlayerSummaryManager> logger, 
-            IPlayerSummaryRepository playerSummaryRepository,
+        public TeamSummaryManager(
+            ILogger<TeamSummaryManager> logger, 
+            ITeamSummaryRepository teamSummaryRepository,
             IConnectionProvider connectionProvider)
         {
             _logger = logger;
-            _playerSummaryRepository = playerSummaryRepository;
+            _teamSummaryRepository = teamSummaryRepository;
             _connectionProvider = connectionProvider;
         }
 
-        public async Task<PlayerSummaries> GetAsync(int season)
+        public async Task<TeamSummaries> GetAsync(int season)
         {
             try
             {
                 using (var conn = _connectionProvider.GetOpenConnection())
                 {
-                    var entities = await _playerSummaryRepository.GetAsync(season, conn);
+                    var entities = await _teamSummaryRepository.GetAsync(season, conn);
                     var summaries = entities.ToModels().ToList();
 
-                    return new PlayerSummaries 
+                    return new TeamSummaries 
                     {
                         Season = season,
-                        Players = summaries
+                        Teams = summaries
                     };
                 }
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Unable to get player summaries");
+                _logger.LogError(ex, "Unable to get team summaries");
                 throw;
             }
         }

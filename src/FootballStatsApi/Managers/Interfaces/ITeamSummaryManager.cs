@@ -4,8 +4,8 @@ using System.Threading.Tasks;
 
 namespace FootballStatsApi.Managers
 {
-    public interface IPlayerSummaryManager
+    public interface ITeamSummaryManager
     {
-        Task<PlayerSummaries> GetAsync(int season);
+        Task<TeamSummaries> GetAsync(int season);
     }
 }

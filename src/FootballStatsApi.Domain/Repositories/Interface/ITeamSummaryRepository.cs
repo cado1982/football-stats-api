@@ -7,8 +7,8 @@ using System.Threading.Tasks;
 
 namespace FootballStatsApi.Domain.Repositories
 {
-    public interface IPlayerSummaryRepository
+    public interface ITeamSummaryRepository
     {
-        Task<List<PlayerSummary>> GetAsync(int season, IDbConnection connection);
+        Task<List<TeamSummary>> GetAsync(int season, IDbConnection connection);
     }
 }

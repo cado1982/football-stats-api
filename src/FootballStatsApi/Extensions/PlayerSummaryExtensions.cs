@@ -12,7 +12,7 @@ namespace FootballStatsApi.Extensions
 
             return new Models.PlayerSummary
             {
-                Id = entity.Id,
+                PlayerId = entity.PlayerId,
                 PlayerName = entity.PlayerName,
                 Games = entity.Games,
                 MinutesPlayed = entity.MinutesPlayed,
@@ -39,7 +39,7 @@ namespace FootballStatsApi.Extensions
 
             return new Entities.PlayerSummary
             {
-                Id = model.Id,
+                PlayerId = model.PlayerId,
                 PlayerName = model.PlayerName,
                 Games = model.Games,
                 MinutesPlayed = model.MinutesPlayed,

@@ -8,13 +8,13 @@ namespace FootballStatsApi.Domain.Sql
     {
         public static string Get = @"
         SELECT 
-            id,
+            player_id as playerid,
             name as playername,
             games,
             time as minutesplayed,
             goals,
             expected_goals as expectedgoals,
-            assists ,
+            assists,
             expected_assists as expectedassists,
             shots,
             key_passes as keypasses,
@@ -27,6 +27,8 @@ namespace FootballStatsApi.Domain.Sql
             expected_goals_chain as expectedgoalschain,
             expected_goals_buildup as expectedgoalsbuildup
         FROM 
-            ""stats"".""player-summary""";
+            ""stats"".""player_summary""
+        WHERE
+            season_id = @SeasonId";
     }
 }

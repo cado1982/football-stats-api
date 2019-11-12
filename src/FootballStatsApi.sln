@@ -9,6 +9,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FootballStatsApi.Models", "
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FootballStatsApi.Domain", "FootballStatsApi.Domain\FootballStatsApi.Domain.csproj", "{A575ACB4-893F-4CC8-A6C4-C81282149D5A}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FootballStatsApi.Database", "FootballStatsApi.Database\FootballStatsApi.Database.csproj", "{AF893BF5-E911-4340-B9C7-BCC6D3738EC9}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +29,10 @@ Global
 		{A575ACB4-893F-4CC8-A6C4-C81282149D5A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A575ACB4-893F-4CC8-A6C4-C81282149D5A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A575ACB4-893F-4CC8-A6C4-C81282149D5A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AF893BF5-E911-4340-B9C7-BCC6D3738EC9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AF893BF5-E911-4340-B9C7-BCC6D3738EC9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AF893BF5-E911-4340-B9C7-BCC6D3738EC9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AF893BF5-E911-4340-B9C7-BCC6D3738EC9}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

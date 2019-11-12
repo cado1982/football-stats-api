@@ -11,16 +11,16 @@ using System.Linq;
 
 namespace FootballStatsApi.Domain.Repositories
 {
-    public class PlayerSummaryRepository : IPlayerSummaryRepository
+    public class TeamSummaryRepository : ITeamSummaryRepository
     {
-        private readonly ILogger<PlayerSummaryRepository> _logger;
+        private readonly ILogger<TeamSummaryRepository> _logger;
 
-        public PlayerSummaryRepository(ILogger<PlayerSummaryRepository> logger)
+        public TeamSummaryRepository(ILogger<TeamSummaryRepository> logger)
         {
             _logger = logger;
         }
 
-        public async Task<List<PlayerSummary>> GetAsync(int seasonId, IDbConnection connection)
+        public async Task<List<TeamSummary>> GetAsync(int seasonId, IDbConnection connection)
         {
             try
             {
@@ -28,12 +28,12 @@ namespace FootballStatsApi.Domain.Repositories
 
                 parameters.Add("@SeasonId", seasonId);
 
-                var result = await connection.QueryAsync<PlayerSummary>(PlayerSummarySql.Get, parameters);
+                var result = await connection.QueryAsync<TeamSummary>(TeamSummarySql.Get, parameters);
                 return result.ToList();
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Unable to get player summaries");
+                _logger.LogError(ex, "Unable to get team summaries");
                 throw;
             }
         }
