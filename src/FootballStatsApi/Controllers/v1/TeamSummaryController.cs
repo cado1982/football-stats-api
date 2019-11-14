@@ -12,7 +12,7 @@ using Microsoft.Extensions.Logging;
 namespace FootballStatsApi.Controllers.v1
 {
     [ApiController]
-    [Route("api/v1/team-summary")]
+    [Route("api/v1/competitions/{competitionId}/team-summaries")]
     public class TeamSummaryController : ControllerBase
     {
         private readonly ILogger<TeamSummaryController> _logger;
@@ -23,14 +23,13 @@ namespace FootballStatsApi.Controllers.v1
             _logger = logger;
             _teamSummaryManager = teamSummaryManager;
         }
-
+        
         [HttpGet]
-        [Route("{season}")]
-        public async Task<IActionResult> Get([Range(2014, 2050)] int season)
-        { 
+        public async Task<IActionResult> Get(int competitionId, [FromQuery][Range(2014, 2050)] int season)
+        {
             try
             {
-                var teamSummaries = await _teamSummaryManager.GetAsync(season);
+                var teamSummaries = await _teamSummaryManager.GetAsync(season, competitionId);
                 return Ok(teamSummaries);
             }
             catch (Exception ex)

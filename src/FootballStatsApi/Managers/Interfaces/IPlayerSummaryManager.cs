@@ -6,6 +6,6 @@ namespace FootballStatsApi.Managers
 {
     public interface IPlayerSummaryManager
     {
-        Task<PlayerSummaries> GetAsync(int season);
+        Task<PlayerSummaries> GetAsync(int season, int competitionId);
     }
 }

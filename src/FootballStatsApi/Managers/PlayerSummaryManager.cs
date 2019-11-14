@@ -26,18 +26,19 @@ namespace FootballStatsApi.Managers
             _connectionProvider = connectionProvider;
         }
 
-        public async Task<PlayerSummaries> GetAsync(int season)
+        public async Task<PlayerSummaries> GetAsync(int season, int competitionId)
         {
             try
             {
                 using (var conn = _connectionProvider.GetOpenConnection())
                 {
-                    var entities = await _playerSummaryRepository.GetAsync(season, conn);
+                    var entities = await _playerSummaryRepository.GetAsync(season, competitionId, conn);
                     var summaries = entities.ToModels().ToList();
 
                     return new PlayerSummaries 
                     {
                         Season = season,
+                        CompetitionId = competitionId,
                         Players = summaries
                     };
                 }

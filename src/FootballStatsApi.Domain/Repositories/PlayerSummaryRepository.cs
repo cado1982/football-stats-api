@@ -20,13 +20,14 @@ namespace FootballStatsApi.Domain.Repositories
             _logger = logger;
         }
 
-        public async Task<List<PlayerSummary>> GetAsync(int seasonId, IDbConnection connection)
+        public async Task<List<PlayerSummary>> GetAsync(int seasonId, int competitionId, IDbConnection connection)
         {
             try
             {
                 var parameters = new DynamicParameters();
 
                 parameters.Add("@SeasonId", seasonId);
+                parameters.Add("@CompetitionId", competitionId);
 
                 var result = await connection.QueryAsync<PlayerSummary>(PlayerSummarySql.Get, parameters);
                 return result.ToList();

@@ -29,6 +29,7 @@ namespace FootballStatsApi.Domain.Sql
         FROM 
             ""stats"".""player_summary""
         WHERE
-            season_id = @SeasonId";
+            season_id = @SeasonId AND
+            competition_id = @CompetitionId;";
     }
 }

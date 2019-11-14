@@ -19,6 +19,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
 using Microsoft.EntityFrameworkCore;
 using FootballStatsApi.Domain;
+using Swashbuckle.AspNetCore.Swagger;
 
 namespace FootballStatsApi
 {
@@ -39,9 +40,11 @@ namespace FootballStatsApi
             services.AddTransient<IPlayerSummaryManager, PlayerSummaryManager>();
             services.AddTransient<ITeamSummaryManager, TeamSummaryManager>();
             services.AddTransient<IUserManager, UserManager>();
+            services.AddTransient<ICompetitionManager, CompetitionManager>();
 
             services.AddTransient<IPlayerSummaryRepository, PlayerSummaryRepository>();
             services.AddTransient<ITeamSummaryRepository, TeamSummaryRepository>();
+            services.AddTransient<ICompetitionRepository, CompetitionRepository>();
 
             services.AddSingleton(new DatabaseConnectionInfo { ConnectionString = Configuration.GetConnectionString("Football") });
             services.AddSingleton<IConnectionProvider, ConnectionProvider>();
@@ -57,6 +60,25 @@ namespace FootballStatsApi
                     {
                         Name = "Chris Oliver"
                     }
+                });
+
+                c.AddSecurityRequirement(new OpenApiSecurityRequirement
+                {
+                    {
+                        new OpenApiSecurityScheme
+                        {
+                            Reference = new OpenApiReference { Type = ReferenceType.SecurityScheme, Id = "api_key"}
+                        },
+                        new string[0]
+                    }
+                });
+
+                c.AddSecurityDefinition("api_key", new OpenApiSecurityScheme
+                {
+                    Description = "API Key",
+                    Name = "X-API-Key",
+                    In = ParameterLocation.Header,
+                    Type = SecuritySchemeType.ApiKey
                 });
 
                 // Set the comments path for the Swagger JSON and UI.

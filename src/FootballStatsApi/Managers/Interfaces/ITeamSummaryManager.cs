@@ -6,6 +6,6 @@ namespace FootballStatsApi.Managers
 {
     public interface ITeamSummaryManager
     {
-        Task<TeamSummaries> GetAsync(int season);
+        Task<TeamSummaries> GetAsync(int season, int competitionId);
     }
 }

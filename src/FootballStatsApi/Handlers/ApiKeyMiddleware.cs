@@ -22,7 +22,7 @@ namespace FootballStatsApi.Handlers
         {
             logger.LogTrace("Entered InvokeAsync");
 
-            if (context.Request.Path == "/healthcheck")
+            if (!context.Request.Path.StartsWithSegments("/api"))
             {
                 await _next(context);
                 return;

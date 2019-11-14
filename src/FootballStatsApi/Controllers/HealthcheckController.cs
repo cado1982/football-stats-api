@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace FootballStatsApi.Controllers
 {
-    [AllowAnonymous]
+    [ApiExplorerSettings(IgnoreApi = true)]
     public class HealthCheckController : ControllerBase
     {
         [Route("healthcheck")]
