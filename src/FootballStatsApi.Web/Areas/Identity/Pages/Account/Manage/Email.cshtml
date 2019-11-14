@@ -33,6 +33,10 @@
                 <input asp-for="Input.NewEmail" class="form-control" />
                 <span asp-validation-for="Input.NewEmail" class="text-danger"></span>
             </div>
+            <div class="form-group">
+                <label>Api Key</label>
+                <input disabled class="form-control" value="@Model.ApiKey"></input>
+            </div>
             <button id="change-email-button" type="submit" asp-page-handler="ChangeEmail" class="btn btn-primary">Change email</button>
         </form>
     </div>

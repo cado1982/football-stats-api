@@ -6,6 +6,7 @@ using System.Reflection;
 using System.Threading.Tasks;
 using FootballStatsApi.Domain.Helpers;
 using FootballStatsApi.Domain.Repositories;
+using FootballStatsApi.Handlers;
 using FootballStatsApi.Managers;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -16,6 +17,8 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
+using Microsoft.EntityFrameworkCore;
+using FootballStatsApi.Domain;
 
 namespace FootballStatsApi
 {
@@ -31,13 +34,16 @@ namespace FootballStatsApi
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddDbContext<ApplicationDbContext>(options => options.UseNpgsql(Configuration.GetConnectionString("Football")));
+
             services.AddTransient<IPlayerSummaryManager, PlayerSummaryManager>();
             services.AddTransient<ITeamSummaryManager, TeamSummaryManager>();
+            services.AddTransient<IUserManager, UserManager>();
 
             services.AddTransient<IPlayerSummaryRepository, PlayerSummaryRepository>();
             services.AddTransient<ITeamSummaryRepository, TeamSummaryRepository>();
 
-            services.AddSingleton(new DatabaseConnectionInfo { ConnectionString = Configuration.GetConnectionString("Api") });
+            services.AddSingleton(new DatabaseConnectionInfo { ConnectionString = Configuration.GetConnectionString("Football") });
             services.AddSingleton<IConnectionProvider, ConnectionProvider>();
 
             // Register the Swagger generator, defining 1 or more Swagger documents
@@ -86,6 +92,8 @@ namespace FootballStatsApi
             app.UseRouting();
 
             app.UseAuthorization();
+
+            app.UseMiddleware<ApiKeyMiddleware>();
 
             app.UseEndpoints(endpoints =>
             {

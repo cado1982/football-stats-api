@@ -1,12 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
-using FootballStatsApi.Web.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using FootballStatsApi.Domain.Entities.Identity;
 
-namespace FootballStatsApi.Web.Data
+namespace FootballStatsApi.Domain
 {
     public class ApplicationDbContext : IdentityDbContext<User, Role, int>
     {
@@ -23,7 +23,7 @@ namespace FootballStatsApi.Web.Data
             builder.Entity<User>(b =>
             {
                 b.ToTable("users", "identity");
-                b.Property(u => u.Id).HasColumnName("id");
+                b.Property(u => u.Id).HasColumnName("id").ValueGeneratedOnAdd();
                 b.Property(u => u.UserName).HasColumnName("user_name");
                 b.Property(u => u.NormalizedUserName).HasColumnName("normalized_user_name");
                 b.Property(u => u.Email).HasColumnName("email");
@@ -55,7 +55,7 @@ namespace FootballStatsApi.Web.Data
             {
                 b.ToTable("user_claims", "identity");
                 //b.HasKey(k => k.Id);
-                b.Property(p => p.Id).HasColumnName("id");
+                b.Property(p => p.Id).HasColumnName("id").ValueGeneratedOnAdd();;
                 b.Property(p => p.UserId).HasColumnName("user_id");
                 b.Property(p => p.ClaimType).HasColumnName("claim_type");
                 b.Property(p => p.ClaimValue).HasColumnName("claim_value");
@@ -63,7 +63,7 @@ namespace FootballStatsApi.Web.Data
 
             builder.Entity<Role>(b => {
                 b.ToTable("roles", "identity");
-                b.Property(p => p.Id).HasColumnName("id");
+                b.Property(p => p.Id).HasColumnName("id").ValueGeneratedOnAdd();
                 b.Property(p => p.Name).HasColumnName("name");
                 b.Property(p => p.NormalizedName).HasColumnName("normalized_name");
                 b.Property(p => p.ConcurrencyStamp).HasColumnName("concurrency_stamp");
@@ -77,7 +77,7 @@ namespace FootballStatsApi.Web.Data
 
             builder.Entity<IdentityRoleClaim<int>>(b => {
                 b.ToTable("role_claims", "identity");
-                b.Property(p => p.Id).HasColumnName("id");
+                b.Property(p => p.Id).HasColumnName("id").ValueGeneratedOnAdd();;
                 b.Property(p => p.RoleId).HasColumnName("role_id");
                 b.Property(p => p.ClaimValue).HasColumnName("claim_value");
                 b.Property(p => p.ClaimType).HasColumnName("claim_type");

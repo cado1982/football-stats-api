@@ -5,6 +5,9 @@
     <UserSecretsId>aspnet-FootballStatsApi.Web-3977488B-8F61-4860-A5EB-49CB72612A20</UserSecretsId>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\FootballStatsApi.Domain\FootballStatsApi.Domain.csproj" />
+  </ItemGroup>
 
   <ItemGroup>
     <None Update="app.db" CopyToOutputDirectory="PreserveNewest" />

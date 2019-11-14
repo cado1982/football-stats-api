@@ -1,0 +1,13 @@
+﻿using FootballStatsApi.Domain.Entities.Identity;
+using FootballStatsApi.Models;
+using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
+
+namespace FootballStatsApi.Managers
+{
+    public interface IUserManager
+    {
+        Task<User> GetUserByApiKeyAsync(Guid apiKey);
+    }
+}

@@ -1,7 +1,7 @@
 using System;
 using Microsoft.AspNetCore.Identity;
 
-namespace FootballStatsApi.Web.Models
+namespace FootballStatsApi.Domain.Entities.Identity
 {
     public class User : IdentityUser<int>
     {
