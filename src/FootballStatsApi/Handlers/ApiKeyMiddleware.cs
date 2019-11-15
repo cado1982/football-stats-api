@@ -1,8 +1,6 @@
 using System;
 using System.Linq;
-using System.Security.Claims;
 using System.Threading.Tasks;
-using FootballStatsApi.Domain;
 using FootballStatsApi.Managers;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
@@ -22,7 +20,7 @@ namespace FootballStatsApi.Handlers
         {
             logger.LogTrace("Entered InvokeAsync");
 
-            if (!context.Request.Path.StartsWithSegments("/api"))
+            if (!context.Request.Path.StartsWithSegments("/v1"))
             {
                 await _next(context);
                 return;

@@ -33,5 +33,23 @@ namespace FootballStatsApi.Domain.Repositories
                 throw;
             }
         }
+
+        public async Task<Competition> GetByIdAsync(int competitionId, IDbConnection connection)
+        {
+            try
+            {
+                var parameters = new DynamicParameters();
+
+                parameters.Add("@CompetitionId", competitionId);
+
+                var result = await connection.QuerySingleOrDefaultAsync<Competition>(CompetitionSql.GetById, parameters);
+                return result;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, $"Unable to get competition '{competitionId}'");
+                throw;
+            }
+        }
     }
 }

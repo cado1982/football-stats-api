@@ -12,8 +12,7 @@ namespace FootballStatsApi.Extensions
 
             return new Models.TeamSummary
             {
-                TeamId = entity.TeamId,
-                TeamName = entity.TeamName,
+                Team = entity.Team.ToModel(),
                 Games = entity.Games,
                 Won = entity.Won,
                 Drawn = entity.Drawn,
@@ -35,8 +34,7 @@ namespace FootballStatsApi.Extensions
 
             return new Entities.TeamSummary
             {
-                TeamId = model.TeamId,
-                TeamName = model.TeamName,
+                Team = model.Team.ToEntity(),
                 Games = model.Games,
                 Won = model.Won,
                 Drawn = model.Drawn,

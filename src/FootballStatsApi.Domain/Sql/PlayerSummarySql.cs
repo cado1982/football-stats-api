@@ -7,27 +7,29 @@ namespace FootballStatsApi.Domain.Sql
     public static class PlayerSummarySql
     {
         public static string Get = @"
-        SELECT 
-            player_id as playerid,
-            name as playername,
-            games,
-            time as minutesplayed,
-            goals,
-            expected_goals as expectedgoals,
-            assists,
-            expected_assists as expectedassists,
-            shots,
-            key_passes as keypasses,
-            yellow_cards as yellowcards,
-            red_cards as redcards,
-            position,
-            team,
-            non_penalty_goals as nonpenaltygoals,
-            non_penalty_expected_goals as nonpenaltyexpectedgoals,
-            expected_goals_chain as expectedgoalschain,
-            expected_goals_buildup as expectedgoalsbuildup
+        SELECT
+            ps.games,
+            ps.time as minutesplayed,
+            ps.goals,
+            ps.expected_goals as expectedgoals,
+            ps.assists,
+            ps.expected_assists as expectedassists,
+            ps.shots,
+            ps.key_passes as keypasses,
+            ps.yellow_cards as yellowcards,
+            ps.red_cards as redcards,
+            ps.position,
+            ps.team,
+            ps.non_penalty_goals as nonpenaltygoals,
+            ps.non_penalty_expected_goals as nonpenaltyexpectedgoals,
+            ps.expected_goals_chain as expectedgoalschain,
+            ps.expected_goals_buildup as expectedgoalsbuildup,
+            p.id,
+            p.name
         FROM 
-            ""stats"".""player_summary""
+            ""stats"".""player_summary"" ps
+        INNER JOIN
+            ""stats"".""player"" p ON p.id = ps.player_id 
         WHERE
             season_id = @SeasonId AND
             competition_id = @CompetitionId;";

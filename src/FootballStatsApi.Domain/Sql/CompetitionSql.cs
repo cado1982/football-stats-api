@@ -13,5 +13,15 @@ namespace FootballStatsApi.Domain.Sql
             internal_name as internalname
         FROM 
             ""stats"".""competition"";";
+
+        public static string GetById = @"
+        SELECT
+            id as competitionid,
+            name,
+            internal_name as internalname
+        FROM
+            ""stats"".""competition""
+        WHERE
+            id = @CompetitionId";
     }
 }

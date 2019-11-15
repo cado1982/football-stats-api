@@ -2,8 +2,7 @@ namespace FootballStatsApi.Domain.Entities
 {
     public class TeamSummary
     {
-        public int TeamId { get; set; }
-        public string TeamName { get; set; }
+        public Team Team { get; set; }
         public int Games { get; set; }
         public int Won { get; set; }
         public int Drawn { get; set; }

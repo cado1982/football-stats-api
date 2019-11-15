@@ -4,8 +4,7 @@ namespace FootballStatsApi.Models
 {
     public class PlayerSummary
     {
-        public int PlayerId { get; set; }
-        public string PlayerName { get; set; }
+        public Player Player { get; set; }
         public int Games { get; set; }
         public int MinutesPlayed { get; set; }
         public int Goals { get; set; }

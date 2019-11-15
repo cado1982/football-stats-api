@@ -14,15 +14,18 @@ namespace FootballStatsApi.Managers
     {
         private readonly ILogger<TeamSummaryManager> _logger;
         private readonly ITeamSummaryRepository _teamSummaryRepository;
+        private readonly ICompetitionRepository _competitionRepository;
         private readonly IConnectionProvider _connectionProvider;
 
         public TeamSummaryManager(
             ILogger<TeamSummaryManager> logger, 
             ITeamSummaryRepository teamSummaryRepository,
+            ICompetitionRepository competitionRepository,
             IConnectionProvider connectionProvider)
         {
             _logger = logger;
             _teamSummaryRepository = teamSummaryRepository;
+            _competitionRepository = competitionRepository;
             _connectionProvider = connectionProvider;
         }
 
@@ -32,13 +35,20 @@ namespace FootballStatsApi.Managers
             {
                 using (var conn = _connectionProvider.GetOpenConnection())
                 {
+                    var competition = await _competitionRepository.GetByIdAsync(competitionId, conn);
+
+                    if (competition == null)
+                    {
+                        throw new ApplicationException($"Competition {competitionId} not found");
+                    }
+
                     var entities = await _teamSummaryRepository.GetAsync(season, competitionId, conn);
                     var summaries = entities.ToModels().ToList();
 
                     return new TeamSummaries 
                     {
                         Season = season,
-                        CompetitionId = competitionId,
+                        Competition = competition.ToModel(),
                         Teams = summaries
                     };
                 }

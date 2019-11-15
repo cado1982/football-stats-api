@@ -13,7 +13,7 @@ using Microsoft.Extensions.Logging;
 namespace FootballStatsApi.Controllers.v1
 {
     [ApiController]
-    [Route("api/v1/competitions")]
+    [Route("v1/competitions")]
     [Produces("application/json")]
     public class CompetitionController : ControllerBase
     {

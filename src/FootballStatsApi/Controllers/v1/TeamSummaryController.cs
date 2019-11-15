@@ -12,7 +12,7 @@ using Microsoft.Extensions.Logging;
 namespace FootballStatsApi.Controllers.v1
 {
     [ApiController]
-    [Route("api/v1/competitions/{competitionId}/team-summaries")]
+    [Route("v1/competitions/{competitionId}/team-summaries")]
     public class TeamSummaryController : ControllerBase
     {
         private readonly ILogger<TeamSummaryController> _logger;

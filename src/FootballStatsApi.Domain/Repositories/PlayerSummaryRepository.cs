@@ -29,7 +29,10 @@ namespace FootballStatsApi.Domain.Repositories
                 parameters.Add("@SeasonId", seasonId);
                 parameters.Add("@CompetitionId", competitionId);
 
-                var result = await connection.QueryAsync<PlayerSummary>(PlayerSummarySql.Get, parameters);
+                var result = await connection.QueryAsync<PlayerSummary, Player, Competition, PlayerSummary>(PlayerSummarySql.Get, (ps, p, c) => {
+                    ps.Player = p;
+                    return ps;
+                }, parameters);
                 return result.ToList();
             }
             catch (Exception ex)

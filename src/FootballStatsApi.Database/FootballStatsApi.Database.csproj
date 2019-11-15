@@ -6,17 +6,19 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Remove="Scripts\Script0001_Create player-summary table.sql" />
-    <None Remove="Scripts\Script0002_Create team-summary table.sql" />
-    <None Remove="Scripts\Script0003_Create identity tables.sql" />
-    <None Remove="Scripts\Script0004_Create competition table.sql" />
+    <None Remove="Scripts\Script0001_Create player and team tables.sql" />
+    <None Remove="Scripts\Script0002_Create competition table.sql" />
+    <None Remove="Scripts\Script0003_Create player-summary table.sql" />
+    <None Remove="Scripts\Script0004_Create team-summary table.sql" />
+    <None Remove="Scripts\Script0005_Create identity tables.sql" />
   </ItemGroup>
 
   <ItemGroup>
-    <EmbeddedResource Include="Scripts\Script0001_Create player-summary table.sql" />
-    <EmbeddedResource Include="Scripts\Script0002_Create team-summary table.sql" />
-    <EmbeddedResource Include="Scripts\Script0003_Create identity tables.sql" />
-    <EmbeddedResource Include="Scripts\Script0004_Create competition table.sql" />
+    <EmbeddedResource Include="Scripts\Script0001_Create player and team tables.sql" />
+    <EmbeddedResource Include="Scripts\Script0002_Create competition table.sql" />
+    <EmbeddedResource Include="Scripts\Script0003_Create player-summary table.sql" />
+    <EmbeddedResource Include="Scripts\Script0004_Create team-summary table.sql" />
+    <EmbeddedResource Include="Scripts\Script0005_Create identity tables.sql" />
   </ItemGroup>
 
   <ItemGroup>
