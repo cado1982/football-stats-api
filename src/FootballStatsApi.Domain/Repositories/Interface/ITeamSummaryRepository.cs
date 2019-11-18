@@ -9,6 +9,7 @@ namespace FootballStatsApi.Domain.Repositories
 {
     public interface ITeamSummaryRepository
     {
-        Task<List<TeamSummary>> GetAsync(int season, int competitionId, IDbConnection connection);
+        Task<List<TeamSummary>> GetAsync(int seasonId, int competitionId, IDbConnection connection);
+        Task<TeamSummary> GetByIdAsync(int teamId, int seasonId, int competitionId, IDbConnection connection);
     }
 }

@@ -16,7 +16,7 @@ namespace FootballStatsApi.Models
         public int YellowCards { get; set; }
         public int RedCards { get; set; }
         public string Position { get; set; }
-        public string Team { get; set; }
+        public Team Team { get; set; }
         public int NonPenaltyGoals { get; set; }
         public float NonPenaltyExpectedGoals { get; set; }
         public float ExpectedGoalsChain { get; set; }

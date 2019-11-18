@@ -29,8 +29,9 @@ namespace FootballStatsApi.Domain.Repositories
                 parameters.Add("@SeasonId", seasonId);
                 parameters.Add("@CompetitionId", competitionId);
 
-                var result = await connection.QueryAsync<PlayerSummary, Player, Competition, PlayerSummary>(PlayerSummarySql.Get, (ps, p, c) => {
+                var result = await connection.QueryAsync<PlayerSummary, Player, Team, PlayerSummary>(PlayerSummarySql.Get, (ps, p, t) => {
                     ps.Player = p;
+                    ps.Team = t;
                     return ps;
                 }, parameters);
                 return result.ToList();
@@ -38,6 +39,31 @@ namespace FootballStatsApi.Domain.Repositories
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Unable to get player summaries");
+                throw;
+            }
+        }
+
+        public async Task<PlayerSummary> GetByIdAsync(int playerId, int seasonId, int competitionId, IDbConnection connection)
+        {
+            try
+            {
+                var parameters = new DynamicParameters();
+
+                parameters.Add("@PlayerId", playerId);
+                parameters.Add("@SeasonId", seasonId);
+                parameters.Add("@CompetitionId", competitionId);
+
+                var result = await connection.QueryAsync<PlayerSummary, Player, Team, PlayerSummary>(PlayerSummarySql.Get, (ps, p, t) => {
+                    ps.Player = p;
+                    ps.Team = t;
+                    return ps;
+                }, parameters);
+
+                return result.FirstOrDefault();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, $"Unable to get player summary for player {playerId} and season {seasonId} and competition {competitionId}");
                 throw;
             }
         }

@@ -55,7 +55,33 @@ namespace FootballStatsApi.Managers
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Unable to get team summaries");
+                _logger.LogError(ex, $"Unable to get team summaries for season {season} and competition {competitionId}");
+                throw;
+            }
+        }
+
+        public async Task<TeamSummary> GetByIdAsync(int teamId, int season, int competitionId)
+        {
+            try
+            {
+                using (var conn = _connectionProvider.GetOpenConnection())
+                {
+                    var competition = await _competitionRepository.GetByIdAsync(competitionId, conn);
+
+                    if (competition == null)
+                    {
+                        throw new ApplicationException($"Competition {competitionId} not found");
+                    }
+
+                    var entity = await _teamSummaryRepository.GetByIdAsync(teamId, season, competitionId, conn);
+                    var model = entity.ToModel();
+
+                    return model;
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, $"Unable to get team summaries for team {teamId} and season {season} and competition {competitionId}");
                 throw;
             }
         }

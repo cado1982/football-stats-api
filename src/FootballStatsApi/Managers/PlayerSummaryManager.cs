@@ -39,7 +39,7 @@ namespace FootballStatsApi.Managers
 
                     if (competition == null)
                     {
-                        throw new ApplicationException($"Competition {competitionId} not found");
+                        throw new ArgumentException($"Competition {competitionId} not found", "competition");
                     }
 
                     var entities = await _playerSummaryRepository.GetAsync(season, competitionId, conn);
@@ -56,6 +56,32 @@ namespace FootballStatsApi.Managers
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Unable to get player summaries");
+                throw;
+            }
+        }
+
+        public async Task<PlayerSummary> GetByIdAsync(int playerId, int season, int competitionId)
+        {
+            try
+            {
+                using (var conn = _connectionProvider.GetOpenConnection())
+                {
+                    var competition = await _competitionRepository.GetByIdAsync(competitionId, conn);
+
+                    if (competition == null)
+                    {
+                        throw new ArgumentException($"Competition {competitionId} not found", "competition");
+                    }
+
+                    var entity = await _playerSummaryRepository.GetByIdAsync(playerId, season, competitionId, conn);
+                    var model = entity.ToModel();
+                    
+                    return model;
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, $"Unable to get player summary for player {playerId} and season {season} and competition {competitionId}");
                 throw;
             }
         }

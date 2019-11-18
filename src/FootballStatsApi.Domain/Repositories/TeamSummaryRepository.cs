@@ -37,7 +37,32 @@ namespace FootballStatsApi.Domain.Repositories
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Unable to get team summaries");
+                _logger.LogError(ex, $"Unable to get team summaries for season {seasonId} and competition {competitionId}");
+                throw;
+            }
+        }
+
+        public async Task<TeamSummary> GetByIdAsync(int teamId, int seasonId, int competitionId, IDbConnection connection)
+        {
+            try
+            {
+                var parameters = new DynamicParameters();
+
+                parameters.Add("@TeamId", teamId);
+                parameters.Add("@SeasonId", seasonId);
+                parameters.Add("@CompetitionId", competitionId);
+
+                var result = await connection.QueryAsync<TeamSummary, Team, TeamSummary>(TeamSummarySql.GetById, (ts, t) => {
+                    ts.Team = t;
+                    return ts;
+                }, parameters);
+
+                var teamSummary = result.FirstOrDefault();
+                return teamSummary;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, $"Unable to get team summaries for team {teamId} season {seasonId} and competition {competitionId}");
                 throw;
             }
         }
