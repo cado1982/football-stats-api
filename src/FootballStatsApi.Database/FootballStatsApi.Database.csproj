@@ -13,6 +13,10 @@
     <None Remove="Scripts\Script0005_Create identity tables.sql" />
     <None Remove="Scripts\Script0006_Add team id to player-summary table.sql" />
     <None Remove="Scripts\Script0007_Add fixture table.sql" />
+    <None Remove="Scripts\Script0008_Add deep and ppda to fixture table.sql" />
+    <None Remove="Scripts\Script0009_Add fixture shot table.sql" />
+    <None Remove="Scripts\Script0010_Add fixture player table.sql" />
+    <None Remove="Scripts\Script0011_Add assisted by to fixture shot table.sql" />
   </ItemGroup>
 
   <ItemGroup>
@@ -23,7 +27,11 @@
     <EmbeddedResource Include="Scripts\Script0005_Create identity tables.sql" />
     <EmbeddedResource Include="Scripts\Script0006_Add team id to player-summary table.sql" />
     <EmbeddedResource Include="Scripts\Script0007_Add fixture table.sql" />
-  </ItemGroup>
+    <EmbeddedResource Include="Scripts\Script0008_Add deep and ppda to fixture table.sql" />
+    <EmbeddedResource Include="Scripts\Script0009_Add fixture shot table.sql" />
+    <EmbeddedResource Include="Scripts\Script0010_Add fixture player table.sql" />
+    <EmbeddedResource Include="Scripts\Script0011_Add assisted by to fixture shot table.sql" />
+</ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="dbup" Version="4.2.0" />

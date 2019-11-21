@@ -12,7 +12,7 @@ namespace FootballStatsApi.Extensions
 
             return new Models.Competition
             {
-                Id = entity.CompetitionId,
+                Id = entity.Id,
                 Name = entity.Name
             };
         }
@@ -23,7 +23,7 @@ namespace FootballStatsApi.Extensions
 
             return new Entities.Competition
             {
-                CompetitionId = model.Id,
+                Id = model.Id,
                 Name = model.Name
             };
         }

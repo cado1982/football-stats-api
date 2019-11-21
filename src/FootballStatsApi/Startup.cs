@@ -41,10 +41,12 @@ namespace FootballStatsApi
             services.AddTransient<ITeamSummaryManager, TeamSummaryManager>();
             services.AddTransient<IUserManager, UserManager>();
             services.AddTransient<ICompetitionManager, CompetitionManager>();
+            services.AddTransient<IFixtureManager, FixtureManager>();
 
             services.AddTransient<IPlayerSummaryRepository, PlayerSummaryRepository>();
             services.AddTransient<ITeamSummaryRepository, TeamSummaryRepository>();
             services.AddTransient<ICompetitionRepository, CompetitionRepository>();
+            services.AddTransient<IFixtureRepository, FixtureRepository>();
 
             services.AddSingleton(new DatabaseConnectionInfo { ConnectionString = Configuration.GetConnectionString("Football") });
             services.AddSingleton<IConnectionProvider, ConnectionProvider>();

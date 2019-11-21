@@ -8,7 +8,7 @@ namespace FootballStatsApi.Domain.Sql
     {
         public static string Get = @"
         SELECT 
-            id as competitionid,
+            id,
             name,
             internal_name as internalname
         FROM 
@@ -16,7 +16,7 @@ namespace FootballStatsApi.Domain.Sql
 
         public static string GetById = @"
         SELECT
-            id as competitionid,
+            id,
             name,
             internal_name as internalname
         FROM
