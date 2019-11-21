@@ -41,7 +41,7 @@ namespace FootballStatsApi.Controllers.v1
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        [Route("{fixture}")]
+        [Route("{fixture}/details")]
         public async Task<IActionResult> GetFixtureDetails(int fixture)
         { 
             try

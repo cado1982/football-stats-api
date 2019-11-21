@@ -9,6 +9,6 @@ namespace FootballStatsApi.Managers
 {
     public interface IFixtureManager
     {
-        Task<FixtureDetailed> GetDetailsAsync(int fixtureId);
+        Task<FixtureDetails> GetDetailsAsync(int fixtureId);
     }
 }

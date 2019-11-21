@@ -28,9 +28,15 @@ namespace FootballStatsApi.Domain.Repositories
 
                 parameters.Add("@FixtureId", fixtureId);
 
-                var result = await connection.ExecuteScalarAsync<FixtureDetails>(FixtureSql.GetDetails, parameters);
+                var players = await connection.QueryAsync<FixtureDetails, Competition, Team, Team, FixtureDetails>(FixtureSql.GetDetails, (fd, c, ht, at) =>
+                {
+                    fd.Competition = c;
+                    fd.HomeTeam = ht;
+                    fd.AwayTeam = at;
+                    return fd;
+                }, parameters);
 
-                return result;
+                return players.FirstOrDefault();
             }
             catch (Exception ex)
             {
@@ -39,14 +45,55 @@ namespace FootballStatsApi.Domain.Repositories
             }
         }
 
-        public Task<List<FixturePlayer>> GetFixturePlayersAsync(int fixtureId, IDbConnection connection)
+        public async Task<List<FixturePlayer>> GetFixturePlayersAsync(int fixtureId, IDbConnection connection)
         {
-            throw new NotImplementedException();
+            try
+            {
+                var parameters = new DynamicParameters();
+
+                parameters.Add("@FixtureId", fixtureId);
+
+                var players = await connection.QueryAsync<FixturePlayer, Player, Player, Player, Team, FixturePlayer>(FixtureSql.GetFixturePlayers, (fp, p, rb, r, t) =>
+                {
+                    fp.Player = p;
+                    fp.ReplacedBy = rb;
+                    fp.Replaced = r;
+                    fp.Team = t;
+                    return fp;
+                }, parameters);
+
+                return players.ToList();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, $"Unable to get fixture players for fixture {fixtureId}");
+                throw;
+            }
         }
 
-        public Task<List<FixtureShot>> GetFixtureShotsAsync(int fixtureId, IDbConnection connection)
+        public async Task<List<FixtureShot>> GetFixtureShotsAsync(int fixtureId, IDbConnection connection)
         {
-            throw new NotImplementedException();
+            try
+            {
+                var parameters = new DynamicParameters();
+
+                parameters.Add("@FixtureId", fixtureId);
+
+                var shots = await connection.QueryAsync<FixtureShot, Player, Player, Team,FixtureShot>(FixtureSql.GetFixtureShots, (fs, p, ap, t) =>
+                {
+                    fs.Player = p;
+                    fs.Assist = ap;
+                    fs.Team = t;
+                    return fs;
+                }, parameters);
+
+                return shots.ToList();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, $"Unable to get fixture shots for fixture {fixtureId}");
+                throw;
+            }
         }
     }
 }

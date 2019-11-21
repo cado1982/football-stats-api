@@ -34,10 +34,10 @@ namespace FootballStatsApi.Managers
             {
                 using (var conn = _connectionProvider.GetOpenConnection())
                 {
-                    var entity = await _fixtureRepository.GetDetailedAsync(fixtureId, conn);
-                    var model = entity.ToModel();
-                    
-                    return model;
+                    var details = await _fixtureRepository.GetFixtureDetailsAsync(fixtureId, conn);
+                    //var shots = await _fixtureRepository.GetFixtureShotsAsync(fixtureId, conn);
+
+                    return details.ToModel();
                 }
             }
             catch (Exception ex)

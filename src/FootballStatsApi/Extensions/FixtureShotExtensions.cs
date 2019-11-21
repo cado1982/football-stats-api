@@ -13,7 +13,7 @@ namespace FootballStatsApi.Extensions
             return new Models.FixtureShot
             {
                 ExpectedGoal = entity.ExpectedGoal,
-                HomeOrAway = entity.HomeOrAway,
+                Team = entity.Team.ToModel(),
                 LastAction = entity.LastAction,
                 Minute = entity.Minute,
                 Player = entity.Player.ToModel(),
@@ -34,7 +34,7 @@ namespace FootballStatsApi.Extensions
             return new Entities.FixtureShot
             {
                 ExpectedGoal = model.ExpectedGoal,
-                HomeOrAway = model.HomeOrAway,
+                Team = model.Team.ToEntity(),
                 LastAction = model.LastAction,
                 Minute = model.Minute,
                 Player = model.Player.ToEntity(),
