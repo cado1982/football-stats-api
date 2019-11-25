@@ -15,6 +15,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FootballStatsApi.Identity",
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FootballStatsApi.Web", "FootballStatsApi.Web\FootballStatsApi.Web.csproj", "{E00C835F-B654-4002-97AF-A45CD2087FBC}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FootballStatsApi.Scraper.Orchestration", "FootballStatsApi.Scraper.Orchestration\FootballStatsApi.Scraper.Orchestration.csproj", "{4D1B4E9F-DD7C-40FA-91D1-20BED26571BD}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FootballStatsApi.Scraper.LeagueSummary", "FootballStatsApi.Scraper.LeagueSummary\FootballStatsApi.Scraper.LeagueSummary.csproj", "{AA5A5AD9-FBD1-472A-B232-11C792210A20}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -45,6 +49,14 @@ Global
 		{E00C835F-B654-4002-97AF-A45CD2087FBC}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E00C835F-B654-4002-97AF-A45CD2087FBC}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E00C835F-B654-4002-97AF-A45CD2087FBC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4D1B4E9F-DD7C-40FA-91D1-20BED26571BD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4D1B4E9F-DD7C-40FA-91D1-20BED26571BD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4D1B4E9F-DD7C-40FA-91D1-20BED26571BD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4D1B4E9F-DD7C-40FA-91D1-20BED26571BD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AA5A5AD9-FBD1-472A-B232-11C792210A20}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AA5A5AD9-FBD1-472A-B232-11C792210A20}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AA5A5AD9-FBD1-472A-B232-11C792210A20}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AA5A5AD9-FBD1-472A-B232-11C792210A20}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
