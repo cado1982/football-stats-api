@@ -3,31 +3,54 @@ using System.Threading.Tasks;
 using System;
 using Newtonsoft.Json;
 using System.Text;
+using FootballStatsApi.Scraper.Shared.Messages;
+using FootballStatsApi.Scraper.Shared;
+using RabbitMQ.Client.Events;
+using FootballStatsApi.Domain.Repositories;
+using FootballStatsApi.Domain.Helpers;
+using PuppeteerSharp;
 
 namespace FootballStatsApi.Scraper.LeagueSummary
 {
     public class LeagueSummaryListener : DefaultBasicConsumer
     {
-        // public override void HandleBasicDeliver(string consumerTag, ulong deliveryTag, bool redelivered, string exchange, string routingKey, IBasicProperties properties, byte[] body)
-        // {
-        //     var message = Encoding.UTF8.GetString(body);
-        //     var json = JsonConvert.DeserializeObject<GetLeagueSummaryMessage>(message);
+        private readonly IAmqpService _amqpService;
+
+        private readonly ICompetitionRepository _competitionRepository;
+        private readonly LeagueSummaryScraper _scraper;
+        private readonly IConnectionProvider _connectionProvider;
+
+        public LeagueSummaryListener(
+            IAmqpService amqpService,
+            ICompetitionRepository competitionRepository,
+            LeagueSummaryScraper scraper,
+            IConnectionProvider connectionProvider)
+        {
+            _competitionRepository = competitionRepository;
+            _scraper = scraper;
+            _connectionProvider = connectionProvider;
+            _amqpService = amqpService;
+        }
+
+        public async Task Listen()
+        {
+            var browser = await Puppeteer.LaunchAsync(new LaunchOptions
+            {
+                Headless = true
+            });
 
 
-        // }
-//         public Task Listen()
-//         {
-//             var factory = new ConnectionFactory();
-//             factory.Uri = new Uri("amqp://guest:guest@localhost/football");
-//             var conn = factory.CreateConnection();
-//             var channel = conn.CreateModel();
+            await _amqpService.DeclareLeagueSummaryQueue();
 
-// channel.ExchangeDeclare("amq.topic", ExchangeType.Topic);
+            await _amqpService.SubscribeToQueue<GetLeagueSummaryMessage>("getLeagueSummary", async s =>
+            {
+                using (var conn = _connectionProvider.GetOpenConnection())
+                {
+                    var competition = await _competitionRepository.GetByIdAsync(s.Competition, conn);
 
-//             channel.Close(); 
-//             conn.Close();
-
-            
-//         }
+                    await _scraper.Run(competition.InternalName);
+                }
+            });
+        }
     }
 }

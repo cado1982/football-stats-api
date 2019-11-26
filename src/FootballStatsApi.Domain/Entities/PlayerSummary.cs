@@ -4,6 +4,8 @@ namespace FootballStatsApi.Domain.Entities
 {
     public class PlayerSummary
     {
+        public Competition Competition { get; set; }
+        public int Season { get; set; }
         public Player Player { get; set; }
         public int Games { get; set; }
         public int MinutesPlayed { get; set; }

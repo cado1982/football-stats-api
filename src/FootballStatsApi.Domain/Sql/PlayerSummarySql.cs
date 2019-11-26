@@ -68,5 +68,21 @@ namespace FootballStatsApi.Domain.Sql
             season_id = @SeasonId AND
             competition_id = @CompetitionId AND
             ps.player_id = @PlayerId;";
+
+        public static string InsertMultiple = @"
+        INSERT INTO ""stats"".""player_summary"" (player_id, season_id, competition_id, team_id, games, time, goals,
+            expected_goals, assists, expected_assists, shots, key_passes, yellow_cards,
+            red_cards, position, non_penalty_goals, non_penalty_expected_goals,
+            expected_goals_chain, expected_goals_buildup) VALUES (@PlayerId, @Season, @CompetitionId, @TeamId, @Games,
+            @Time, @Goals, @ExpectedGoals, @Assists, @ExpectedAssists, @Shots, @KeyPasses,
+            @YellowCards, @RedCards, @Position, @NonPenaltyGoals, @NonPenaltyExpectedGoals, @ExpectedGoalsChain,
+            @ExpectedGoalsBuildUp)
+        ON CONFLICT(player_id, season_id, competition_id) DO UPDATE SET team_id = EXCLUDED.team_id, games = EXCLUDED.games, time = EXCLUDED.time,
+        goals = EXCLUDED.goals, expected_goals = EXCLUDED.expected_goals, assists = EXCLUDED.assists,
+        expected_assists = EXCLUDED.expected_assists, shots = EXCLUDED.shots,
+        key_passes = EXCLUDED.key_passes, yellow_cards = EXCLUDED.yellow_cards,
+        red_cards = EXCLUDED.red_cards, position = EXCLUDED.position, non_penalty_goals = EXCLUDED.non_penalty_goals,
+        non_penalty_expected_goals = EXCLUDED.non_penalty_expected_goals,
+        expected_goals_chain = EXCLUDED.expected_goals_chain, expected_goals_buildup = EXCLUDED.expected_goals_buildup;";
     }
 }

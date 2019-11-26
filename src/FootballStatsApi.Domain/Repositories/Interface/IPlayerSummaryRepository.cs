@@ -11,5 +11,6 @@ namespace FootballStatsApi.Domain.Repositories
     {
         Task<List<PlayerSummary>> GetAsync(int seasonId, int competitionId, IDbConnection connection);
         Task<PlayerSummary> GetByIdAsync(int playerId, int seasonId, int competitionId, IDbConnection connection);
+        Task InsertPlayerSummariesAsync(List<PlayerSummary> summaries, IDbConnection connection);
     }
 }

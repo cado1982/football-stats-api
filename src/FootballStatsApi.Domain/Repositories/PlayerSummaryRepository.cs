@@ -67,5 +67,39 @@ namespace FootballStatsApi.Domain.Repositories
                 throw;
             }
         }
+
+        public async Task InsertPlayerSummariesAsync(List<PlayerSummary> summaries, IDbConnection connection)
+        {
+            try
+            {
+                await connection.ExecuteAsync(PlayerSummarySql.InsertMultiple, summaries.Select(s => new 
+                {
+                    PlayerId = s.Player.Id,
+                    s.Assists,
+                    CompetitionId = s.Competition.Id,
+                    s.ExpectedAssists,
+                    s.ExpectedGoals,
+                    s.ExpectedGoalsBuildup,
+                    s.ExpectedGoalsChain,
+                    s.Games,
+                    s.Goals,
+                    s.KeyPasses,
+                    s.MinutesPlayed,
+                    s.NonPenaltyExpectedGoals,
+                    s.NonPenaltyGoals,
+                    s.Position,
+                    s.RedCards,
+                    s.Season,
+                    s.Shots,
+                    TeamId = s.Team.Id,
+                    s.YellowCards
+                }));
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, $"Unable to insert player summaries");
+                throw;
+            }
+        }
     }
 }
