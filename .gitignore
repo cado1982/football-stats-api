@@ -552,4 +552,6 @@ healthchecksdb
 # Backup folder for Package Reference Convert tool in Visual Studio 2017
 MigrationBackup/
 
+.local-chromium/
+
 # End of https://www.gitignore.io/api/macos,windows,dotnetcore,aspnetcore,visualstudio,visualstudiocode
