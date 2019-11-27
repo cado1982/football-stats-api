@@ -66,5 +66,35 @@ namespace FootballStatsApi.Domain.Repositories
                 throw;
             }
         }
+
+        public async Task InsertMultipleAsync(List<TeamSummary> summaries, IDbConnection connection)
+        {
+            try
+            {
+                await connection.ExecuteAsync(TeamSummarySql.InsertMultiple, summaries.Select(s => new 
+                {
+                    TeamId = s.Team.Id,
+                    Season = s.Season,
+                    CompetitionId = s.Competition.Id,
+                    Games = s.Games,
+                    Won = s.Won,
+                    Drawn = s.Drawn,
+                    Lost = s.Lost,
+                    GoalsFor = s.GoalsFor,
+                    GoalsAgainst = s.GoalsAgainst,
+                    Points = s.Points,
+                    ExpectedGoals = s.ExpectedGoals,
+                    ExpectedGoalsAgainst = s.ExpectedGoalsAgainst,
+                    ExpectedPoints = s.ExpectedPoints,
+                    Ppda = s.Ppda,
+                    DeepPasses = s.DeepPasses
+                }));
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, $"Unable to insert team summaries");
+                throw;
+            }
+        }
     }
 }

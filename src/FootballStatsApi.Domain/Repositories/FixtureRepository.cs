@@ -95,5 +95,52 @@ namespace FootballStatsApi.Domain.Repositories
                 throw;
             }
         }
+
+        public async Task InsertMultipleAsync(List<FixtureDetails> fixtures, IDbConnection connection)
+        {
+            try
+            {
+                await connection.ExecuteAsync(FixtureSql.InsertMultiple, fixtures.Select(f => new
+                {
+                    FixtureId = f.FixtureId,
+                    HomeTeamId = f.HomeTeam.Id,
+                    AwayTeamId = f.AwayTeam.Id,
+                    SeasonId = f.Season,
+                    CompetitionId = f.Competition.Id,
+                    IsResult = f.IsResult,
+                    HomeGoals = f.HomeGoals,
+                    AwayGoals = f.AwayGoals,
+                    ExpectedHomeGoals = f.HomeExpectedGoals,
+                    ExpectedAwayGoals = f.AwayExpectedGoals,
+                    HomeWinForecast = f.ForecastHomeWin,
+                    DrawForecast = f.ForecastDraw,
+                    AwayWinForecast = f.ForecastAwayWin,
+                    DateTime = f.DateTime
+                }));
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, $"Insert multiple fixtures");
+                throw;
+            }
+        }
+
+        public async Task<bool> IsFixtureSavedAsync(int fixtureId, IDbConnection connection)
+        {
+            try
+            {
+                var parameters = new DynamicParameters();
+
+                parameters.Add("@FixtureId", fixtureId);
+
+                var alreadySaved = await connection.ExecuteScalarAsync<bool>(FixtureSql.IsFixtureSaved, parameters);
+                return alreadySaved;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, $"Unable to get fixture already saved status for fixture {fixtureId}");
+                throw;
+            }
+        }
     }
 }

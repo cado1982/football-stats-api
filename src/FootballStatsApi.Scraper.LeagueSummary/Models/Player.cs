@@ -20,13 +20,13 @@ namespace FootballStatsApi.Scraper.LeagueSummary.Models
         public int Goals { get; set; }
 
         [JsonProperty("xG")]
-        public float ExpectedGoals { get; set; }
+        public double ExpectedGoals { get; set; }
 
         [JsonProperty("assists")]
         public int Assists { get; set; }
 
         [JsonProperty("xA")]
-        public float ExpectedAssists { get; set; }
+        public double ExpectedAssists { get; set; }
 
         [JsonProperty("shots")]
         public int Shots { get; set; }
@@ -50,13 +50,13 @@ namespace FootballStatsApi.Scraper.LeagueSummary.Models
         public int NonPenaltyGoals { get; set; }
 
         [JsonProperty("npxG")]
-        public float NonPenaltyExpectedGoals { get; set; }
+        public double NonPenaltyExpectedGoals { get; set; }
 
         [JsonProperty("xGChain")]
-        public float ExpectedGoalsChain { get; set; }
+        public double ExpectedGoalsChain { get; set; }
 
         [JsonProperty("xGBuildup")]
-        public float ExpectedGoalsBuildup { get; set; }
+        public double ExpectedGoalsBuildup { get; set; }
     }
 }
 

@@ -39,7 +39,6 @@ namespace FootballStatsApi.Scraper.LeagueSummary
                 Headless = true
             });
 
-
             await _amqpService.DeclareLeagueSummaryQueue();
 
             await _amqpService.SubscribeToQueue<GetLeagueSummaryMessage>("getLeagueSummary", async s =>

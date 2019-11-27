@@ -74,7 +74,7 @@ namespace FootballStatsApi.Domain.Sql
             expected_goals, assists, expected_assists, shots, key_passes, yellow_cards,
             red_cards, position, non_penalty_goals, non_penalty_expected_goals,
             expected_goals_chain, expected_goals_buildup) VALUES (@PlayerId, @Season, @CompetitionId, @TeamId, @Games,
-            @Time, @Goals, @ExpectedGoals, @Assists, @ExpectedAssists, @Shots, @KeyPasses,
+            @MinutesPlayed, @Goals, @ExpectedGoals, @Assists, @ExpectedAssists, @Shots, @KeyPasses,
             @YellowCards, @RedCards, @Position, @NonPenaltyGoals, @NonPenaltyExpectedGoals, @ExpectedGoalsChain,
             @ExpectedGoalsBuildUp)
         ON CONFLICT(player_id, season_id, competition_id) DO UPDATE SET team_id = EXCLUDED.team_id, games = EXCLUDED.games, time = EXCLUDED.time,

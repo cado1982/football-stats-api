@@ -12,5 +12,7 @@ namespace FootballStatsApi.Domain.Repositories
         Task<FixtureDetails> GetFixtureDetailsAsync(int fixtureId, IDbConnection connection);
         Task<List<FixtureShot>> GetFixtureShotsAsync(int fixtureId, IDbConnection connection);
         Task<List<FixturePlayer>> GetFixturePlayersAsync(int fixtureId, IDbConnection connection);
+        Task<bool> IsFixtureSavedAsync(int fixtureId, IDbConnection connection);
+        Task InsertMultipleAsync(List<FixtureDetails> fixtures, IDbConnection connection);
     }
 }

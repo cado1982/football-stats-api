@@ -1,18 +1,16 @@
-using System.Collections.Generic;
 using Newtonsoft.Json;
 
 namespace FootballStatsApi.Scraper.LeagueSummary.Models
 {
-    public class Team
+    public class FixtureTeam
     {
         [JsonProperty("id")]
         public int Id { get; set; }
 
         [JsonProperty("title")]
-        public string Name { get; set; }
+        public string Title { get; set; }
 
-        [JsonProperty("history")]
-        public List<TeamHistory> History { get; set; }
+        [JsonProperty("short_title")]
+        public string ShortTitle { get; set; }
     }
 }
-

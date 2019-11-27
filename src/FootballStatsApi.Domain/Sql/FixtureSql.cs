@@ -106,7 +106,20 @@
         LEFT JOIN
             ""stats"".""player"" ap ON ap.id = fs.assisted_by
         WHERE
-            fs.fixture_id = @FixtureId;
-        ";
+            fs.fixture_id = @FixtureId;";
+
+        public static string IsFixtureSaved = @"SELECT is_result FROM ""stats"".""fixture"" WHERE fixture_id = @FixtureId";
+
+        public static string InsertMultiple = @" 
+            INSERT INTO ""stats"".""fixture"" (fixture_id,home_team_id,away_team_id,season_id,competition_id,
+                is_result,home_goals,away_goals,expected_home_goals,expected_away_goals,
+                home_win_forecast,home_draw_forecast,home_loss_forecast,datetime) VALUES (@FixtureId, @HomeTeamId,
+                @AwayTeamId, @SeasonId, @CompetitionId, @IsResult, @HomeGoals, @AwayGoals,
+                @ExpectedHomeGoals, @ExpectedAwayGoals, @HomeWinForecast, @DrawForecast, @AwayWinForecast,
+                @DateTime)
+            ON CONFLICT(fixture_id) DO UPDATE SET is_result = EXCLUDED.is_result, home_goals = EXCLUDED.home_goals,
+            away_goals = EXCLUDED.away_goals, expected_home_goals = EXCLUDED.expected_home_goals, expected_away_goals = EXCLUDED.expected_away_goals,
+            home_win_forecast = EXCLUDED.home_win_forecast, home_draw_forecast = EXCLUDED.home_draw_forecast,
+            home_loss_forecast = EXCLUDED.home_loss_forecast, datetime = EXCLUDED.datetime;";
     }
 }

@@ -28,6 +28,8 @@ namespace FootballStatsApi.Scraper.LeagueSummary
         private readonly IPlayerSummaryRepository _playerSummaryRepository;
         private readonly IPlayerRepository _playerRepository;
         private readonly ITeamRepository _teamRepository;
+        private readonly ITeamSummaryRepository _teamSummaryRepository;
+        private readonly IFixtureRepository _fixtureRepository;
         private readonly IConnectionProvider _connectionProvider;
 
         public LeagueSummaryScraper(
@@ -37,76 +39,77 @@ namespace FootballStatsApi.Scraper.LeagueSummary
             IPlayerSummaryRepository playerSummaryRepository,
             IPlayerRepository playerRepository,
             ITeamRepository teamRepository,
+            ITeamSummaryRepository teamSummaryRepository,
+            IFixtureRepository fixtureRepository,
             IConnectionProvider connectionProvider)
         {
             _competitionRepository = competitionRepository;
             _playerSummaryRepository = playerSummaryRepository;
             _playerRepository = playerRepository;
             _teamRepository = teamRepository;
+            _teamSummaryRepository = teamSummaryRepository;
+            _fixtureRepository = fixtureRepository;
             _connectionProvider = connectionProvider;
             _amqpService = amqpService;
             _logger = logger;
             _browser = Puppeteer.LaunchAsync(new LaunchOptions { Headless = true }).Result;
         }
 
-
         public async Task Run(string competitionName, int? season = null)
         {
-            using (var conn = _connectionProvider.GetOpenConnection())
+            try
             {
-                var competitions = await _competitionRepository.GetAsync(conn);
-
-                var competition = competitions.Find(c => c.InternalName == competitionName);
-
-                if (competition == null)
+                _logger.LogDebug($"Entering Run({competitionName})");
+                using (var conn = _connectionProvider.GetOpenConnection())
                 {
-                    throw new Exception($"Competition not found '{competitionName}'");
+                    var competitions = await _competitionRepository.GetAsync(conn);
+
+                    var competition = competitions.Find(c => c.InternalName == competitionName);
+
+                    if (competition == null)
+                    {
+                        throw new Exception($"Competition not found '{competitionName}'");
+                    }
+
+                    var page = await _browser.NewPageAsync();
+
+                    var url = season != null ? $"https://understat.com/league/{competition.InternalName}/{season}" :
+                                               $"https://understat.com/league/{competition.InternalName}";
+
+                    _logger.LogInformation("Loading " + url);
+
+                    var response = await page.GoToAsync(url, new NavigationOptions { WaitUntil = new WaitUntilNavigation[] { WaitUntilNavigation.Networkidle2 } });
+
+                    if (!response.Ok)
+                    {
+                        _logger.LogError($"Unable to load {url}. Http Status {response.Status}");
+                        return;
+                    }
+
+                    _logger.LogInformation("Attempting to parse season from page");
+                    // Use the select dropdown on the page to decide which season it is
+                    var seasonFromPage = await page.EvaluateExpressionAsync<int>("+document.querySelector('select[name=season] > option[selected]').value");
+                    _logger.LogInformation($"Season {seasonFromPage} found");
+
+                    var pd = await page.EvaluateExpressionAsync("playersData");
+                    var td = await page.EvaluateExpressionAsync("teamsData");
+                    var dd = await page.EvaluateExpressionAsync("datesData");
+
+                    var players = pd.ToObject<List<Models.Player>>();
+                    var teams = td.ToObject<Dictionary<string, Models.Team>>();
+                    var fixtures = dd.ToObject<List<Models.Fixture>>();
+
+                    await ProcessTeams(teams.Values.ToList(), seasonFromPage, competition, conn);
+                    await ProcessPlayers(players, seasonFromPage, competition, conn);
+                    await ProcessFixtures(fixtures, seasonFromPage, competition, conn);
+
+                    await page.CloseAsync();
                 }
-
-                var page = await _browser.NewPageAsync();
-
-                var url = season != null ? $"https://understat.com/league/{competition.InternalName}/{season}" :
-                                           $"https://understat.com/league/{competition.InternalName}";
-
-                _logger.LogInformation("Loading " + url);
-
-                var response = await page.GoToAsync(url, new NavigationOptions { WaitUntil = new WaitUntilNavigation[] { WaitUntilNavigation.Networkidle2 } });
-
-                if (!response.Ok)
-                {
-                    _logger.LogError($"Unable to load {url}. Http Status {response.Status}");
-                    return;
-                }
-
-                _logger.LogInformation("Attempting to parse season from page");
-                // Use the select dropdown on the page to decide which season it is
-                var seasonFromPage = await page.EvaluateExpressionAsync<int>("+document.querySelector('select[name=season] > option[selected]').value");
-                _logger.LogInformation($"Season {seasonFromPage} found");
-
-                var pd = await page.EvaluateExpressionAsync("playersData");
-                var td = await page.EvaluateExpressionAsync("teamsData");
-                
-                var players = pd.ToObject<List<Models.Player>>();
-                var teams = td.ToObject<Dictionary<string, Models.Team>>();
-
-                //await ProcessTeams(teams, seasonFromPage, competition, conn);
-                //await ProcessPlayers(players, seasonFromPage, competition, conn);
             }
-
-            
-            // const dd: any = await page.evaluate(() => datesData);
-
-            // const players = pd;
-            // const fixtures = dd as IFixture[];
-            // const teams = td as ITeams;
-
-            // await repository.saveTeams(teams, season, competitionId, pool);
-            // await repository.savePlayers(players, season, competitionId, pool);
-            // await processFixtures(fixtures, seasonFromPage, competitionId, pool, repository);
-
-            // // Clean up
-            // await pool.end();
-            // await browser.close();
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error running LeagueSummaryScraper");
+            }
         }
 
         private Team GetPlayersTeam(Models.Player player, List<Team> allTeams)
@@ -118,61 +121,116 @@ namespace FootballStatsApi.Scraper.LeagueSummary
             return team;
         }
 
+        private async Task ProcessFixtures(List<Models.Fixture> fixtures, int season, Competition competition, IDbConnection connection)
+        {
+            _logger.LogInformation($"Processing {fixtures.Count} fixtures for season {season} and competition {competition.Name}");
+
+            var completedFixtures = fixtures.Where(f => f.IsResult).ToList();
+            var futureFixtures = fixtures.Where(f => !f.IsResult).ToList();
+
+            await ProcessCompletedFixtures(completedFixtures, connection);
+            await ProcessFutureFixtures(futureFixtures, season, competition, connection);
+
+            _logger.LogInformation($"Successfully processed {fixtures.Count} fixtures for season {season} and competition {competition.Name}");
+        }
+
+        private async Task ProcessCompletedFixtures(List<Models.Fixture> fixtures, IDbConnection connection)
+        {
+            foreach (var fixture in fixtures)
+            {
+                // 1. If fixture is already saved. Skip it.
+                var isFixtureAlreadySaved = await _fixtureRepository.IsFixtureSavedAsync(fixture.Id, connection);
+                if (isFixtureAlreadySaved) { continue; }
+
+                // 2. Send AMQP message to request fixture is pulled.
+                var message = new GetFixtureDetailsMessage();
+                message.FixtureId = fixture.Id;
+                await _amqpService.Send(message, "stats.getFixtureDetails");
+            }
+        }
+
+        private async Task ProcessFutureFixtures(List<Models.Fixture> fixtures, int season, Competition competition, IDbConnection connection)
+        {
+            // 1. Get the distinct home and away teams to insert into db
+            var teams = fixtures.Select(t => t.HomeTeam)
+                .Union(fixtures.Select(t => t.AwayTeam))
+                .GroupBy(k => k.Id)
+                .Select(g => g.FirstOrDefault())
+                .Where(t => t != null)
+                .Select(t => new Entities.Team
+                {
+                    Id = t.Id,
+                    Name = t.Title,
+                    ShortName = t.ShortTitle
+                })
+                .ToList();
+
+            var fixtureEntities = fixtures.Select(f => new Entities.FixtureDetails
+            {
+                FixtureId = f.Id,
+                HomeTeam = new Entities.Team { Id = f.HomeTeam.Id },
+                AwayTeam = new Entities.Team { Id = f.AwayTeam.Id },
+                Season = season,
+                Competition = competition,
+                IsResult = f.IsResult,
+                ForecastHomeWin = f.Forecast == null ? (double?)null : f.Forecast.HomeWin,
+                ForecastDraw = f.Forecast == null ? (double?)null : f.Forecast.Draw,
+                ForecastAwayWin = f.Forecast == null ? (double?)null : f.Forecast.AwayWin,
+                DateTime = f.DateTime
+            }).ToList();
+
+            await _teamRepository.InsertMultipleAsync(teams, connection);
+            await _fixtureRepository.InsertMultipleAsync(fixtureEntities, connection);
+        }
+
         private async Task ProcessTeams(List<Models.Team> teams, int season, Competition competition, IDbConnection connection)
         {
-        //     console.log(`Saving team summaries for season ${season}`);
-        
-        // let teamSummaryValues = '';
-        // let teamValues = '';
+            _logger.LogInformation($"Processing {teams.Count} teams for season {season} and competition {competition.Name}");
 
-        // for (const teamId in teams) {
-        //     if (teams.hasOwnProperty(teamId)) {
-        //         const team = teams[teamId];
+            var teamEntities = new List<Entities.Team>();
+            var teamSummaryEntities = new List<Entities.TeamSummary>();
 
-        //         const games = team.history.length;
-        //         const won = team.history.reduce((total, current) => total + current.wins, 0);
-        //         const drawn = team.history.reduce((total, current) => total + current.draws, 0);
-        //         const lost = team.history.reduce((total, current) => total + current.loses, 0);
-        //         const goalsFor = team.history.reduce((total, current) => total + current.scored, 0);
-        //         const goalsAgainst = team.history.reduce((total, current) => total + current.missed, 0);
-        //         const points = team.history.reduce((total, current) => total + current.pts, 0);
-        //         const expectedGoals = team.history.reduce((total, current) => total + current.xG, 0);
-        //         const expectedGoalsAgainst = team.history.reduce((total, current) => total + current.xGA, 0);
-        //         const expectedPoints = team.history.reduce((total, current) => total + current.xpts, 0);
+            foreach (var team in teams)
+            {
+                var teamEntity = new Entities.Team();
+                teamEntity.Id = team.Id;
+                teamEntity.Name = team.Name;
+                teamEntity.ShortName = String.Empty;
+                teamEntities.Add(teamEntity);
 
-        //         const oppositionPasses = team.history.reduce((total, current) => total + current.ppda.att, 0);
-        //         const defensiveEvents = team.history.reduce((total, current) => total + current.ppda.def, 0);
-        //         const ppda = oppositionPasses / defensiveEvents;
-        //         const deepPasses = team.history.reduce((total, current) => total + current.deep, 0);
+                var teamSummaryEntity = new Entities.TeamSummary();
+                teamSummaryEntity.Team = teamEntity;
+                teamSummaryEntity.Season = season;
+                teamSummaryEntity.Competition = competition;
+                teamSummaryEntity.Games = team.History.Count();
+                teamSummaryEntity.Won = team.History.Sum(h => h.Wins);
+                teamSummaryEntity.Drawn = team.History.Sum(h => h.Draws);
+                teamSummaryEntity.Lost = team.History.Sum(h => h.Loses);
+                teamSummaryEntity.GoalsFor = team.History.Sum(h => h.Scored);
+                teamSummaryEntity.GoalsAgainst = team.History.Sum(h => h.Missed);
+                teamSummaryEntity.Points = team.History.Sum(h => h.Points);
+                teamSummaryEntity.ExpectedGoals = (short)team.History.Sum(h => h.ExpectedGoals);
+                teamSummaryEntity.ExpectedGoalsAgainst = (short)team.History.Sum(h => h.ExpectedGoalsAgainst);
+                teamSummaryEntity.ExpectedPoints = (short)team.History.Sum(h => h.ExpectedPoints);
+                teamSummaryEntity.DeepPasses = team.History.Sum(h => h.Deep);
 
-        //         teamValues = teamValues.concat(`(${team.id},'${team.title}',''),`);
-        //         teamSummaryValues = teamSummaryValues.concat(`(${team.id},${season},${competitionId},${games},${won},${drawn},${lost},${goalsFor},${goalsAgainst},${points},${expectedGoals},${expectedGoalsAgainst},${expectedPoints},'${ppda}','${deepPasses}'),`);
-        //     }
-        // }
+                var oppositionPasses = team.History.Sum(h => h.PPDA.PassesAllowed);
+                var defensiveActions = team.History.Sum(h => h.PPDA.DefensiveActions);
+                teamSummaryEntity.Ppda = (short)(oppositionPasses / defensiveActions);
 
-        // // Remove the final commas
-        // teamSummaryValues = teamSummaryValues.slice(0, teamSummaryValues.length - 1);
-        // teamValues = teamValues.slice(0, teamValues.length - 1);
+                teamSummaryEntities.Add(teamSummaryEntity);
+            }
 
-        // let insertTeamsQuery = `INSERT INTO "stats"."team" (id, name, short_name) VALUES ${teamValues} ON CONFLICT(id) DO NOTHING`;
-        // const insertTeamSummariesQuery = `INSERT INTO "stats"."team_summary" (team_id, season_id, competition_id, games, won, drawn,
-        //     lost, goals_for, goals_against, points, expected_goals, expected_goals_against,
-        //     expected_points, ppda, deep_passes) VALUES ${teamSummaryValues}
-        // ON CONFLICT(team_id, season_id, competition_id) DO UPDATE SET games = EXCLUDED.games, won = EXCLUDED.won,
-        // drawn = EXCLUDED.drawn, lost = EXCLUDED.lost, goals_for = EXCLUDED.goals_for,
-        // goals_against = EXCLUDED.goals_against, points = EXCLUDED.points,
-        // expected_goals = EXCLUDED.expected_goals, expected_goals_against = EXCLUDED.expected_goals_against,
-        // expected_points = EXCLUDED.expected_points, ppda = EXCLUDED.ppda, deep_passes = EXCLUDED.deep_passes;`;
+            await _teamRepository.InsertMultipleAsync(teamEntities, connection);
+            await _teamSummaryRepository.InsertMultipleAsync(teamSummaryEntities, connection);
 
-        // insertTeamsQuery = insertTeamsQuery.replace('&#039;', "''");
-
-        // await pool.query(insertTeamsQuery);
-        // await pool.query(insertTeamSummariesQuery);
+            _logger.LogInformation($"Successfully processed {teams.Count} teams for season {season} and competition {competition.Name}");
         }
 
         private async Task ProcessPlayers(List<Models.Player> players, int season, Competition competition, IDbConnection conn)
         {
-            // 1. Insert players
+            _logger.LogInformation($"Processing {players.Count} players for season {season} and competition {competition.Name}");
+
             var playerEntities = new List<Entities.Player>();
             var playerSummaries = new List<Entities.PlayerSummary>();
 
@@ -180,10 +238,10 @@ namespace FootballStatsApi.Scraper.LeagueSummary
 
             foreach (var playerModel in players)
             {
-                var entity = new Entities.Player();
-                entity.Id = playerModel.Id;
-                entity.Name = playerModel.PlayerName;
-                playerEntities.Add(entity);
+                var playerEntity = new Entities.Player();
+                playerEntity.Id = playerModel.Id;
+                playerEntity.Name = playerModel.PlayerName.Replace("&#039;", "'");
+                playerEntities.Add(playerEntity);
 
                 var team = GetPlayersTeam(playerModel, allTeams);
                 if (team == null)
@@ -193,7 +251,7 @@ namespace FootballStatsApi.Scraper.LeagueSummary
                 }
 
                 var summary = new Entities.PlayerSummary();
-                summary.Player = new Entities.Player { Id = playerModel.Id };
+                summary.Player = playerEntity;
                 summary.Season = season;
                 summary.Competition = competition;
                 summary.Team = team;
@@ -217,6 +275,8 @@ namespace FootballStatsApi.Scraper.LeagueSummary
 
             await _playerRepository.InsertPlayersAsync(playerEntities, conn);
             await _playerSummaryRepository.InsertPlayerSummariesAsync(playerSummaries, conn);
+
+            _logger.LogInformation($"Successfully processed {players.Count} players for season {season} and competition {competition.Name}");
         }
 
         public void Dispose()

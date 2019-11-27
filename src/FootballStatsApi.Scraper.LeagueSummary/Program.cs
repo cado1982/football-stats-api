@@ -19,33 +19,42 @@ namespace FootballStatsApi.Scraper.LeagueSummary
 
         static void Main(string[] args)
         {
-            var builder = new ConfigurationBuilder()
+            try
+            {
+                var builder = new ConfigurationBuilder()
                 .SetBasePath(Directory.GetCurrentDirectory())
                 .AddJsonFile("appsettings.json")
                 .AddEnvironmentVariables();
 
-            _configuration = builder.Build();
+                _configuration = builder.Build();
 
-            var services = new ServiceCollection();
+                var services = new ServiceCollection();
 
-            ConfigureServices(services);
+                ConfigureServices(services);
 
-            _serviceProvider = services.BuildServiceProvider();
+                _serviceProvider = services.BuildServiceProvider();
 
-            // Download chromium
-            var fetcher = new BrowserFetcher();
-            Console.WriteLine("Downloading chromium");
-            fetcher.DownloadProgressChanged += (s, e) => Console.WriteLine($"{e.ProgressPercentage}%");
-            fetcher.DownloadAsync(BrowserFetcher.DefaultRevision).Wait();
-            Console.WriteLine("Chromium downloaded successfully");
+                // Download chromium
+                var fetcher = new BrowserFetcher();
+                Console.WriteLine("Downloading chromium");
+                fetcher.DownloadProgressChanged += (s, e) => Console.WriteLine($"{e.ProgressPercentage}%");
+                fetcher.DownloadAsync(BrowserFetcher.DefaultRevision).Wait();
+                Console.WriteLine("Chromium downloaded successfully");
 
-            var amqpService = _serviceProvider.GetService<IAmqpService>();
-            amqpService.Connect().Wait();
+                var amqpService = _serviceProvider.GetService<IAmqpService>();
+                amqpService.Connect().Wait();
 
-            var listener = _serviceProvider.GetService<LeagueSummaryListener>();
-            listener.Listen().Wait();
+                var listener = _serviceProvider.GetService<LeagueSummaryListener>();
+                listener.Listen().Wait();
 
-            Console.WriteLine("Done");
+                Console.WriteLine("Done");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Error during startup");
+                Console.WriteLine(ex);
+                throw;
+            }
         }
 
         private static void ConfigureServices(IServiceCollection services)
@@ -67,6 +76,8 @@ namespace FootballStatsApi.Scraper.LeagueSummary
             services.AddSingleton<IPlayerRepository, PlayerRepository>();
             services.AddSingleton<IPlayerSummaryRepository, PlayerSummaryRepository>();
             services.AddSingleton<ITeamRepository, TeamRepository>();
+            services.AddSingleton<ITeamSummaryRepository, TeamSummaryRepository>();
+            services.AddSingleton<IFixtureRepository, FixtureRepository>();
         }
     }
 }

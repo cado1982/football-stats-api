@@ -8,9 +8,9 @@ namespace FootballStatsApi.Models
         public int Games { get; set; }
         public int MinutesPlayed { get; set; }
         public int Goals { get; set; }
-        public float ExpectedGoals { get; set; }
+        public double ExpectedGoals { get; set; }
         public int Assists { get; set; }
-        public float ExpectedAssists { get; set; }
+        public double ExpectedAssists { get; set; }
         public int Shots { get; set; }
         public int KeyPasses { get; set; }
         public int YellowCards { get; set; }
@@ -18,8 +18,8 @@ namespace FootballStatsApi.Models
         public string Position { get; set; }
         public Team Team { get; set; }
         public int NonPenaltyGoals { get; set; }
-        public float NonPenaltyExpectedGoals { get; set; }
-        public float ExpectedGoalsChain { get; set; }
-        public float ExpectedGoalsBuildup { get; set; }
+        public double NonPenaltyExpectedGoals { get; set; }
+        public double ExpectedGoalsChain { get; set; }
+        public double ExpectedGoalsBuildup { get; set; }
     }
 }

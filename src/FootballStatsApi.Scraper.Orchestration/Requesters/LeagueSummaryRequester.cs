@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
 using System.Threading.Tasks;
 using FootballStatsApi.Domain.Helpers;
 using FootballStatsApi.Domain.Repositories;
@@ -62,7 +63,7 @@ namespace FootballStatsApi.Scraper.Orchestration.Requesters
                 var competitions = await _competitionRepository.GetAsync(conn);
 
                 // 2. Fire off a GetLeagueSummaryMessage for each competition
-                foreach (var competition in competitions)
+                foreach (var competition in competitions.Where(c => c.Id == 1))
                 {
                     var message = new GetLeagueSummaryMessage();
                     message.Competition = competition.Id;
