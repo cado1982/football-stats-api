@@ -13,7 +13,7 @@ variables:
 build:
   stage: build
   script:
-    - docker build --pull -f FootballStatsApi.Scraper.Orchestration/Dockerfile -t $SCRAPER_ORCHESTRATION_IMAGE_NAME:$CI_COMMIT_REF_NAME-$CI_COMMIT_SHORT_SHA .
+    - docker build --pull -f src/FootballStatsApi.Scraper.Orchestration/Dockerfile -t $SCRAPER_ORCHESTRATION_IMAGE_NAME:$CI_COMMIT_REF_NAME-$CI_COMMIT_SHORT_SHA src
     - docker push $SCRAPER_ORCHESTRATION_IMAGE_NAME:$CI_COMMIT_REF_NAME-$CI_COMMIT_SHORT_SHA
 
 release:
