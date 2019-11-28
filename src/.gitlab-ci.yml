@@ -1,0 +1,26 @@
+image: docker:latest
+
+stages:
+  - build
+  - release
+
+services:
+  - docker:dind
+
+variables:
+  SCRAPER_ORCHESTRATION_IMAGE_NAME: registry.gitlab.com/cado82/football-stats-api/scraper/orchestration
+
+build:
+  stage: build
+  script:
+    - docker build --pull -f FootballStatsApi.Scraper.Orchestration/Dockerfile -t $SCRAPER_ORCHESTRATION_IMAGE_NAME:$CI_COMMIT_REF_NAME-$CI_COMMIT_SHORT_SHA .
+    - docker push $SCRAPER_ORCHESTRATION_IMAGE_NAME:$CI_COMMIT_REF_NAME-$CI_COMMIT_SHORT_SHA
+
+release:
+  stage: release
+  script:
+    - docker pull $SCRAPER_ORCHESTRATION_IMAGE_NAME:$CI_COMMIT_REF_NAME-$CI_COMMIT_SHORT_SHA
+    - docker tag $SCRAPER_ORCHESTRATION_IMAGE_NAME:$CI_COMMIT_REF_NAME-$CI_COMMIT_SHORT_SHA $SCRAPER_ORCHESTRATION_IMAGE_NAME:latest
+    - docker push $SCRAPER_ORCHESTRATION_IMAGE_NAME:latest
+  only:
+    - master
