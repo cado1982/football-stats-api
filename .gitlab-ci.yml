@@ -9,6 +9,7 @@ services:
 
 variables:
   SCRAPER_ORCHESTRATION_IMAGE_NAME: registry.gitlab.com/cado82/football-stats-api/scraper/orchestration
+  SCRAPER_LEAGUE_SUMMARY_IMAGE_NAME: registry.gitlab.com/cado82/football-stats-api/scraper/leaguesummary
 
 before_script:
   - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
@@ -16,14 +17,19 @@ before_script:
 build:
   stage: build
   script:
-    - docker build --pull -f src/FootballStatsApi.Scraper.Orchestration/Dockerfile -t $SCRAPER_ORCHESTRATION_IMAGE_NAME:$CI_COMMIT_REF_NAME-$CI_COMMIT_SHORT_SHA src
+    - docker build --pull -f src/FootballStatsApi.Scraper.Orchestration/Dockerfile -t $SCRAPER_ORCHESTRATION_IMAGE_NAME:$CI_COMMIT_REF_NAME-$CI_COMMIT_SHORT_SHA .
+    - docker build --pull -f src/FootballStatsApi.Scraper.LeagueSummary/Dockerfile -t $SCRAPER_LEAGUE_SUMMARY_IMAGE_NAME:$CI_COMMIT_REF_NAME-$CI_COMMIT_SHORT_SHA .
     - docker push $SCRAPER_ORCHESTRATION_IMAGE_NAME:$CI_COMMIT_REF_NAME-$CI_COMMIT_SHORT_SHA
+    - docker push $SCRAPER_LEAGUE_SUMMARY_IMAGE_NAME:$CI_COMMIT_REF_NAME-$CI_COMMIT_SHORT_SHA
 
 release:
   stage: release
   script:
     - docker pull $SCRAPER_ORCHESTRATION_IMAGE_NAME:$CI_COMMIT_REF_NAME-$CI_COMMIT_SHORT_SHA
+    - docker pull $SCRAPER_LEAGUE_SUMMARY_IMAGE_NAME:$CI_COMMIT_REF_NAME-$CI_COMMIT_SHORT_SHA
     - docker tag $SCRAPER_ORCHESTRATION_IMAGE_NAME:$CI_COMMIT_REF_NAME-$CI_COMMIT_SHORT_SHA $SCRAPER_ORCHESTRATION_IMAGE_NAME:latest
+    - docker tag $SCRAPER_LEAGUE_SUMMARY_IMAGE_NAME:$CI_COMMIT_REF_NAME-$CI_COMMIT_SHORT_SHA $SCRAPER_LEAGUE_SUMMARY_IMAGE_NAME:latest
     - docker push $SCRAPER_ORCHESTRATION_IMAGE_NAME:latest
+    - docker push $SCRAPER_LEAGUE_SUMMARY_IMAGE_NAME:latest
   only:
     - master

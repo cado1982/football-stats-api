@@ -1,21 +1,16 @@
-using RabbitMQ.Client;
 using System.Threading.Tasks;
-using System;
-using Newtonsoft.Json;
-using System.Text;
 using FootballStatsApi.Scraper.Shared.Messages;
 using FootballStatsApi.Scraper.Shared;
-using RabbitMQ.Client.Events;
 using FootballStatsApi.Domain.Repositories;
 using FootballStatsApi.Domain.Helpers;
 using PuppeteerSharp;
 
 namespace FootballStatsApi.Scraper.LeagueSummary
 {
-    public class LeagueSummaryListener : DefaultBasicConsumer
+
+    public class LeagueSummaryListener : IListener
     {
         private readonly IAmqpService _amqpService;
-
         private readonly ICompetitionRepository _competitionRepository;
         private readonly LeagueSummaryScraper _scraper;
         private readonly IConnectionProvider _connectionProvider;

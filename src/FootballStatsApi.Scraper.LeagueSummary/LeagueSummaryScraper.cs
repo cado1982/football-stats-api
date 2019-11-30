@@ -125,32 +125,6 @@ namespace FootballStatsApi.Scraper.LeagueSummary
         {
             _logger.LogInformation($"Processing {fixtures.Count} fixtures for season {season} and competition {competition.Name}");
 
-            var completedFixtures = fixtures.Where(f => f.IsResult).ToList();
-            var futureFixtures = fixtures.Where(f => !f.IsResult).ToList();
-
-            await ProcessCompletedFixtures(completedFixtures, connection);
-            await ProcessFutureFixtures(futureFixtures, season, competition, connection);
-
-            _logger.LogInformation($"Successfully processed {fixtures.Count} fixtures for season {season} and competition {competition.Name}");
-        }
-
-        private async Task ProcessCompletedFixtures(List<Models.Fixture> fixtures, IDbConnection connection)
-        {
-            foreach (var fixture in fixtures)
-            {
-                // 1. If fixture is already saved. Skip it.
-                var isFixtureAlreadySaved = await _fixtureRepository.IsFixtureSavedAsync(fixture.Id, connection);
-                if (isFixtureAlreadySaved) { continue; }
-
-                // 2. Send AMQP message to request fixture is pulled.
-                var message = new GetFixtureDetailsMessage();
-                message.FixtureId = fixture.Id;
-                await _amqpService.Send(message, "stats.getFixtureDetails");
-            }
-        }
-
-        private async Task ProcessFutureFixtures(List<Models.Fixture> fixtures, int season, Competition competition, IDbConnection connection)
-        {
             // 1. Get the distinct home and away teams to insert into db
             var teams = fixtures.Select(t => t.HomeTeam)
                 .Union(fixtures.Select(t => t.AwayTeam))
@@ -181,6 +155,8 @@ namespace FootballStatsApi.Scraper.LeagueSummary
 
             await _teamRepository.InsertMultipleAsync(teams, connection);
             await _fixtureRepository.InsertMultipleAsync(fixtureEntities, connection);
+
+            _logger.LogInformation($"Successfully processed {fixtures.Count} fixtures for season {season} and competition {competition.Name}");
         }
 
         private async Task ProcessTeams(List<Models.Team> teams, int season, Competition competition, IDbConnection connection)

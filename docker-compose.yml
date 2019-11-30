@@ -1,0 +1,72 @@
+version: '3'
+services:
+  rabbitmq:
+    image: rabbitmq:3-management
+    container_name: fsa-rabbitmq
+    logging:
+      driver: none
+    expose:
+      - 5672
+  scraper-orchestration:
+    depends_on:
+      - db
+      - db-migrations
+      - rabbitmq
+    build:
+      context: .
+      dockerfile: src/FootballStatsApi.Scraper.Orchestration/Dockerfile
+    image: fsa-orchestration:latest
+    container_name: fsa-orchestration
+    environment:
+      ConnectionStrings__AMQP: amqp://guest:guest@rabbitmq
+      ConnectionStrings__Football: Server=db;User Id=postgres;Password=admin;Database=football;
+  scraper:
+    depends_on:
+      - db
+      - db-migrations
+      - rabbitmq
+    build:
+      context: .
+      dockerfile: src/FootballStatsApi.Scraper.LeagueSummary/Dockerfile
+    image: fsa-scraper:latest
+    security_opt: 
+      - seccomp:unconfined
+    container_name: fsa-scraper
+    environment:
+      ConnectionStrings__AMQP: amqp://guest:guest@rabbitmq
+      ConnectionStrings__Football: Server=db;User Id=postgres;Password=admin;Database=football;
+  db:
+    image: postgres:11
+    container_name: fsa-db
+    logging:
+      driver: none
+    restart: always
+    environment:
+      POSTGRES_PASSWORD: admin
+      POSTGRES_DB: football
+    expose:
+      - "5432"
+  # pg-admin:
+  #   image: dpage/pgadmin4
+  #   container_name: fsa-pgadmin
+  #   logging:
+  #     driver: none
+  #   expose:
+  #     - "5454"
+  #   environment:
+  #     - PGADMIN_DEFAULT_EMAIL=admin@mydomain.com
+  #     - PGADMIN_DEFAULT_PASSWORD=postgres
+  #     - PGADMIN_LISTEN_PORT=5454
+  db-migrations:
+    depends_on:
+      - db
+    container_name: fsa-dbmigrations
+    build:
+      context: .
+      dockerfile: ./src/FootballStatsApi.Database/Dockerfile
+    image: fsa-dbmigrations:latest
+    environment:
+      ConnectionStrings__Football: Server=db;User Id=postgres;Password=admin;Database=football;
+
+
+    

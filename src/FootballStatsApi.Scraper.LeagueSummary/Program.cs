@@ -12,15 +12,23 @@ using PuppeteerSharp;
 
 namespace FootballStatsApi.Scraper.LeagueSummary
 {
-    class Program
+    public class Program
     {
         private static IServiceProvider _serviceProvider;
-        private static IConfigurationRoot _configuration; 
+        private static IConfigurationRoot _configuration;
 
-        static void Main(string[] args)
+        private static Browser _browser;
+
+        public static void Main(string[] args)
         {
             try
             {
+                AppDomain.CurrentDomain.ProcessExit += async (s, e) =>
+                {
+                    await _browser?.CloseAsync();
+                    _browser?.Dispose();
+                };
+
                 var builder = new ConfigurationBuilder()
                 .SetBasePath(Directory.GetCurrentDirectory())
                 .AddJsonFile("appsettings.json")
@@ -34,20 +42,11 @@ namespace FootballStatsApi.Scraper.LeagueSummary
 
                 _serviceProvider = services.BuildServiceProvider();
 
-                // Download chromium
-                var fetcher = new BrowserFetcher();
-                Console.WriteLine("Downloading chromium");
-                fetcher.DownloadProgressChanged += (s, e) => Console.WriteLine($"{e.ProgressPercentage}%");
-                fetcher.DownloadAsync(BrowserFetcher.DefaultRevision).Wait();
-                Console.WriteLine("Chromium downloaded successfully");
-
                 var amqpService = _serviceProvider.GetService<IAmqpService>();
                 amqpService.Connect().Wait();
 
                 var listener = _serviceProvider.GetService<LeagueSummaryListener>();
                 listener.Listen().Wait();
-
-                Console.WriteLine("Done");
             }
             catch (Exception ex)
             {
@@ -78,6 +77,11 @@ namespace FootballStatsApi.Scraper.LeagueSummary
             services.AddSingleton<ITeamRepository, TeamRepository>();
             services.AddSingleton<ITeamSummaryRepository, TeamSummaryRepository>();
             services.AddSingleton<IFixtureRepository, FixtureRepository>();
+
+            _browser = Puppeteer.LaunchAsync(new LaunchOptions
+            {
+                Headless = true
+            }).Result;
         }
     }
 }

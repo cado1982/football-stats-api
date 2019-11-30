@@ -16,7 +16,6 @@ namespace FootballStatsApi.Scraper.Shared
         private IModel _channel;
         private ConnectionFactory _factory;
         private const string _exchangeName = "amq.topic";
-        private int _maxConnectAttempets = 5;
         private int _connectAttempts = 0;
 
         public AmqpService(Uri amqpUri, ILogger<AmqpService> logger)
@@ -31,7 +30,7 @@ namespace FootballStatsApi.Scraper.Shared
         public Task Send(IAmqpMessage message, string routingKey)
         {
             _channel.ExchangeDeclare(_exchangeName, ExchangeType.Topic, true);
-            
+
             var json = JsonConvert.SerializeObject(message);
             byte[] messageBodyBytes = System.Text.Encoding.UTF8.GetBytes(json);
 
@@ -44,6 +43,7 @@ namespace FootballStatsApi.Scraper.Shared
         public async Task Connect()
         {
             _connectAttempts++;
+            var isFaulted = false;
 
             try
             {
@@ -54,15 +54,17 @@ namespace FootballStatsApi.Scraper.Shared
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, $"Unable to connect to RabbitMQ. Attempt {_connectAttempts} of {_maxConnectAttempets}");
-                if (_connectAttempts < _maxConnectAttempets) 
-                {
-                    await Task.Run(async () => 
-                    {
-                        await Task.Delay(5000);
-                        await Connect();
-                    });
-                }
+                _logger.LogError(ex, $"Unable to connect to RabbitMQ. Attempt {_connectAttempts}.");
+
+                isFaulted = true;
+            }
+
+            // The reconnect must not be done inside the catch block
+            // It's bad practice to have code in a catch block that could throw further exceptions
+            if (isFaulted)
+            {
+                await Task.Delay(5000);
+                await Connect();
             }
         }
 
@@ -81,7 +83,7 @@ namespace FootballStatsApi.Scraper.Shared
             return Task.CompletedTask;
         }
 
-        
+
 
         public Task BindQueue(string queueName, string exchangeName, string routingKey)
         {
@@ -95,8 +97,8 @@ namespace FootballStatsApi.Scraper.Shared
             {
                 { "x-message-ttl", 10000 }
             };
-            
-            await  DeclareQueue("getLeagueSummary", arguments: queueArgs);
+
+            await DeclareQueue("getLeagueSummary", arguments: queueArgs);
             await BindQueue("getLeagueSummary", "amq.topic", "stats.getLeagueSummary");
         }
 

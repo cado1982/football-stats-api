@@ -10,8 +10,8 @@ namespace FootballStatsApi.Database
     {
         public static int Main(string[] args)
         {
-            var environment = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
-
+            Console.WriteLine("Start");
+            
             var configuration = new ConfigurationBuilder()
                 .SetBasePath(Directory.GetCurrentDirectory())
                 .AddJsonFile("appsettings.json", false, true)
@@ -20,7 +20,7 @@ namespace FootballStatsApi.Database
 
             var upgrader =
                 DeployChanges.To
-                    .PostgresqlDatabase(configuration.GetConnectionString("Api"))
+                    .PostgresqlDatabase(configuration.GetConnectionString("Football"))
                     .WithTransaction()
                     .WithScriptsEmbeddedInAssembly(Assembly.GetExecutingAssembly())
                     .LogToConsole()
