@@ -53,7 +53,7 @@ namespace FootballStatsApi.Scraper.LeagueSummary
                 })
                 .ToList();
 
-            // 2. Insert the pre-match stats into the db. Any advanced stats will be requested by the orchestration project.
+            // 2. Insert the pre-match info into the db. Any advanced stats will be requested by the orchestration project.
             var fixtureEntities = fixtures.Select(f => new Entities.FixtureDetails
             {
                 FixtureId = f.Id,

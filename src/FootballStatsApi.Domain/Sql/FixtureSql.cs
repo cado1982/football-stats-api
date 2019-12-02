@@ -144,24 +144,22 @@
             UPDATE 
                 ""stats"".""fixture"" 
             SET
-                home_team_id = @HomeTeamId, 
-                away_team_id = @AwayTeamId,
-                season_id = @SeasonId,
-                competition_id = @CompetitionId,
-                is_result = @IsResult,
-                home_goals = @HomeGoals,
-                away_goals = @AwayGoals,
+                is_result = true,
+                home_deep = @HomeDeep,
+                away_deep = @AwayDeep,
                 expected_home_goals = @ExpectedHomeGoals,
                 expected_away_goals = @ExpectedAwayGoals,
+                home_goals = @HomeGoals,
+                away_goals = @AwayGoals,
+                home_shots = @HomeShots,
+                away_shots = @AwayShots,
                 home_win_forecast = @HomeWinForecast,
                 home_draw_forecast = @DrawForecast,
                 home_loss_forecast = @AwayWinForecast,
-                datetime = @DateTime,
-                home_passes = @HomePasses,
-                away_passes = @AwayPasses,
-                home_defensive_actions = @HomeDefensiveActions,
-                away_defensive_actions = @AwayDefensiveActions,
-                details_saved = @DetailsSaved
+                home_shots_on_target = @HomeShotsOnTarget,
+                away_shots_on_target = @AwayShotsOnTarget,
+                home_ppda = @HomePpda,
+                away_ppda = @AwayPpda
             WHERE
                 fixture_id = @FixtureId";
         
@@ -181,5 +179,50 @@
                 details_saved = NOW()
             WHERE
                 fixture_id = @FixtureId;";
+
+        public static string InsertFixturePlayers = @"
+            INSERT INTO ""stats"".""fixture_player"" 
+            (
+                player_id,
+                fixture_id,
+                team_id,
+                time,
+                position,
+                yellow_cards,
+                red_cards,
+                replaced_by_id,
+                replaced_id,
+                key_passes,
+                assists,
+                expected_goals_chain,
+                expected_goals_buildup,
+                position_order,
+                goals,
+                own_goals,
+                shots,
+                expected_goals,
+                expected_assists
+            ) VALUES (
+                @PlayerId,
+                @FixtureId,
+                @TeamId,
+                @Time,
+                @Position,
+                @YellowCards,
+                @RedCards,
+                @ReplacedById,
+                @ReplacedId,
+                @KeyPasses,
+                @Assists,
+                @ExpectedGoalsChain,
+                @ExpectedGoalsBuildup,
+                @PositionOrder,
+                @Goals,
+                @OwnGoals,
+                @Shots,
+                @ExpectedGoals,
+                @ExpectedAssists
+            )
+            ON CONFLICT(player_id, fixture_id) DO NOTHING;";
     }
 }

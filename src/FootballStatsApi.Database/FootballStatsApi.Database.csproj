@@ -22,7 +22,7 @@
     <None Remove="Scripts\Script0013_Add shots to fixture table.sql" />
     <None Remove="Scripts\Script0014_Fix ppda and deep column types.sql" />
     <None Remove="Scripts\Script0015_Add meta data to fixture table.sql" />
-    <None Remove="Scripts\Script0016_Add ppda breakdown stats to fixture table.sql" />
+    <None Remove="Scripts\Script0016_Remove nullable from columns in fixture table.sql" />
   </ItemGroup>
 
   <ItemGroup>
@@ -47,7 +47,7 @@
     <EmbeddedResource Include="Scripts\Script0013_Add shots to fixture table.sql" />
     <EmbeddedResource Include="Scripts\Script0014_Fix ppda and deep column types.sql" />
     <EmbeddedResource Include="Scripts\Script0015_Add meta data to fixture table.sql" />
-    <EmbeddedResource Include="Scripts\Script0016_Add ppda breakdown stats to fixture table.sql" />
+    <EmbeddedResource Include="Scripts\Script0016_Remove nullable from columns in fixture table.sql" />
 </ItemGroup>
 
   <ItemGroup>

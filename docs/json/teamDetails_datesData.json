@@ -1,0 +1,1003 @@
+[{
+        "id": "12030",
+        "isResult": true,
+        "side": "a",
+        "h": {
+            "id": "141",
+            "title": "Espanyol",
+            "short_title": "ESP"
+        },
+        "a": {
+            "id": "138",
+            "title": "Sevilla",
+            "short_title": "SEV"
+        },
+        "goals": {
+            "h": "0",
+            "a": "2"
+        },
+        "xG": {
+            "h": "0.145879",
+            "a": "2.40044"
+        },
+        "datetime": "2019-08-18 18:00:00",
+        "forecast": {
+            "w": 0.014535882833869595,
+            "d": 0.10831060216328811,
+            "l": 0.8771534737743956
+        },
+        "result": "w"
+    },
+    {
+        "id": "12035",
+        "isResult": true,
+        "side": "a",
+        "h": {
+            "id": "155",
+            "title": "Granada",
+            "short_title": "GRA"
+        },
+        "a": {
+            "id": "138",
+            "title": "Sevilla",
+            "short_title": "SEV"
+        },
+        "goals": {
+            "h": "0",
+            "a": "1"
+        },
+        "xG": {
+            "h": "0.428332",
+            "a": "1.39211"
+        },
+        "datetime": "2019-08-23 19:00:00",
+        "forecast": {
+            "w": 0.11298735713063515,
+            "d": 0.2739111673433445,
+            "l": 0.6131014754962814
+        },
+        "result": "w"
+    },
+    {
+        "id": "12046",
+        "isResult": true,
+        "side": "h",
+        "h": {
+            "id": "138",
+            "title": "Sevilla",
+            "short_title": "SEV"
+        },
+        "a": {
+            "id": "152",
+            "title": "Celta Vigo",
+            "short_title": "CEL"
+        },
+        "goals": {
+            "h": "1",
+            "a": "1"
+        },
+        "xG": {
+            "h": "1.50787",
+            "a": "0.454026"
+        },
+        "datetime": "2019-08-30 19:00:00",
+        "forecast": {
+            "w": 0.6360517255655831,
+            "d": 0.2546241679943729,
+            "l": 0.10932410635156989
+        },
+        "result": "d"
+    },
+    {
+        "id": "12053",
+        "isResult": true,
+        "side": "a",
+        "h": {
+            "id": "158",
+            "title": "Alaves",
+            "short_title": "ALA"
+        },
+        "a": {
+            "id": "138",
+            "title": "Sevilla",
+            "short_title": "SEV"
+        },
+        "goals": {
+            "h": "0",
+            "a": "1"
+        },
+        "xG": {
+            "h": "0.773661",
+            "a": "1.091"
+        },
+        "datetime": "2019-09-15 12:00:00",
+        "forecast": {
+            "w": 0.2568932821032744,
+            "d": 0.31606302599820657,
+            "l": 0.42704369189749347
+        },
+        "result": "w"
+    },
+    {
+        "id": "12068",
+        "isResult": true,
+        "side": "h",
+        "h": {
+            "id": "138",
+            "title": "Sevilla",
+            "short_title": "SEV"
+        },
+        "a": {
+            "id": "150",
+            "title": "Real Madrid",
+            "short_title": "RMA"
+        },
+        "goals": {
+            "h": "0",
+            "a": "1"
+        },
+        "xG": {
+            "h": "0.394624",
+            "a": "1.23916"
+        },
+        "datetime": "2019-09-22 19:00:00",
+        "forecast": {
+            "w": 0.11778185690356213,
+            "d": 0.30296007275825443,
+            "l": 0.579258070332198
+        },
+        "result": "l"
+    },
+    {
+        "id": "12081",
+        "isResult": true,
+        "side": "a",
+        "h": {
+            "id": "156",
+            "title": "Eibar",
+            "short_title": "EIB"
+        },
+        "a": {
+            "id": "138",
+            "title": "Sevilla",
+            "short_title": "SEV"
+        },
+        "goals": {
+            "h": "3",
+            "a": "2"
+        },
+        "xG": {
+            "h": "1.69937",
+            "a": "1.3532"
+        },
+        "datetime": "2019-09-26 17:00:00",
+        "forecast": {
+            "w": 0.4567955382070464,
+            "d": 0.23678755931631637,
+            "l": 0.30641690201163846
+        },
+        "result": "l"
+    },
+    {
+        "id": "12091",
+        "isResult": true,
+        "side": "h",
+        "h": {
+            "id": "138",
+            "title": "Sevilla",
+            "short_title": "SEV"
+        },
+        "a": {
+            "id": "140",
+            "title": "Real Sociedad",
+            "short_title": "SOC"
+        },
+        "goals": {
+            "h": "3",
+            "a": "2"
+        },
+        "xG": {
+            "h": "1.60195",
+            "a": "0.774246"
+        },
+        "datetime": "2019-09-29 19:00:00",
+        "forecast": {
+            "w": 0.5709555022364289,
+            "d": 0.24918635097233766,
+            "l": 0.17985814659030525
+        },
+        "result": "w"
+    },
+    {
+        "id": "12093",
+        "isResult": true,
+        "side": "a",
+        "h": {
+            "id": "148",
+            "title": "Barcelona",
+            "short_title": "BAR"
+        },
+        "a": {
+            "id": "138",
+            "title": "Sevilla",
+            "short_title": "SEV"
+        },
+        "goals": {
+            "h": "4",
+            "a": "0"
+        },
+        "xG": {
+            "h": "2.40324",
+            "a": "3.03653"
+        },
+        "datetime": "2019-10-06 20:00:00",
+        "forecast": {
+            "w": 0.3104578171556332,
+            "d": 0.1697421289956793,
+            "l": 0.5197992348799204
+        },
+        "result": "l"
+    },
+    {
+        "id": "12112",
+        "isResult": true,
+        "side": "h",
+        "h": {
+            "id": "138",
+            "title": "Sevilla",
+            "short_title": "SEV"
+        },
+        "a": {
+            "id": "151",
+            "title": "Levante",
+            "short_title": "LEV"
+        },
+        "goals": {
+            "h": "1",
+            "a": "0"
+        },
+        "xG": {
+            "h": "2.58436",
+            "a": "0.459674"
+        },
+        "datetime": "2019-10-20 20:00:00",
+        "forecast": {
+            "w": 0.830306338846946,
+            "d": 0.12344002895198747,
+            "l": 0.046253526998814826
+        },
+        "result": "w"
+    },
+    {
+        "id": "12120",
+        "isResult": true,
+        "side": "h",
+        "h": {
+            "id": "138",
+            "title": "Sevilla",
+            "short_title": "SEV"
+        },
+        "a": {
+            "id": "142",
+            "title": "Getafe",
+            "short_title": "GET"
+        },
+        "goals": {
+            "h": "2",
+            "a": "0"
+        },
+        "xG": {
+            "h": "2.14059",
+            "a": "0.62652"
+        },
+        "datetime": "2019-10-27 17:30:00",
+        "forecast": {
+            "w": 0.7246352114097644,
+            "d": 0.17996504848396283,
+            "l": 0.09539973069509891
+        },
+        "result": "w"
+    },
+    {
+        "id": "12132",
+        "isResult": true,
+        "side": "a",
+        "h": {
+            "id": "146",
+            "title": "Valencia",
+            "short_title": "VAL"
+        },
+        "a": {
+            "id": "138",
+            "title": "Sevilla",
+            "short_title": "SEV"
+        },
+        "goals": {
+            "h": "1",
+            "a": "1"
+        },
+        "xG": {
+            "h": "1.0283",
+            "a": "0.46703"
+        },
+        "datetime": "2019-10-30 18:00:00",
+        "forecast": {
+            "w": 0.48917114740495105,
+            "d": 0.34547037071368625,
+            "l": 0.1653584818809184
+        },
+        "result": "d"
+    },
+    {
+        "id": "12140",
+        "isResult": true,
+        "side": "h",
+        "h": {
+            "id": "138",
+            "title": "Sevilla",
+            "short_title": "SEV"
+        },
+        "a": {
+            "id": "143",
+            "title": "Atletico Madrid",
+            "short_title": "ATL"
+        },
+        "goals": {
+            "h": "1",
+            "a": "1"
+        },
+        "xG": {
+            "h": "0.888419",
+            "a": "2.45211"
+        },
+        "datetime": "2019-11-02 17:30:00",
+        "forecast": {
+            "w": 0.11666133937391063,
+            "d": 0.16628444978184148,
+            "l": 0.7170541567552919
+        },
+        "result": "d"
+    },
+    {
+        "id": "12147",
+        "isResult": true,
+        "side": "a",
+        "h": {
+            "id": "153",
+            "title": "Real Betis",
+            "short_title": "BET"
+        },
+        "a": {
+            "id": "138",
+            "title": "Sevilla",
+            "short_title": "SEV"
+        },
+        "goals": {
+            "h": "1",
+            "a": "2"
+        },
+        "xG": {
+            "h": "1.56474",
+            "a": "0.993088"
+        },
+        "datetime": "2019-11-10 20:00:00",
+        "forecast": {
+            "w": 0.5062405216369834,
+            "d": 0.2535378516144772,
+            "l": 0.24022162660205693
+        },
+        "result": "w"
+    },
+    {
+        "id": "12162",
+        "isResult": true,
+        "side": "a",
+        "h": {
+            "id": "231",
+            "title": "Real Valladolid",
+            "short_title": "VAL"
+        },
+        "a": {
+            "id": "138",
+            "title": "Sevilla",
+            "short_title": "SEV"
+        },
+        "goals": {
+            "h": "0",
+            "a": "1"
+        },
+        "xG": {
+            "h": "0.363545",
+            "a": "1.11673"
+        },
+        "datetime": "2019-11-24 20:00:00",
+        "forecast": {
+            "w": 0.12009188593331167,
+            "d": 0.3297776031249937,
+            "l": 0.550130510940285
+        },
+        "result": "w"
+    },
+    {
+        "id": "12171",
+        "isResult": true,
+        "side": "h",
+        "h": {
+            "id": "138",
+            "title": "Sevilla",
+            "short_title": "SEV"
+        },
+        "a": {
+            "id": "159",
+            "title": "Leganes",
+            "short_title": "LEG"
+        },
+        "goals": {
+            "h": "1",
+            "a": "0"
+        },
+        "xG": {
+            "h": "2.44081",
+            "a": "1.05322"
+        },
+        "datetime": "2019-12-01 11:00:00",
+        "forecast": {
+            "w": 0.6785953503964488,
+            "d": 0.17555438890316907,
+            "l": 0.14585020969949064
+        },
+        "result": "w"
+    },
+    {
+        "id": "12179",
+        "isResult": false,
+        "side": "a",
+        "h": {
+            "id": "157",
+            "title": "Osasuna",
+            "short_title": "OSA"
+        },
+        "a": {
+            "id": "138",
+            "title": "Sevilla",
+            "short_title": "SEV"
+        },
+        "goals": {
+            "h": null,
+            "a": null
+        },
+        "xG": {
+            "h": null,
+            "a": null
+        },
+        "datetime": "2019-12-08 20:00:00"
+    },
+    {
+        "id": "12191",
+        "isResult": false,
+        "side": "h",
+        "h": {
+            "id": "138",
+            "title": "Sevilla",
+            "short_title": "SEV"
+        },
+        "a": {
+            "id": "154",
+            "title": "Villarreal",
+            "short_title": "VIL"
+        },
+        "goals": {
+            "h": null,
+            "a": null
+        },
+        "xG": {
+            "h": null,
+            "a": null
+        },
+        "datetime": "2019-12-15 17:30:00"
+    },
+    {
+        "id": "12198",
+        "isResult": false,
+        "side": "a",
+        "h": {
+            "id": "239",
+            "title": "Mallorca",
+            "short_title": "MAL"
+        },
+        "a": {
+            "id": "138",
+            "title": "Sevilla",
+            "short_title": "SEV"
+        },
+        "goals": {
+            "h": null,
+            "a": null
+        },
+        "xG": {
+            "h": null,
+            "a": null
+        },
+        "datetime": "2019-12-21 12:00:00"
+    },
+    {
+        "id": "12210",
+        "isResult": false,
+        "side": "h",
+        "h": {
+            "id": "138",
+            "title": "Sevilla",
+            "short_title": "SEV"
+        },
+        "a": {
+            "id": "147",
+            "title": "Athletic Club",
+            "short_title": "ATH"
+        },
+        "goals": {
+            "h": null,
+            "a": null
+        },
+        "xG": {
+            "h": null,
+            "a": null
+        },
+        "datetime": "2020-01-05 16:30:00"
+    },
+    {
+        "id": "12221",
+        "isResult": false,
+        "side": "a",
+        "h": {
+            "id": "150",
+            "title": "Real Madrid",
+            "short_title": "RMA"
+        },
+        "a": {
+            "id": "138",
+            "title": "Sevilla",
+            "short_title": "SEV"
+        },
+        "goals": {
+            "h": null,
+            "a": null
+        },
+        "xG": {
+            "h": null,
+            "a": null
+        },
+        "datetime": "2020-01-19 16:30:00"
+    },
+    {
+        "id": "12230",
+        "isResult": false,
+        "side": "h",
+        "h": {
+            "id": "138",
+            "title": "Sevilla",
+            "short_title": "SEV"
+        },
+        "a": {
+            "id": "155",
+            "title": "Granada",
+            "short_title": "GRA"
+        },
+        "goals": {
+            "h": null,
+            "a": null
+        },
+        "xG": {
+            "h": null,
+            "a": null
+        },
+        "datetime": "2020-01-26 16:30:00"
+    },
+    {
+        "id": "12239",
+        "isResult": false,
+        "side": "h",
+        "h": {
+            "id": "138",
+            "title": "Sevilla",
+            "short_title": "SEV"
+        },
+        "a": {
+            "id": "158",
+            "title": "Alaves",
+            "short_title": "ALA"
+        },
+        "goals": {
+            "h": null,
+            "a": null
+        },
+        "xG": {
+            "h": null,
+            "a": null
+        },
+        "datetime": "2020-02-02 16:30:00"
+    },
+    {
+        "id": "12252",
+        "isResult": false,
+        "side": "a",
+        "h": {
+            "id": "152",
+            "title": "Celta Vigo",
+            "short_title": "CEL"
+        },
+        "a": {
+            "id": "138",
+            "title": "Sevilla",
+            "short_title": "SEV"
+        },
+        "goals": {
+            "h": null,
+            "a": null
+        },
+        "xG": {
+            "h": null,
+            "a": null
+        },
+        "datetime": "2020-02-09 16:30:00"
+    },
+    {
+        "id": "12260",
+        "isResult": false,
+        "side": "h",
+        "h": {
+            "id": "138",
+            "title": "Sevilla",
+            "short_title": "SEV"
+        },
+        "a": {
+            "id": "141",
+            "title": "Espanyol",
+            "short_title": "ESP"
+        },
+        "goals": {
+            "h": null,
+            "a": null
+        },
+        "xG": {
+            "h": null,
+            "a": null
+        },
+        "datetime": "2020-02-16 16:30:00"
+    },
+    {
+        "id": "12268",
+        "isResult": false,
+        "side": "a",
+        "h": {
+            "id": "142",
+            "title": "Getafe",
+            "short_title": "GET"
+        },
+        "a": {
+            "id": "138",
+            "title": "Sevilla",
+            "short_title": "SEV"
+        },
+        "goals": {
+            "h": null,
+            "a": null
+        },
+        "xG": {
+            "h": null,
+            "a": null
+        },
+        "datetime": "2020-02-23 16:30:00"
+    },
+    {
+        "id": "12281",
+        "isResult": false,
+        "side": "h",
+        "h": {
+            "id": "138",
+            "title": "Sevilla",
+            "short_title": "SEV"
+        },
+        "a": {
+            "id": "157",
+            "title": "Osasuna",
+            "short_title": "OSA"
+        },
+        "goals": {
+            "h": null,
+            "a": null
+        },
+        "xG": {
+            "h": null,
+            "a": null
+        },
+        "datetime": "2020-03-01 16:30:00"
+    },
+    {
+        "id": "12284",
+        "isResult": false,
+        "side": "a",
+        "h": {
+            "id": "143",
+            "title": "Atletico Madrid",
+            "short_title": "ATL"
+        },
+        "a": {
+            "id": "138",
+            "title": "Sevilla",
+            "short_title": "SEV"
+        },
+        "goals": {
+            "h": null,
+            "a": null
+        },
+        "xG": {
+            "h": null,
+            "a": null
+        },
+        "datetime": "2020-03-08 16:30:00"
+    },
+    {
+        "id": "12301",
+        "isResult": false,
+        "side": "h",
+        "h": {
+            "id": "138",
+            "title": "Sevilla",
+            "short_title": "SEV"
+        },
+        "a": {
+            "id": "153",
+            "title": "Real Betis",
+            "short_title": "BET"
+        },
+        "goals": {
+            "h": null,
+            "a": null
+        },
+        "xG": {
+            "h": null,
+            "a": null
+        },
+        "datetime": "2020-03-15 16:30:00"
+    },
+    {
+        "id": "12312",
+        "isResult": false,
+        "side": "a",
+        "h": {
+            "id": "151",
+            "title": "Levante",
+            "short_title": "LEV"
+        },
+        "a": {
+            "id": "138",
+            "title": "Sevilla",
+            "short_title": "SEV"
+        },
+        "goals": {
+            "h": null,
+            "a": null
+        },
+        "xG": {
+            "h": null,
+            "a": null
+        },
+        "datetime": "2020-03-22 16:30:00"
+    },
+    {
+        "id": "12321",
+        "isResult": false,
+        "side": "h",
+        "h": {
+            "id": "138",
+            "title": "Sevilla",
+            "short_title": "SEV"
+        },
+        "a": {
+            "id": "148",
+            "title": "Barcelona",
+            "short_title": "BAR"
+        },
+        "goals": {
+            "h": null,
+            "a": null
+        },
+        "xG": {
+            "h": null,
+            "a": null
+        },
+        "datetime": "2020-04-05 16:30:00"
+    },
+    {
+        "id": "12331",
+        "isResult": false,
+        "side": "a",
+        "h": {
+            "id": "154",
+            "title": "Villarreal",
+            "short_title": "VIL"
+        },
+        "a": {
+            "id": "138",
+            "title": "Sevilla",
+            "short_title": "SEV"
+        },
+        "goals": {
+            "h": null,
+            "a": null
+        },
+        "xG": {
+            "h": null,
+            "a": null
+        },
+        "datetime": "2020-04-12 16:30:00"
+    },
+    {
+        "id": "12341",
+        "isResult": false,
+        "side": "h",
+        "h": {
+            "id": "138",
+            "title": "Sevilla",
+            "short_title": "SEV"
+        },
+        "a": {
+            "id": "231",
+            "title": "Real Valladolid",
+            "short_title": "VAL"
+        },
+        "goals": {
+            "h": null,
+            "a": null
+        },
+        "xG": {
+            "h": null,
+            "a": null
+        },
+        "datetime": "2020-04-22 19:00:00"
+    },
+    {
+        "id": "12347",
+        "isResult": false,
+        "side": "a",
+        "h": {
+            "id": "159",
+            "title": "Leganes",
+            "short_title": "LEG"
+        },
+        "a": {
+            "id": "138",
+            "title": "Sevilla",
+            "short_title": "SEV"
+        },
+        "goals": {
+            "h": null,
+            "a": null
+        },
+        "xG": {
+            "h": null,
+            "a": null
+        },
+        "datetime": "2020-04-26 16:30:00"
+    },
+    {
+        "id": "12360",
+        "isResult": false,
+        "side": "h",
+        "h": {
+            "id": "138",
+            "title": "Sevilla",
+            "short_title": "SEV"
+        },
+        "a": {
+            "id": "156",
+            "title": "Eibar",
+            "short_title": "EIB"
+        },
+        "goals": {
+            "h": null,
+            "a": null
+        },
+        "xG": {
+            "h": null,
+            "a": null
+        },
+        "datetime": "2020-05-03 16:30:00"
+    },
+    {
+        "id": "12363",
+        "isResult": false,
+        "side": "a",
+        "h": {
+            "id": "147",
+            "title": "Athletic Club",
+            "short_title": "ATH"
+        },
+        "a": {
+            "id": "138",
+            "title": "Sevilla",
+            "short_title": "SEV"
+        },
+        "goals": {
+            "h": null,
+            "a": null
+        },
+        "xG": {
+            "h": null,
+            "a": null
+        },
+        "datetime": "2020-05-10 16:30:00"
+    },
+    {
+        "id": "12381",
+        "isResult": false,
+        "side": "h",
+        "h": {
+            "id": "138",
+            "title": "Sevilla",
+            "short_title": "SEV"
+        },
+        "a": {
+            "id": "239",
+            "title": "Mallorca",
+            "short_title": "MAL"
+        },
+        "goals": {
+            "h": null,
+            "a": null
+        },
+        "xG": {
+            "h": null,
+            "a": null
+        },
+        "datetime": "2020-05-13 19:00:00"
+    },
+    {
+        "id": "12389",
+        "isResult": false,
+        "side": "a",
+        "h": {
+            "id": "140",
+            "title": "Real Sociedad",
+            "short_title": "SOC"
+        },
+        "a": {
+            "id": "138",
+            "title": "Sevilla",
+            "short_title": "SEV"
+        },
+        "goals": {
+            "h": null,
+            "a": null
+        },
+        "xG": {
+            "h": null,
+            "a": null
+        },
+        "datetime": "2020-05-17 16:30:00"
+    },
+    {
+        "id": "12402",
+        "isResult": false,
+        "side": "h",
+        "h": {
+            "id": "138",
+            "title": "Sevilla",
+            "short_title": "SEV"
+        },
+        "a": {
+            "id": "146",
+            "title": "Valencia",
+            "short_title": "VAL"
+        },
+        "goals": {
+            "h": null,
+            "a": null
+        },
+        "xG": {
+            "h": null,
+            "a": null
+        },
+        "datetime": "2020-05-24 16:30:00"
+    }
+]

@@ -16,10 +16,8 @@ namespace FootballStatsApi.Domain.Entities
         public int Season { get; set; }
         public int HomeDeepPasses { get; set; }
         public int AwayDeepPasses { get; set; }
-        public double HomePasses { get; set; }
-        public double AwayPasses { get; set; }
-        public int HomeDefensiveActions { get; set; }
-        public int AwayDefensiveActions { get; set; }
+        public double HomePpda { get; set; }
+        public double AwayPpda { get; set; }
         public double ForecastHomeWin { get; set; }
         public double ForecastDraw { get; set; }
         public double ForecastAwayWin { get; set; }

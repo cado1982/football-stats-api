@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Data;
+using System.Linq;
 using System.Threading.Tasks;
 using FootballStatsApi.Domain.Repositories;
 using FootballStatsApi.Scraper.LeagueSummary.Models;
@@ -13,14 +14,17 @@ namespace FootballStatsApi.Scraper.LeagueSummary
         private readonly ILogger<FixtureDetailsManager> _logger;
         private readonly IFixtureRepository _fixtureRepository;
         private readonly ITeamRepository _teamRepository;
+        private readonly IPlayerRepository _playerRepository;
 
         public FixtureDetailsManager(
             ILogger<FixtureDetailsManager> logger,
             IFixtureRepository fixtureRepository,
-            ITeamRepository teamRepository)
+            ITeamRepository teamRepository,
+            IPlayerRepository playerRepository)
         {
             _fixtureRepository = fixtureRepository;
             _teamRepository = teamRepository;
+            _playerRepository = playerRepository;
             _logger = logger;
         }
 
@@ -43,97 +47,55 @@ namespace FootballStatsApi.Scraper.LeagueSummary
             };
             await _teamRepository.InsertMultipleAsync(teams, conn);
 
-            
+            var details = new Entities.FixtureDetails
+            {
+                FixtureId = matchInfo.Id,
+                HomeDeepPasses = matchInfo.HomeDeepPasses,
+                AwayDeepPasses = matchInfo.AwayDeepPasses,
+                HomeExpectedGoals = matchInfo.HomeExpectedGoals,
+                AwayExpectedGoals = matchInfo.AwayExpectedGoals,
+                HomeGoals = matchInfo.HomeGoals,
+                AwayGoals = matchInfo.AwayGoals,
+                HomeShots = matchInfo.HomeShots,
+                AwayShots = matchInfo.AwayShots,
+                ForecastHomeWin = matchInfo.HomeWinForecast,
+                ForecastDraw = matchInfo.DrawForecast,
+                ForecastAwayWin = matchInfo.AwayWinForecast,
+                HomeShotsOnTarget = matchInfo.HomeShotsOnTarget,
+                AwayShotsOnTarget = matchInfo.AwayShotsOnTarget,
+                HomePpda = matchInfo.HomePpda,
+                AwayPpda = matchInfo.AwayPpda
+            };
 
-
-            /*
-            console.log(`Attempting to save match info for fixture ${data.id}. ${data.team_h} vs ${data.team_a} in season ${data.season} and competition ${data.league}`);
-
-            const insertTeamsQuery = `INSERT INTO "stats"."team" (id, name, short_name) VALUES (${data.h},'${data.team_h}',''),(${data.a},'${data.team_a}','') ON CONFLICT(id) DO NOTHING;`;
-            const insertMatchInfoQuery = `INSERT INTO "stats"."fixture" 
-                (
-                    fixture_id,
-                    home_team_id,
-                    away_team_id,
-                    season_id,
-                    competition_id,
-                    is_result,
-                    home_goals,
-                    away_goals,
-                    expected_home_goals,
-                    expected_away_goals,
-                    home_win_forecast,
-                    home_draw_forecast,
-                    home_loss_forecast,
-                    home_deep,
-                    away_deep,
-                    home_ppda,
-                    away_ppda,
-                    home_shots,
-                    away_shots,
-                    home_shots_on_target,
-                    away_shots_on_target,
-                    datetime
-                ) 
-                VALUES 
-                (
-                    ${data.id},
-                    ${data.h},
-                    ${data.a},
-                    ${data.season},
-                    ${data.league_id},
-                    true,
-                    ${data.h_goals},
-                    ${data.a_goals},
-                    ${data.h_xg},
-                    ${data.a_xg},
-                    ${data.h_w},
-                    ${data.h_d},
-                    ${data.h_l},
-                    ${data.h_deep},
-                    ${data.a_deep},
-                    ${data.h_ppda},
-                    ${data.a_ppda},
-                    ${data.h_shot},
-                    ${data.a_shot},
-                    ${data.h_shotOnTarget},
-                    ${data.a_shotOnTarget},
-                    '${data.date}'
-                )
-                ON CONFLICT(fixture_id) DO UPDATE SET 
-                is_result = EXCLUDED.is_result,
-                home_goals = EXCLUDED.home_goals,
-                away_goals = EXCLUDED.away_goals,
-                expected_home_goals = EXCLUDED.expected_home_goals,
-                expected_away_goals = EXCLUDED.expected_away_goals,
-                home_win_forecast = EXCLUDED.home_win_forecast,
-                home_draw_forecast = EXCLUDED.home_draw_forecast,
-                home_loss_forecast = EXCLUDED.home_loss_forecast,
-                home_deep = EXCLUDED.home_deep,
-                away_deep = EXCLUDED.away_deep,
-                home_ppda = EXCLUDED.home_ppda,
-                away_ppda = EXCLUDED.away_ppda,
-                home_shots = EXCLUDED.home_shots,
-                away_shots = EXCLUDED.away_shots,
-                home_shots_on_target = EXCLUDED.home_shots_on_target,
-                away_shots_on_target = EXCLUDED.away_shots_on_target,
-                datetime = EXCLUDED.datetime;`;
-
-            await pool.query(insertTeamsQuery);
-            await pool.query(insertMatchInfoQuery);
-            console.log('Saved match info');
-            */
+            await _fixtureRepository.Update(details, conn);
         }
 
         public async Task ProcessRosters(FixtureRosters rosters, IDbConnection conn)
         {
-            /*
-            console.log(`Attempting to save players for fixture ${matchInfo.id}`);
+            var homePlayers = rosters.Home.Values.ToList();
+            var awayPlayers = rosters.Away.Values.ToList();
+            var players = homePlayers.Union(awayPlayers).ToList();
+            
+            var playerEntities = players.Select(p => new Entities.Player 
+            {
+                Id = p.PlayerId,
+                Name = p.PlayerName
+            }).ToList();
 
-            let playerValues = '';
-            let fixturePlayerValues = '';
+            await _playerRepository.InsertPlayersAsync(playerEntities, conn);
 
-            for (const rosterId in data.h) {
+            var fixturePlayers = players.Select(p => new Entities.FixturePlayer
+            {
+                ExpectedGoalsBuildup = p.ExpectedGoalsBuildup,
+                ExpectedGoalsChain = p.ExpectedGoalsChain,
+                Minutes = p.Time,
+                Player = new Entities.Player { Id = p.PlayerId },
+                Finish making this object to pass to the fixture repository
+            }).ToList();
+
+            
+
+            /*for (const rosterId in data.h) {
                 if (data.h.hasOwnProperty(rosterId)) {
                     const player = data.h[rosterId];
 

@@ -7,4 +7,6 @@
     ALTER COLUMN "home_draw_forecast" SET DATA TYPE real NOT NULL,
     ALTER COLUMN "home_loss_forecast" SET DATA TYPE real NOT NULL,
     ALTER COLUMN "home_deep" SET DATA TYPE integer NOT NULL,
-    ALTER COLUMN "away_deep" SET DATA TYPE integer NOT NULL;
+    ALTER COLUMN "away_deep" SET DATA TYPE integer NOT NULL,
+    ALTER COLUMN "home_ppda" SET DATA TYPE integer NOT NULL,
+    ALTER COLUMN "away_ppda" SET DATA TYPE integer NOT NULL;

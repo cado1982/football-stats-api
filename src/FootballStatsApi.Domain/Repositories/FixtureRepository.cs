@@ -111,6 +111,44 @@ namespace FootballStatsApi.Domain.Repositories
             }
         }
 
+        public async Task InsertFixturePlayers(List<FixturePlayer> players, int fixtureId, IDbConnection connection)
+        {
+            try
+            {
+                await connection.ExecuteAsync(FixtureSql.InsertFixturePlayers, players.Select(p => new 
+                {
+                    FixtureId = fixtureId,
+                    PlayerId = p.,
+                    TeamId = p.,
+                    Time = p.,
+                    Position = p.,
+                    YellowCards = p.,
+                    RedCards = p.,
+                    ReplacedById = p.,
+                    ReplacedId = p.,
+                    KeyPasses = p.,
+                    Assists = p.,
+                    ExpectedGoalsChain = p.,
+                    ExpectedGoalsBuildup = p.,
+                    PositionOrder = p.,
+                    Goals = p.,
+                    OwnGoals = p.,
+                    Shots = p.,
+                    ExpectedGoals = p.,
+                    ExpectedAssists = p.,
+                }));
+
+                return shots.ToList();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, $"Unable to insert fixture players for fixture {fixtureId}");
+                throw;
+            }
+            
+
+        }
+
         public async Task<List<int>> InsertMultipleAsync(List<FixtureDetails> fixtures, IDbConnection connection)
         {
             try
@@ -131,10 +169,8 @@ namespace FootballStatsApi.Domain.Repositories
                     DrawForecast = f.ForecastDraw,
                     AwayWinForecast = f.ForecastAwayWin,
                     DateTime = f.DateTime,
-                    HomePasses = f.HomePasses,
-                    AwayPasses = f.AwayPasses,
-                    HomeDefensiveActions = f.HomeDefensiveActions,
-                    AwayDefensiveActions = f.AwayDefensiveActions
+                    HomePpda = f.HomePpda,
+                    AwayPpda = f.AwayPpda
                 }));
 
                 return ids.ToList();
@@ -162,6 +198,39 @@ namespace FootballStatsApi.Domain.Repositories
                 _logger.LogError(ex, $"Unable to get fixture already saved status for fixture {fixtureId}");
                 throw;
             }
+        }
+
+        public async Task Update(FixtureDetails fixture, IDbConnection connection)
+        {
+            try
+            {
+                var parameters = new DynamicParameters();
+
+                parameters.Add("@FixtureId", fixture.FixtureId);
+                parameters.Add("@HomeDeep", fixture.HomeDeepPasses);
+                parameters.Add("@AwayDeep", fixture.AwayDeepPasses);
+                parameters.Add("@ExpectedHomeGoals", fixture.HomeExpectedGoals);
+                parameters.Add("@ExpectedAwayGoals", fixture.AwayExpectedGoals);
+                parameters.Add("@HomeGoals", fixture.HomeGoals);
+                parameters.Add("@AwayGoals", fixture.AwayGoals);
+                parameters.Add("@HomeShots", fixture.HomeShots);
+                parameters.Add("@AwayShots", fixture.AwayShots);
+                parameters.Add("@HomeWinForecast", fixture.ForecastHomeWin);
+                parameters.Add("@DrawForecast", fixture.ForecastDraw);
+                parameters.Add("@AwayWinForecast", fixture.ForecastAwayWin);
+                parameters.Add("@HomeShotsOnTarget", fixture.HomeShotsOnTarget);
+                parameters.Add("@AwayShotsOnTarget", fixture.AwayShotsOnTarget);
+                parameters.Add("@HomePpda", fixture.HomePpda);
+                parameters.Add("@AwayPpda", fixture.AwayPpda);
+
+                await connection.ExecuteAsync(FixtureSql.Update, parameters);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, $"Unable to update fixture {fixture.FixtureId}");
+                throw;
+            }
+            
         }
 
         public async Task UpdateDetailsSavedAsync(int fixtureId, IDbConnection connection)

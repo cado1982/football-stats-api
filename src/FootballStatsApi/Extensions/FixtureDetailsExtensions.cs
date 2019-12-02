@@ -24,8 +24,8 @@ namespace FootballStatsApi.Extensions
                 },
                 Ppda = new HomeAway<double>
                 {
-                    Home = entity.HomeDefensiveActions == 0 ? 0 : entity.AwayPasses / entity.HomeDefensiveActions,
-                    Away = entity.AwayDefensiveActions == 0 ? 0 : entity.HomePasses / entity.AwayDefensiveActions
+                    Home = entity.HomePpda,
+                    Away = entity.AwayPpda
                 },
                 Forecast = new FixtureForecast
                 {
