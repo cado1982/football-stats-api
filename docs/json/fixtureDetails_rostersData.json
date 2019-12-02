@@ -1,0 +1,52 @@
+{
+    "h": {
+        "361248": {
+            "id": "361248",
+            "goals": "0",
+            "own_goals": "0",
+            "shots": "0",
+            "xG": "0",
+            "time": "90",
+            "player_id": "5603",
+            "team_id": "73",
+            "position": "GK",
+            "player": "Aaron Ramsdale",
+            "h_a": "h",
+            "yellow_card": "0",
+            "red_card": "0",
+            "roster_in": "0",
+            "roster_out": "0",
+            "key_passes": "0",
+            "assists": "0",
+            "xA": "0",
+            "xGChain": "0.09682872146368027",
+            "xGBuildup": "0.09682872146368027",
+            "positionOrder": "1"
+        }
+    },
+    "a": {
+        "361260": {
+            "id": "361260",
+            "goals": "0",
+            "own_goals": "0",
+            "shots": "0",
+            "xG": "0",
+            "time": "90",
+            "player_id": "546",
+            "team_id": "89",
+            "position": "GK",
+            "player": "David de Gea",
+            "h_a": "a",
+            "yellow_card": "0",
+            "red_card": "0",
+            "roster_in": "0",
+            "roster_out": "0",
+            "key_passes": "0",
+            "assists": "0",
+            "xA": "0",
+            "xGChain": "0.052547477185726166",
+            "xGBuildup": "0.052547477185726166",
+            "positionOrder": "1"
+        }
+    }
+}

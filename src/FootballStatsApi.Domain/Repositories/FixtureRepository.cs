@@ -96,11 +96,26 @@ namespace FootballStatsApi.Domain.Repositories
             }
         }
 
-        public async Task InsertMultipleAsync(List<FixtureDetails> fixtures, IDbConnection connection)
+        public async Task<List<int>> GetFixturesToCheckAsync(IDbConnection connection)
         {
             try
             {
-                await connection.ExecuteAsync(FixtureSql.InsertMultiple, fixtures.Select(f => new
+                var shots = await connection.QueryAsync<int>(FixtureSql.GetFixtureIdsToCheck);
+
+                return shots.ToList();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, $"Unable to get recently ended fixtures");
+                throw;
+            }
+        }
+
+        public async Task<List<int>> InsertMultipleAsync(List<FixtureDetails> fixtures, IDbConnection connection)
+        {
+            try
+            {
+                var ids = await connection.QueryAsync<int>(FixtureSql.InsertMultiple, fixtures.Select(f => new
                 {
                     FixtureId = f.FixtureId,
                     HomeTeamId = f.HomeTeam.Id,
@@ -115,12 +130,18 @@ namespace FootballStatsApi.Domain.Repositories
                     HomeWinForecast = f.ForecastHomeWin,
                     DrawForecast = f.ForecastDraw,
                     AwayWinForecast = f.ForecastAwayWin,
-                    DateTime = f.DateTime
+                    DateTime = f.DateTime,
+                    HomePasses = f.HomePasses,
+                    AwayPasses = f.AwayPasses,
+                    HomeDefensiveActions = f.HomeDefensiveActions,
+                    AwayDefensiveActions = f.AwayDefensiveActions
                 }));
+
+                return ids.ToList();
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, $"Insert multiple fixtures");
+                _logger.LogError(ex, $"Unable to insert multiple fixtures");
                 throw;
             }
         }
@@ -139,6 +160,23 @@ namespace FootballStatsApi.Domain.Repositories
             catch (Exception ex)
             {
                 _logger.LogError(ex, $"Unable to get fixture already saved status for fixture {fixtureId}");
+                throw;
+            }
+        }
+
+        public async Task UpdateDetailsSavedAsync(int fixtureId, IDbConnection connection)
+        {
+            try
+            {
+                var parameters = new DynamicParameters();
+
+                parameters.Add("@FixtureId", fixtureId);
+
+                await connection.ExecuteAsync(FixtureSql.UpdateDetailsSaved, parameters);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, $"Unable to update details saved column for fixture {fixtureId}");
                 throw;
             }
         }

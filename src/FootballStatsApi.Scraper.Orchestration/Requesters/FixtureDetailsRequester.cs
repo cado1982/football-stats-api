@@ -1,7 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
 using System.Threading.Tasks;
 using FootballStatsApi.Domain.Helpers;
 using FootballStatsApi.Domain.Repositories;
@@ -13,33 +9,33 @@ using RabbitMQ;
 
 namespace FootballStatsApi.Scraper.Orchestration.Requesters
 {
-    public class LeagueSummaryRequester : IRequester
+    public class FixtureDetailsRequester : IRequester
     {
-        private int _delaySeconds = 3600; // 1 hour
+        private int _delaySeconds = 60 * 5; // 5 minutes
         private bool _isRunning = false;
-        private readonly ILogger<LeagueSummaryRequester> _logger;
+        private readonly ILogger<FixtureDetailsRequester> _logger;
         private readonly IAmqpService _amqpService;
-        private readonly ICompetitionRepository _competitionRepository;
+        private readonly IFixtureRepository _fixtureRepository;
         private readonly IConnectionProvider _connectionProvider;
-        private const string _routingKey = "stats.getLeagueSummary";
+        private const string _routingKey = "stats.getFixtureDetails";
 
-        public LeagueSummaryRequester(
-            ILogger<LeagueSummaryRequester> logger,
+        public FixtureDetailsRequester(
+            ILogger<FixtureDetailsRequester> logger,
             IAmqpService amqpService,
-            ICompetitionRepository competitionRepository,
+            IFixtureRepository fixtureRepository,
             IConnectionProvider connectionProvider)
         {
             _logger = logger;
             _amqpService = amqpService;
-            _competitionRepository = competitionRepository;
+            _fixtureRepository = fixtureRepository;
             _connectionProvider = connectionProvider;
         }
 
         public async Task Run()
         {
-            _logger.LogDebug("LeagueSummaryRequester Run()");
+            _logger.LogDebug("FixtureDetailsRequester Run()");
 
-            await _amqpService.DeclareLeagueSummaryQueue();
+            await _amqpService.DeclareFixtureDetailsQueue();
 
             _isRunning = true;
 
@@ -58,14 +54,14 @@ namespace FootballStatsApi.Scraper.Orchestration.Requesters
 
             using (var conn = _connectionProvider.GetOpenConnection())
             {
-                // 1. Get all competitions
-                var competitions = await _competitionRepository.GetAsync(conn);
+                // 1. Get all fixtures that should've finished by now that we didn't save yet
+                var fixtureIds = await _fixtureRepository.GetFixturesToCheckAsync(conn);
 
-                // 2. Fire off a GetLeagueSummaryMessage for each competition
-                foreach (var competition in competitions)
+                // 2. Send an AMQP message to request the details be updated
+                foreach (var fixtureId in fixtureIds)
                 {
-                    var message = new GetLeagueSummaryMessage();
-                    message.CompetitionId = competition.Id;
+                    var message = new GetFixtureDetailsMessage();
+                    message.FixtureId = fixtureId;
 
                     _logger.LogInformation($"Sending AMQP message to '{_routingKey}'. {JsonConvert.SerializeObject(message)}");
                     await _amqpService.Send(message, _routingKey);

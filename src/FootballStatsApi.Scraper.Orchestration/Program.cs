@@ -35,24 +35,18 @@ namespace FootballStatsApi.Scraper.Orchestration
             var amqpService = _serviceProvider.GetService<IAmqpService>();
             amqpService.Connect().Wait();
 
-            var requesters = _serviceProvider.GetServices<IRequester>();
-            var tasks = new List<Task>();
-            foreach (var requester in requesters)
-            {
-                var task = requester.Run();
-                tasks.Add(task);
-            }
+            var leagueSummaryRequester = _serviceProvider.GetService<LeagueSummaryRequester>();
+            var fixtureDetailsRequester = _serviceProvider.GetService<FixtureDetailsRequester>();
 
-            Task.WhenAll(tasks).Wait();
-
-            Console.WriteLine("Done");
+            Task.WhenAll(leagueSummaryRequester.Run()/*, fixtureDetailsRequester.Run()*/).Wait();
         }
 
         private static void ConfigureServices(IServiceCollection services)
         {
             services.AddLogging(o => o.AddConsole());
 
-            services.AddSingleton<IRequester, LeagueSummaryRequester>();
+            services.AddSingleton<LeagueSummaryRequester>();
+            services.AddSingleton<FixtureDetailsRequester>();
 
             var dbInfo = new DatabaseConnectionInfo();
             dbInfo.ConnectionString = _configuration.GetConnectionString("Football");
@@ -63,6 +57,7 @@ namespace FootballStatsApi.Scraper.Orchestration
             services.AddSingleton<IAmqpService, AmqpService>();
             services.AddSingleton<IConnectionProvider, ConnectionProvider>();
             services.AddSingleton<ICompetitionRepository, CompetitionRepository>();
+            services.AddSingleton<IFixtureRepository, FixtureRepository>();
         }
     }
 }

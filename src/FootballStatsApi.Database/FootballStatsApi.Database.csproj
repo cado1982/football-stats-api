@@ -21,6 +21,8 @@
     <None Remove="Scripts\Script0012_Add team id to fixture shot and player tables.sql" />
     <None Remove="Scripts\Script0013_Add shots to fixture table.sql" />
     <None Remove="Scripts\Script0014_Fix ppda and deep column types.sql" />
+    <None Remove="Scripts\Script0015_Add meta data to fixture table.sql" />
+    <None Remove="Scripts\Script0016_Add ppda breakdown stats to fixture table.sql" />
   </ItemGroup>
 
   <ItemGroup>
@@ -40,10 +42,12 @@
     <EmbeddedResource Include="Scripts\Script0008_Add deep and ppda to fixture table.sql" />
     <EmbeddedResource Include="Scripts\Script0009_Add fixture shot table.sql" />
     <EmbeddedResource Include="Scripts\Script0010_Add fixture player table.sql" />
-    <EmbeddedResource Include="Scripts\Script0014_Fix ppda and deep column types.sql" />
-    <EmbeddedResource Include="Scripts\Script0013_Add shots to fixture table.sql" />
-    <EmbeddedResource Include="Scripts\Script0012_Add team id to fixture shot and player tables.sql" />
     <EmbeddedResource Include="Scripts\Script0011_Add assisted by to fixture shot table.sql" />
+    <EmbeddedResource Include="Scripts\Script0012_Add team id to fixture shot and player tables.sql" />
+    <EmbeddedResource Include="Scripts\Script0013_Add shots to fixture table.sql" />
+    <EmbeddedResource Include="Scripts\Script0014_Fix ppda and deep column types.sql" />
+    <EmbeddedResource Include="Scripts\Script0015_Add meta data to fixture table.sql" />
+    <EmbeddedResource Include="Scripts\Script0016_Add ppda breakdown stats to fixture table.sql" />
 </ItemGroup>
 
   <ItemGroup>

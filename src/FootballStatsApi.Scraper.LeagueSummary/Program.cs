@@ -16,7 +16,6 @@ namespace FootballStatsApi.Scraper.LeagueSummary
     {
         private static IServiceProvider _serviceProvider;
         private static IConfigurationRoot _configuration;
-
         private static Browser _browser;
 
         public static void Main(string[] args)
@@ -45,8 +44,15 @@ namespace FootballStatsApi.Scraper.LeagueSummary
                 var amqpService = _serviceProvider.GetService<IAmqpService>();
                 amqpService.Connect().Wait();
 
-                var listener = _serviceProvider.GetService<LeagueSummaryListener>();
-                listener.Listen().Wait();
+                var listeners = _serviceProvider.GetServices<IListener>();
+                var tasks = new List<Task>();
+                foreach (var listener in listeners)
+                {
+                    tasks.Add(listener.Listen());
+                }
+
+                Task.WhenAll(tasks).Wait();
+
             }
             catch (Exception ex)
             {
@@ -60,8 +66,10 @@ namespace FootballStatsApi.Scraper.LeagueSummary
         {
             services.AddLogging(o => o.AddConsole());
 
-            services.AddSingleton<LeagueSummaryListener>();
+            services.AddSingleton<IListener, LeagueSummaryListener>();
+            services.AddSingleton<IListener, FixtureDetailsListener>();
             services.AddSingleton<LeagueSummaryScraper>();
+            services.AddSingleton<FixtureDetailsScraper>();
 
             var dbInfo = new DatabaseConnectionInfo();
             dbInfo.ConnectionString = _configuration.GetConnectionString("Football");
@@ -78,10 +86,14 @@ namespace FootballStatsApi.Scraper.LeagueSummary
             services.AddSingleton<ITeamSummaryRepository, TeamSummaryRepository>();
             services.AddSingleton<IFixtureRepository, FixtureRepository>();
 
+            services.AddSingleton<ILeagueSummaryManager, LeagueSummaryManager>();
+
             _browser = Puppeteer.LaunchAsync(new LaunchOptions
             {
                 Headless = true
             }).Result;
+            services.AddSingleton(_browser);
+            
         }
     }
 }

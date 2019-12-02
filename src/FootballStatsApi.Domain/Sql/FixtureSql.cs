@@ -8,8 +8,10 @@
             f.season_id as season,
             f.home_deep as homedeeppasses,
             f.away_deep as awaydeeppasses,
-            f.home_ppda as homeppda,
-            f.away_ppda as awayppda,
+            f.home_passes as homepasses,
+            f.away_passes as awaypasses,
+            f.home_defensive_actions as homedefensiveactions,
+            f.away_defensive_actions as awaydefensiveactions,
             f.home_win_forecast as forecasthomewin,
             f.home_draw_forecast as forecastdraw,
             f.home_loss_forecast as forecastawaywin,
@@ -111,15 +113,73 @@
         public static string IsFixtureSaved = @"SELECT is_result FROM ""stats"".""fixture"" WHERE fixture_id = @FixtureId";
 
         public static string InsertMultiple = @" 
-            INSERT INTO ""stats"".""fixture"" (fixture_id,home_team_id,away_team_id,season_id,competition_id,
-                is_result,home_goals,away_goals,expected_home_goals,expected_away_goals,
-                home_win_forecast,home_draw_forecast,home_loss_forecast,datetime) VALUES (@FixtureId, @HomeTeamId,
-                @AwayTeamId, @SeasonId, @CompetitionId, @IsResult, @HomeGoals, @AwayGoals,
-                @ExpectedHomeGoals, @ExpectedAwayGoals, @HomeWinForecast, @DrawForecast, @AwayWinForecast,
-                @DateTime)
-            ON CONFLICT(fixture_id) DO UPDATE SET is_result = EXCLUDED.is_result, home_goals = EXCLUDED.home_goals,
-            away_goals = EXCLUDED.away_goals, expected_home_goals = EXCLUDED.expected_home_goals, expected_away_goals = EXCLUDED.expected_away_goals,
-            home_win_forecast = EXCLUDED.home_win_forecast, home_draw_forecast = EXCLUDED.home_draw_forecast,
-            home_loss_forecast = EXCLUDED.home_loss_forecast, datetime = EXCLUDED.datetime;";
+            INSERT INTO ""stats"".""fixture"" (
+                fixture_id,
+                home_team_id,
+                away_team_id,
+                season_id,
+                competition_id,
+                is_result,
+                datetime,
+                details_saved
+            ) VALUES (
+                @FixtureId,
+                @HomeTeamId,
+                @AwayTeamId,
+                @SeasonId,
+                @CompetitionId,
+                @IsResult,
+                @DateTime,
+                NULL
+            )
+            ON CONFLICT(fixture_id) UPDATE SET
+                home_team_id = EXCLUDED.home_team_id,
+                away_team_id = EXCLUDED.away_team_id,
+                season_id = EXCLUDED.season_id,
+                competition_id = EXCLUDED.competition_id,
+                is_result = EXCLUDED.is_result,
+                datetime = EXCLUDED.datetime;";
+
+        public static string Update = @"
+            UPDATE 
+                ""stats"".""fixture"" 
+            SET
+                home_team_id = @HomeTeamId, 
+                away_team_id = @AwayTeamId,
+                season_id = @SeasonId,
+                competition_id = @CompetitionId,
+                is_result = @IsResult,
+                home_goals = @HomeGoals,
+                away_goals = @AwayGoals,
+                expected_home_goals = @ExpectedHomeGoals,
+                expected_away_goals = @ExpectedAwayGoals,
+                home_win_forecast = @HomeWinForecast,
+                home_draw_forecast = @DrawForecast,
+                home_loss_forecast = @AwayWinForecast,
+                datetime = @DateTime,
+                home_passes = @HomePasses,
+                away_passes = @AwayPasses,
+                home_defensive_actions = @HomeDefensiveActions,
+                away_defensive_actions = @AwayDefensiveActions,
+                details_saved = @DetailsSaved
+            WHERE
+                fixture_id = @FixtureId";
+        
+        public static string GetFixtureIdsToCheck = @"
+            SELECT
+                fixture_id
+            FROM
+                ""stats"".""fixture""
+            WHERE
+                datetime < NOW() - INTERVAL '100 minutes' AND
+                details_saved IS NULL;";
+
+        public static string UpdateDetailsSaved = @"
+            UPDATE
+                ""stats"".""fixture""
+            SET
+                details_saved = NOW()
+            WHERE
+                fixture_id = @FixtureId;";
     }
 }

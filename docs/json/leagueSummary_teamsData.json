@@ -1,0 +1,33 @@
+{
+    "138": {
+        "id": "138",
+        "title": "Sevilla",
+        "history": [{
+            "h_a": "a",
+            "xG": 2.40044,
+            "xGA": 0.145879,
+            "npxG": 2.40044,
+            "npxGA": 0.145879,
+            "ppda": {
+                "att": 256,
+                "def": 23
+            },
+            "ppda_allowed": {
+                "att": 327,
+                "def": 29
+            },
+            "deep": 6,
+            "deep_allowed": 0,
+            "scored": 2,
+            "missed": 0,
+            "xpts": 2.9074,
+            "result": "w",
+            "date": "2019-08-18 18:00:00",
+            "wins": 1,
+            "draws": 0,
+            "loses": 0,
+            "pts": 3,
+            "npxGD": 2.2545610000000003
+        }]
+    }
+}

@@ -8,17 +8,17 @@ using PuppeteerSharp;
 namespace FootballStatsApi.Scraper.LeagueSummary
 {
 
-    public class LeagueSummaryListener : IListener
+    public class FixtureDetailsListener : IListener
     {
         private readonly IAmqpService _amqpService;
         private readonly ICompetitionRepository _competitionRepository;
-        private readonly LeagueSummaryScraper _scraper;
+        private readonly FixtureDetailsScraper _scraper;
         private readonly IConnectionProvider _connectionProvider;
 
-        public LeagueSummaryListener(
+        public FixtureDetailsListener(
             IAmqpService amqpService,
             ICompetitionRepository competitionRepository,
-            LeagueSummaryScraper scraper,
+            FixtureDetailsScraper scraper,
             IConnectionProvider connectionProvider)
         {
             _competitionRepository = competitionRepository;
@@ -29,11 +29,11 @@ namespace FootballStatsApi.Scraper.LeagueSummary
 
         public async Task Listen()
         {
-            await _amqpService.DeclareLeagueSummaryQueue();
+            await _amqpService.DeclareFixtureDetailsQueue();
 
-            await _amqpService.SubscribeToQueue<GetLeagueSummaryMessage>("getLeagueSummary", async s =>
+            await _amqpService.SubscribeToQueue<GetFixtureDetailsMessage>("getFixtureDetails", async s =>
             {
-                await _scraper.Run(s.CompetitionId);
+                await _scraper.Run(s.FixtureId);
             });
         }
     }

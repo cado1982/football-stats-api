@@ -3,10 +3,13 @@ services:
   rabbitmq:
     image: rabbitmq:3-management
     container_name: fsa-rabbitmq
+    restart: always
     logging:
       driver: none
     expose:
       - 5672
+    ports:
+      - "8080:15672"
   scraper-orchestration:
     depends_on:
       - db
@@ -46,6 +49,8 @@ services:
       POSTGRES_DB: football
     expose:
       - "5432"
+    ports:
+      - "8090:5432"
   # pg-admin:
   #   image: dpage/pgadmin4
   #   container_name: fsa-pgadmin

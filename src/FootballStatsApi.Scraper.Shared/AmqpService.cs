@@ -95,11 +95,22 @@ namespace FootballStatsApi.Scraper.Shared
         {
             var queueArgs = new Dictionary<string, object>
             {
-                { "x-message-ttl", 10000 }
+                { "x-message-ttl", 60 * 60 * 1000 } // 1 hour
             };
 
             await DeclareQueue("getLeagueSummary", arguments: queueArgs);
             await BindQueue("getLeagueSummary", "amq.topic", "stats.getLeagueSummary");
+        }
+
+        public async Task DeclareFixtureDetailsQueue()
+        {
+            var queueArgs = new Dictionary<string, object>
+            {
+                { "x-message-ttl", 60 * 1000 } // 60 seconds
+            };
+
+            await DeclareQueue("getFixtureDetails", arguments: queueArgs);
+            await BindQueue("getFixtureDetails", "amq.topic", "stats.getFixtureDetails");
         }
 
         public Task SubscribeToQueue<T>(string queueName, Action<T> action)
