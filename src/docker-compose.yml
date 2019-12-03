@@ -49,6 +49,19 @@ services:
     environment:
       ConnectionStrings__Football: Server=db;User Id=postgres;Password=admin;Database=football;
       ASPNETCORE_ENVIRONMENT: Development
+  api:
+    depends_on:
+      - db
+      - db-migrations
+    build:
+      context: .
+      dockerfile: FootballStatsApi/app/Dockerfile
+    image: fsa-api:latest
+    ports:
+      - "8060:5000"
+    environment:
+      ConnectionStrings__Football: Server=db;User Id=postgres;Password=admin;Database=football;
+      ASPNETCORE_ENVIRONMENT: Development
   db:
     image: postgres:11
     container_name: fsa-db

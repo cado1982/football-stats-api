@@ -1,2 +1,2 @@
 FROM nginx
-COPY src/FootballStatsApi.Web/nginx/nginx.conf /etc/nginx/nginx.conf
+COPY FootballStatsApi.Web/nginx/nginx.conf /etc/nginx/nginx.conf
