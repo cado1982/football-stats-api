@@ -1,38 +1,36 @@
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Identity.UI;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using FootballStatsApi.Web.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using FootballStatsApi.Web.Helpers;
 using FootballStatsApi.Domain;
 using FootballStatsApi.Domain.Entities.Identity;
+using Microsoft.AspNetCore.DataProtection;
+using System.Security.Cryptography.X509Certificates;
 
 namespace FootballStatsApi.Web
 {
     public class Startup
     {
-        public Startup(IConfiguration configuration)
+        public IConfiguration Configuration { get; }
+        public IHostEnvironment Environment { get; } 
+
+        public Startup(IConfiguration configuration, IHostEnvironment environment)
         {
             Configuration = configuration;
+            Environment = environment;
         }
 
-        public IConfiguration Configuration { get; }
-
-        // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddDbContext<ApplicationDbContext>(options => options.UseNpgsql(Configuration.GetConnectionString("Football")));
+            services.AddDbContext<DataProtectionKeysContext>(options => options.UseNpgsql(Configuration.GetConnectionString("Football")));
             services.AddIdentity<User, Role>(options => options.SignIn.RequireConfirmedAccount = true)
                 .AddEntityFrameworkStores<ApplicationDbContext>()
                 .AddDefaultTokenProviders();
@@ -68,6 +66,19 @@ namespace FootballStatsApi.Web
                 options.SignIn.RequireConfirmedPhoneNumber = false;
             });
 
+            // Data Protection - Provides storage and encryption for anti-forgery tokens
+            if (Environment.IsDevelopment())
+            {
+                services.AddDataProtection()
+                        .PersistKeysToDbContext<DataProtectionKeysContext>();
+            }
+            else
+            {
+                services.AddDataProtection()
+                        .PersistKeysToDbContext<DataProtectionKeysContext>()
+                        .ProtectKeysWithCertificate(GetSigningCertificate());
+            }
+
             services.AddSingleton<IEmailSender, EmailSender>();
 
             services.AddControllersWithViews();
@@ -99,6 +110,15 @@ namespace FootballStatsApi.Web
                     pattern: "{controller=Home}/{action=Index}/{id?}");
                 endpoints.MapRazorPages();
             });
+        }
+
+        private X509Certificate2 GetSigningCertificate()
+        {
+            var cert = Configuration["TokenSigningCert"];
+            var secret = Configuration["TokenSigningCertSecret"];
+                
+            byte[] decodedPfxBytes = Convert.FromBase64String(cert);
+            return new X509Certificate2(decodedPfxBytes, secret);
         }
     }
 }

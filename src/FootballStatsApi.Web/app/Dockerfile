@@ -2,14 +2,14 @@ FROM mcr.microsoft.com/dotnet/core/sdk:3.0 AS build
 WORKDIR /app
 
 COPY ./src/FootballStatsApi.Domain/FootballStatsApi.Domain.csproj ./FootballStatsApi.Domain/
-COPY ./src/FootballStatsApi.Web/app/FootballStatsApi.Web.csproj ./FootballStatsApi.Web/
+COPY ./src/FootballStatsApi.Web/app/FootballStatsApi.Web.csproj ./FootballStatsApi.Web/app/
 
-RUN dotnet restore ./FootballStatsApi.Web/FootballStatsApi.Web.csproj
+RUN dotnet restore ./FootballStatsApi.Web/app/FootballStatsApi.Web.csproj
 
 COPY ./src/FootballStatsApi.Domain ./FootballStatsApi.Domain
-COPY ./src/FootballStatsApi.Web/app ./FootballStatsApi.Web
+COPY ./src/FootballStatsApi.Web/app ./FootballStatsApi.Web/app
 
-RUN dotnet publish FootballStatsApi.Web/FootballStatsApi.Web.csproj -c Release -o /publish --no-restore
+RUN dotnet publish FootballStatsApi.Web/app/FootballStatsApi.Web.csproj -c Release -o /publish --no-restore
 
 #Runtime Image Stage
 FROM mcr.microsoft.com/dotnet/core/aspnet:3.0
