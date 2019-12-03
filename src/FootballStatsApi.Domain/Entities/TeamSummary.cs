@@ -12,10 +12,10 @@ namespace FootballStatsApi.Domain.Entities
         public int GoalsFor { get; set; }
         public int GoalsAgainst { get; set; }
         public int Points { get; set; }
-        public short ExpectedGoals { get; set; }
-        public short ExpectedGoalsAgainst { get; set; }
-        public short ExpectedPoints { get; set; }
-        public short Ppda { get; set; }
+        public double ExpectedGoals { get; set; }
+        public double ExpectedGoalsAgainst { get; set; }
+        public double ExpectedPoints { get; set; }
+        public double Ppda { get; set; }
         public int DeepPasses { get; set; }
     }
 }

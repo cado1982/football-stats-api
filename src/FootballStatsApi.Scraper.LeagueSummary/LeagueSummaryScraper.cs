@@ -40,7 +40,7 @@ namespace FootballStatsApi.Scraper.LeagueSummary
             {
                 _logger.LogDebug($"Entering Run for competition {competitionId}");
 
-                using (var conn = _connectionProvider.GetOpenConnection())
+                using (var conn = await _connectionProvider.GetOpenConnectionAsync())
                 {
                     var competition = await _competitionRepository.GetByIdAsync(competitionId, conn);
 

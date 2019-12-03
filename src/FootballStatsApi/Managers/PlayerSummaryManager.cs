@@ -33,7 +33,7 @@ namespace FootballStatsApi.Managers
         {
             try
             {
-                using (var conn = _connectionProvider.GetOpenConnection())
+                using (var conn = await _connectionProvider.GetOpenConnectionAsync())
                 {
                     var competition = await _competitionRepository.GetByIdAsync(competitionId, conn);
 
@@ -64,7 +64,7 @@ namespace FootballStatsApi.Managers
         {
             try
             {
-                using (var conn = _connectionProvider.GetOpenConnection())
+                using (var conn = await _connectionProvider.GetOpenConnectionAsync())
                 {
                     var competition = await _competitionRepository.GetByIdAsync(competitionId, conn);
 

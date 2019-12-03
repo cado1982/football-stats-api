@@ -17,16 +17,16 @@ namespace FootballStatsApi.Scraper.LeagueSummary.Models
         [JsonProperty("a")]
         public FixtureTeam AwayTeam { get; set; }
 
-        [JsonProperty("goals")]
-        public Goals<int> Goals { get; set; }
+        // [JsonProperty("goals")]
+        // public Goals<int> Goals { get; set; }
 
-        [JsonProperty("xG")]
-        public Goals<double> ExpectedGoals { get; set; }
+        // [JsonProperty("xG")]
+        // public Goals<double> ExpectedGoals { get; set; }
 
         [JsonProperty("datetime")]
         public DateTimeOffset DateTime { get; set; }
 
-        [JsonProperty("forecast")]
-        public Forecast Forecast { get; set; }
+        // [JsonProperty("forecast")]
+        // public Forecast Forecast { get; set; }
     }
 }

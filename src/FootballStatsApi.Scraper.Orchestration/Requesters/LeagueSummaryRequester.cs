@@ -15,13 +15,12 @@ namespace FootballStatsApi.Scraper.Orchestration.Requesters
 {
     public class LeagueSummaryRequester : IRequester
     {
-        private int _delaySeconds = 3600; // 1 hour
+        private int _delaySeconds = 60 * 60; // 1 hour
         private bool _isRunning = false;
         private readonly ILogger<LeagueSummaryRequester> _logger;
         private readonly IAmqpService _amqpService;
         private readonly ICompetitionRepository _competitionRepository;
         private readonly IConnectionProvider _connectionProvider;
-        private const string _routingKey = "stats.getLeagueSummary";
 
         public LeagueSummaryRequester(
             ILogger<LeagueSummaryRequester> logger,
@@ -39,8 +38,6 @@ namespace FootballStatsApi.Scraper.Orchestration.Requesters
         {
             _logger.LogDebug("LeagueSummaryRequester Run()");
 
-            await _amqpService.DeclareLeagueSummaryQueue();
-
             _isRunning = true;
 
             await Process();
@@ -56,7 +53,7 @@ namespace FootballStatsApi.Scraper.Orchestration.Requesters
         {
             _logger.LogInformation("Running process iteration");
 
-            using (var conn = _connectionProvider.GetOpenConnection())
+            using (var conn = await _connectionProvider.GetOpenConnectionAsync())
             {
                 // 1. Get all competitions
                 var competitions = await _competitionRepository.GetAsync(conn);
@@ -67,8 +64,8 @@ namespace FootballStatsApi.Scraper.Orchestration.Requesters
                     var message = new GetLeagueSummaryMessage();
                     message.CompetitionId = competition.Id;
 
-                    _logger.LogInformation($"Sending AMQP message to '{_routingKey}'. {JsonConvert.SerializeObject(message)}");
-                    await _amqpService.Send(message, _routingKey);
+                    _logger.LogInformation($"Sending AMQP message to '{RoutingKey.LeagueSummary}'. {JsonConvert.SerializeObject(message)}");
+                    _amqpService.Send(message, RoutingKey.LeagueSummary);
                 }
             }
         }

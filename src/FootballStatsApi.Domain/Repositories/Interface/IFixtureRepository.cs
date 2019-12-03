@@ -14,9 +14,10 @@ namespace FootballStatsApi.Domain.Repositories
         Task<List<FixturePlayer>> GetFixturePlayersAsync(int fixtureId, IDbConnection connection);
         Task<List<int>> GetFixturesToCheckAsync(IDbConnection connection);
         Task<bool> IsFixtureSavedAsync(int fixtureId, IDbConnection connection);
-        Task<List<int>> InsertMultipleAsync(List<FixtureDetails> fixtures, IDbConnection connection);
+        Task InsertMultipleAsync(List<FixtureDetails> fixtures, IDbConnection connection);
         Task UpdateDetailsSavedAsync(int fixtureId, IDbConnection connection);
         Task Update(FixtureDetails fixture, IDbConnection connection);
-        Task InsertFixturePlayers(List<FixturePlayer> players, IDbConnection connection);
+        Task InsertFixturePlayers(List<FixturePlayer> players, int fixtureId, IDbConnection connection);
+        Task InsertFixtureShots(List<FixtureShot> shots, int fixtureId, IDbConnection connection);
     }
 }

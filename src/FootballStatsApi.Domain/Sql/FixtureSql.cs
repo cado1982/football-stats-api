@@ -132,7 +132,7 @@
                 @DateTime,
                 NULL
             )
-            ON CONFLICT(fixture_id) UPDATE SET
+            ON CONFLICT(fixture_id) DO UPDATE SET
                 home_team_id = EXCLUDED.home_team_id,
                 away_team_id = EXCLUDED.away_team_id,
                 season_id = EXCLUDED.season_id,
@@ -224,5 +224,37 @@
                 @ExpectedAssists
             )
             ON CONFLICT(player_id, fixture_id) DO NOTHING;";
+
+        public static string InsertFixtureShots = @"
+            INSERT INTO ""stats"".""fixture_shot"" (
+                shot_id,
+                player_id,
+                fixture_id,
+                team_id,
+                minute,
+                result,
+                x,
+                y,
+                expected_goal,
+                situation,
+                shot_type,
+                last_action,
+                assisted_by
+            ) VALUES (
+                @ShotId,
+                @PlayerId,
+                @FixtureId,
+                @TeamId,
+                @Minute,
+                @Result,
+                @X,
+                @Y,
+                @ExpectedGoal,
+                @Situation,
+                @ShotType,
+                @LastAction,
+                @AssistedById
+            )
+            ON CONFLICT(shot_id) DO NOTHING;";
     }
 }

@@ -38,7 +38,7 @@ namespace FootballStatsApi.Scraper.Orchestration
             var leagueSummaryRequester = _serviceProvider.GetService<LeagueSummaryRequester>();
             var fixtureDetailsRequester = _serviceProvider.GetService<FixtureDetailsRequester>();
 
-            Task.WhenAll(leagueSummaryRequester.Run()/*, fixtureDetailsRequester.Run()*/).Wait();
+            Task.WhenAll(leagueSummaryRequester.Run(), fixtureDetailsRequester.Run()).Wait();
         }
 
         private static void ConfigureServices(IServiceCollection services)

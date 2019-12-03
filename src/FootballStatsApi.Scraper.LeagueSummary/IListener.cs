@@ -4,6 +4,6 @@ namespace FootballStatsApi.Scraper.LeagueSummary
 {
     public interface IListener
     {
-        Task Listen();
+        void Listen();
     }
 }

@@ -34,7 +34,7 @@ services:
     image: fsa-scraper:latest
     security_opt: 
       - seccomp:unconfined
-    container_name: fsa-scraper
+    #container_name: fsa-scraper
     environment:
       ConnectionStrings__AMQP: amqp://guest:guest@rabbitmq
       ConnectionStrings__Football: Server=db;User Id=postgres;Password=admin;Database=football;
@@ -51,6 +51,10 @@ services:
       - "5432"
     ports:
       - "8090:5432"
+    command:
+      - "postgres"
+      - "-c"
+      - "max_connections=300"
   # pg-admin:
   #   image: dpage/pgadmin4
   #   container_name: fsa-pgadmin

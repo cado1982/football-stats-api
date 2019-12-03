@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace FootballStatsApi.Domain.Helpers
 {
@@ -19,19 +20,14 @@ namespace FootballStatsApi.Domain.Helpers
             _logger = logger;
         }
 
-        public IDbConnection GetConnection()
-        {
-            return new NpgsqlConnection(_connectionInfo.ConnectionString);
-        }
-
-        public IDbConnection GetOpenConnection()
+        public async Task<IDbConnection> GetOpenConnectionAsync()
         {
             _connectionAttempts++;
 
             try
             {
-                var connection = GetConnection();
-                connection.Open();
+                var connection = new NpgsqlConnection(_connectionInfo.ConnectionString);
+                await connection.OpenAsync();
 
                 _connectionAttempts = 0;
 
@@ -43,7 +39,7 @@ namespace FootballStatsApi.Domain.Helpers
             }
 
             // This line will only hit if an exception occurs
-            return GetOpenConnection();
+            return await GetOpenConnectionAsync();
             
         }
     }

@@ -115,45 +115,79 @@ namespace FootballStatsApi.Domain.Repositories
         {
             try
             {
+                if (players.Any(p => p.Player == null)) { throw new ArgumentException("Each FixturePlayer must have its Player property set."); }
+                if (players.Any(p => p.Team == null)) { throw new ArgumentException("Each FixturePlayer must have its Team property set."); }
+
                 await connection.ExecuteAsync(FixtureSql.InsertFixturePlayers, players.Select(p => new 
                 {
                     FixtureId = fixtureId,
-                    PlayerId = p.,
-                    TeamId = p.,
-                    Time = p.,
-                    Position = p.,
-                    YellowCards = p.,
-                    RedCards = p.,
-                    ReplacedById = p.,
-                    ReplacedId = p.,
-                    KeyPasses = p.,
-                    Assists = p.,
-                    ExpectedGoalsChain = p.,
-                    ExpectedGoalsBuildup = p.,
-                    PositionOrder = p.,
-                    Goals = p.,
-                    OwnGoals = p.,
-                    Shots = p.,
-                    ExpectedGoals = p.,
-                    ExpectedAssists = p.,
+                    PlayerId = p.Player.Id,
+                    TeamId = p.Team.Id,
+                    Time = p.Minutes,
+                    Position = p.Position,
+                    YellowCards = p.YellowCards,
+                    RedCards = p.RedCards,
+                    ReplacedById = p.ReplacedBy?.Id,
+                    ReplacedId = p.Replaced?.Id,
+                    KeyPasses = p.KeyPasses,
+                    Assists = p.Assists,
+                    ExpectedGoalsChain = p.ExpectedGoalsChain,
+                    ExpectedGoalsBuildup = p.ExpectedGoalsBuildup,
+                    PositionOrder = p.PositionOrder,
+                    Goals = p.Goals,
+                    OwnGoals = p.OwnGoals,
+                    Shots = p.Shots,
+                    ExpectedGoals = p.ExpectedGoals,
+                    ExpectedAssists = p.ExpectedAssists
                 }));
-
-                return shots.ToList();
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, $"Unable to insert fixture players for fixture {fixtureId}");
                 throw;
             }
-            
-
         }
 
-        public async Task<List<int>> InsertMultipleAsync(List<FixtureDetails> fixtures, IDbConnection connection)
+        public async Task InsertFixtureShots(List<FixtureShot> shots, int fixtureId, IDbConnection connection)
         {
             try
             {
-                var ids = await connection.QueryAsync<int>(FixtureSql.InsertMultiple, fixtures.Select(f => new
+                if (shots.Any(f => f.Player == null)) { throw new ArgumentException("Each FixtureShot must have its Player property set."); }
+                if (shots.Any(f => f.Team == null)) { throw new ArgumentException("Each FixtureShot must have its Team property set."); }
+
+                await connection.ExecuteAsync(FixtureSql.InsertFixtureShots, shots.Select(f => new
+                {
+                    ShotId = f.ShotId,
+                    PlayerId = f.Player.Id,
+                    FixtureId = fixtureId,
+                    TeamId = f.Team.Id,
+                    Minute = f.Minute,
+                    Result = f.Result,
+                    X = f.X,
+                    Y = f.Y,
+                    ExpectedGoal = f.ExpectedGoal,
+                    Situation = f.Situation,
+                    ShotType = f.Type,
+                    LastAction = f.LastAction,
+                    AssistedById = f.Assist?.Id
+                }));
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, $"Unable to insert fixture shots for fixture {fixtureId}");
+                throw;
+            }
+        }
+
+        public async Task InsertMultipleAsync(List<FixtureDetails> fixtures, IDbConnection connection)
+        {
+            try
+            {
+                if (fixtures.Any(f => f.HomeTeam == null)) { throw new ArgumentException("Each FixtureDetails must have its HomeTeam property set."); }
+                if (fixtures.Any(f => f.AwayTeam == null)) { throw new ArgumentException("Each FixtureDetails must have its AwayTeam property set."); }
+                if (fixtures.Any(f => f.Competition == null)) { throw new ArgumentException("Each FixtureDetails must have its Competition property set."); }
+
+                await connection.ExecuteAsync(FixtureSql.InsertMultiple, fixtures.Select(f => new
                 {
                     FixtureId = f.FixtureId,
                     HomeTeamId = f.HomeTeam.Id,
@@ -172,8 +206,6 @@ namespace FootballStatsApi.Domain.Repositories
                     HomePpda = f.HomePpda,
                     AwayPpda = f.AwayPpda
                 }));
-
-                return ids.ToList();
             }
             catch (Exception ex)
             {

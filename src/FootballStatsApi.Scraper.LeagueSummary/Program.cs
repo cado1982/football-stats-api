@@ -45,14 +45,11 @@ namespace FootballStatsApi.Scraper.LeagueSummary
                 amqpService.Connect().Wait();
 
                 var listeners = _serviceProvider.GetServices<IListener>();
-                var tasks = new List<Task>();
+
                 foreach (var listener in listeners)
                 {
-                    tasks.Add(listener.Listen());
+                    listener.Listen();
                 }
-
-                Task.WhenAll(tasks).Wait();
-
             }
             catch (Exception ex)
             {
@@ -87,6 +84,7 @@ namespace FootballStatsApi.Scraper.LeagueSummary
             services.AddSingleton<IFixtureRepository, FixtureRepository>();
 
             services.AddSingleton<ILeagueSummaryManager, LeagueSummaryManager>();
+            services.AddSingleton<IFixtureDetailsManager, FixtureDetailsManager>();
 
             _browser = Puppeteer.LaunchAsync(new LaunchOptions
             {

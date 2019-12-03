@@ -3,6 +3,7 @@ using Microsoft.Extensions.Configuration;
 using System;
 using System.IO;
 using System.Reflection;
+using System.Threading.Tasks;
 
 namespace FootballStatsApi.Database
 {
@@ -26,21 +27,47 @@ namespace FootballStatsApi.Database
                     .LogToConsole()
                     .Build();
 
+
+            var isConnected = false;
+
+            while (!isConnected)
+            {
+                isConnected = upgrader.TryConnect(out var error);
+                if (!isConnected)
+                {
+                    LogError($"Unable to connect to db. {error}");
+                    Task.Delay(5000).Wait();
+                } else
+                {
+                    LogSuccess("Connected");
+                }
+            }
+
             var result = upgrader.PerformUpgrade();
 
             if (!result.Successful)
             {
-                Console.ForegroundColor = ConsoleColor.Red;
-                Console.WriteLine(result.Error);
-                Console.ResetColor();
+                LogError(result.Error.ToString());
                 return -1;
             }
 
-            Console.ForegroundColor = ConsoleColor.Green;
-            Console.WriteLine("Success!");
-            Console.ResetColor();
+            LogSuccess("Success!");
 
             return 0;
+        }
+
+        private static void LogError(string error)
+        {
+            Console.ForegroundColor = ConsoleColor.Red;
+            Console.WriteLine(error);
+            Console.ResetColor();
+        }
+
+        private static void LogSuccess(string message)
+        {
+            Console.ForegroundColor = ConsoleColor.Green;
+            Console.WriteLine(message);
+            Console.ResetColor();
         }
     }
 }

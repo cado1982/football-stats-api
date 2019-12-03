@@ -70,13 +70,13 @@ namespace FootballStatsApi.Scraper.LeagueSummary
             await _fixtureRepository.Update(details, conn);
         }
 
-        public async Task ProcessRosters(FixtureRosters rosters, IDbConnection conn)
+        public async Task ProcessRosters(FixtureRosters rosters, FixtureMatchInfo matchInfo, IDbConnection conn)
         {
             var homePlayers = rosters.Home.Values.ToList();
             var awayPlayers = rosters.Away.Values.ToList();
             var players = homePlayers.Union(awayPlayers).ToList();
-            
-            var playerEntities = players.Select(p => new Entities.Player 
+
+            var playerEntities = players.Select(p => new Entities.Player
             {
                 Id = p.PlayerId,
                 Name = p.PlayerName
@@ -84,167 +84,83 @@ namespace FootballStatsApi.Scraper.LeagueSummary
 
             await _playerRepository.InsertPlayersAsync(playerEntities, conn);
 
-            var fixturePlayers = players.Select(p => new Entities.FixturePlayer
+            var fixturePlayers = new List<Entities.FixturePlayer>();
+
+            foreach (var player in players)
             {
-                ExpectedGoalsBuildup = p.ExpectedGoalsBuildup,
-                ExpectedGoalsChain = p.ExpectedGoalsChain,
-                Minutes = p.Time,
-                Player = new Entities.Player { Id = p.PlayerId },
-                Finish making this object to pass to the fixture repository
-            }).ToList();
+                var rosterOutPlayer = players.Find(p => p.RosterOut == player.RosterOut);
+                var rosterInPlayer = players.Find(p => p.RosterIn == player.RosterIn);
 
-            
+                var fixturePlayer = new Entities.FixturePlayer
+                {
+                    ExpectedGoalsBuildup = player.ExpectedGoalsBuildup,
+                    ExpectedGoalsChain = player.ExpectedGoalsChain,
+                    Minutes = player.Time,
+                    Player = new Entities.Player { Id = player.PlayerId },
+                    Position = player.Position,
+                    PositionOrder = player.PositionOrder,
+                    RedCards = player.RedCard,
+                    YellowCards = player.YellowCard,
+                    Replaced = rosterOutPlayer == null ? null : new Entities.Player { Id = rosterOutPlayer.PlayerId },
+                    ReplacedBy = rosterInPlayer == null ? null : new Entities.Player { Id = rosterInPlayer.PlayerId },
+                    Team = new Entities.Team { Id = player.TeamId }
+                };
 
-            /*for (const rosterId in data.h) {
-                if (data.h.hasOwnProperty(rosterId)) {
-                    const player = data.h[rosterId];
-
-                    const rosterInEntry = player.roster_in === 0 ? null : data.h[player.roster_in];
-                    const rosterOutEntry = player.roster_out === 0 ? null : data.h[player.roster_out];
-
-                    fixturePlayerValues = fixturePlayerValues.concat(`(${player.player_id},${matchInfo.id},${matchInfo.h},${player.time},
-                        '${player.position}',${player.yellow_card},${player.red_card},${!rosterInEntry ? 'NULL' : rosterInEntry.player_id},
-                        ${!rosterOutEntry ? 'NULL' : rosterOutEntry.player_id},${player.key_passes},${player.assists},
-                        ${player.xGChain},${player.xGBuildup},${player.positionOrder},${player.goals},${player.own_goals},
-                        ${player.shots},${player.xG},${player.xA}),`);
-
-                    playerValues = playerValues.concat(`(${player.player_id},'${player.player}'),`);
-                }
+                fixturePlayers.Add(fixturePlayer);
             }
 
-            for (const rosterId in data.a) {
-                if (data.a.hasOwnProperty(rosterId)) {
-                    const player = data.a[rosterId];
-
-                    const rosterInEntry = player.roster_in === 0 ? null : data.a[player.roster_in];
-                    const rosterOutEntry = player.roster_out === 0 ? null : data.a[player.roster_out];
-
-                    fixturePlayerValues = fixturePlayerValues.concat(`(${player.player_id},${matchInfo.id},${matchInfo.a},${player.time},
-                        '${player.position}',${player.yellow_card},${player.red_card},${!rosterInEntry ? 'NULL' : rosterInEntry.player_id},
-                        ${!rosterOutEntry ? 'NULL' : rosterOutEntry.player_id},${player.key_passes},${player.assists},
-                        ${player.xGChain},${player.xGBuildup},${player.positionOrder},${player.goals},${player.own_goals},
-                        ${player.shots},${player.xG},${player.xA}),`);
-
-                    playerValues = playerValues.concat(`(${player.player_id},'${player.player}'),`);
-                }
-            }
-
-            // Remove the final commas
-            playerValues = playerValues.slice(0, playerValues.length - 1);
-            fixturePlayerValues = fixturePlayerValues.slice(0, fixturePlayerValues.length - 1);
-
-            const insertPlayersQuery = `INSERT INTO "stats"."player" (id,name) VALUES ${playerValues} ON CONFLICT DO NOTHING;`;
-            const insertFixturePlayersQuery = `INSERT INTO "stats"."fixture_player" 
-            (
-                player_id,
-                fixture_id,
-                team_id,
-                time,
-                position,
-                yellow_cards,
-                red_cards,
-                replaced_by_id,
-                replaced_id,
-                key_passes,
-                assists,
-                expected_goals_chain,
-                expected_goals_buildup,
-                position_order,
-                goals,
-                own_goals,
-                shots,
-                expected_goals,
-                expected_assists
-            ) VALUES ${fixturePlayerValues}
-            ON CONFLICT(player_id, fixture_id) DO UPDATE SET 
-                time = EXCLUDED.time,
-                team_id = EXCLUDED.team_id,
-                position = EXCLUDED.position,
-                yellow_cards = EXCLUDED.yellow_cards,
-                red_cards = EXCLUDED.red_cards,
-                replaced_by_id = EXCLUDED.replaced_by_id,
-                replaced_id = EXCLUDED.replaced_id,
-                key_passes = EXCLUDED.key_passes,
-                assists = EXCLUDED.assists,
-                expected_goals_chain = EXCLUDED.expected_goals_chain,
-                expected_goals_buildup = EXCLUDED.expected_goals_buildup,
-                position_order = EXCLUDED.position_order,
-                goals = EXCLUDED.goals,
-                own_goals = EXCLUDED.own_goals,
-                shots = EXCLUDED.shots,
-                expected_goals = EXCLUDED.expected_goals,
-                expected_assists = EXCLUDED.expected_assists`;
-
-            console.log(insertFixturePlayersQuery);
-
-            await pool.query(insertPlayersQuery);
-            await pool.query(insertFixturePlayersQuery);
-            console.log(`Saved players for fixture ${matchInfo.id}`);
-            */
+            await _fixtureRepository.InsertFixturePlayers(fixturePlayers, matchInfo.Id, conn);
         }
 
-        public async Task ProcessShots(FixtureShots shots, IDbConnection conn)
+        public async Task ProcessShots(FixtureShots shots, FixtureRosters rosters, FixtureMatchInfo matchInfo, IDbConnection conn)
         {
-            /*
-            console.log(`Attempting to save shots for fixture ${matchInfo.id}. ${data.h.length} home shots and ${data.a.length} away shots.`);
+            var allShots = shots.Home.Union(shots.Away).ToList();
+            var homePlayers = rosters.Home.Values.ToList();
+            var awayPlayers = rosters.Away.Values.ToList();
 
-                let shotValues: string = '';
+            var entities = new List<Entities.FixtureShot>();
 
-                for (const shot of data.h) {
-                    let assistedById = 0;
-                    console.log(shot.player_assisted);
-                    if (shot.player_assisted) {
-                        for (const id in rosters.h) {
-                            if (rosters.h.hasOwnProperty(id) && rosters.h[id].player === shot.player_assisted) {
-                                assistedById = rosters.h[id].player_id
-                            }
-                        }
+            foreach (var shot in allShots)
+            {
+                var entity = new Entities.FixtureShot();
+
+                // Try and resolve the assister if there is one
+                if (shot.PlayerAssistedName != null)
+                {
+                    FixtureRosterEntry matchingPlayer = null;
+
+                    if (shot.HomeOrAway == "h")
+                    {
+                        matchingPlayer = homePlayers.Find(v => v.PlayerName == shot.PlayerAssistedName);
+                    }
+                    else if (shot.HomeOrAway == "a")
+                    {
+                        matchingPlayer = awayPlayers.Find(p => p.PlayerName == shot.PlayerAssistedName);
                     }
 
-                    shotValues = shotValues.concat(`(${shot.id},${shot.player_id},${matchInfo.id},${matchInfo.h},${shot.minute},'${shot.result}',
-                        ${shot.X},${shot.Y},${shot.xG},'${shot.situation}','${shot.shotType}',
-                        '${shot.lastAction}',${!assistedById ? 'NULL' : assistedById}),`);
-                }
-
-                for (const shot of data.a) {
-                    let assistedById = 0;
-
-                    if (shot.player_assisted) {
-                        for (const id in rosters.a) {
-                            if (rosters.a.hasOwnProperty(id) && rosters.a[id].player === shot.player_assisted) {
-                                assistedById = rosters.a[id].player_id
-                            }
-                        }
+                    if (matchingPlayer != null)
+                    {
+                        entity.Assist = new Entities.Player { Id = matchingPlayer.PlayerId };
                     }
-
-                    shotValues = shotValues.concat(`(${shot.id},${shot.player_id},${matchInfo.id},${matchInfo.a},${shot.minute},'${shot.result}',
-                        ${shot.X},${shot.Y},${shot.xG},'${shot.situation}','${shot.shotType}',
-                        '${shot.lastAction}',${!assistedById ? 'NULL' : assistedById}),`);
                 }
 
-                // Remove the final commas
-                shotValues = shotValues.slice(0, shotValues.length - 1);
+                entity.ExpectedGoal = shot.ExpectedGoal;
+                entity.ShotId = shot.Id;
+                entity.Player = new Entities.Player { Id = shot.PlayerId };
+                entity.Minute = shot.Minute;
+                entity.Result = shot.Result;
+                entity.X = shot.X;
+                entity.Y = shot.Y;
+                entity.ExpectedGoal = shot.ExpectedGoal;
+                entity.Team = new Entities.Team { Id = shot.HomeOrAway == "h" ? matchInfo.HomeTeamId : matchInfo.AwayTeamId };
+                entity.Situation = shot.Situation;
+                entity.Type = shot.ShotType;
+                entity.LastAction = shot.LastAction;
 
-                const insertShotsQuery = `INSERT INTO "stats"."fixture_shot" 
-                (
-                    shot_id,
-                    player_id,
-                    fixture_id,
-                    team_id,
-                    minute,
-                    result,
-                    x,
-                    y,
-                    expected_goal,
-                    situation,
-                    shot_type,
-                    last_action,
-                    assisted_by
-                ) VALUES ${shotValues}
-                ON CONFLICT(shot_id) DO NOTHING;`;
+                entities.Add(entity);
+            }
 
-                await pool.query(insertShotsQuery);
-            */
+            await _fixtureRepository.InsertFixtureShots(entities, matchInfo.Id, conn);
         }
 
         public async Task ConfirmDetailsSaved(int fixtureId, IDbConnection conn)

@@ -32,7 +32,7 @@ namespace FootballStatsApi.Managers
         {
             try
             {
-                using (var conn = _connectionProvider.GetOpenConnection())
+                using (var conn = await _connectionProvider.GetOpenConnectionAsync())
                 {
                     var details = await _fixtureRepository.GetFixtureDetailsAsync(fixtureId, conn);
                     //var shots = await _fixtureRepository.GetFixtureShotsAsync(fixtureId, conn);

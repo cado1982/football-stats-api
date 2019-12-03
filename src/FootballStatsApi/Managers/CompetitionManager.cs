@@ -32,7 +32,7 @@ namespace FootballStatsApi.Managers
         {
             try
             {
-                using (var conn = _connectionProvider.GetOpenConnection())
+                using (var conn = await _connectionProvider.GetOpenConnectionAsync())
                 {
                     var entities = await _competitionRepository.GetAsync(conn);
                     var models = entities.ToModels().ToList();
