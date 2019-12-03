@@ -2,15 +2,15 @@
 FROM mcr.microsoft.com/dotnet/core/sdk:3.0 AS build
 WORKDIR /app
 
-COPY ./src/FootballStatsApi.Domain/FootballStatsApi.Domain.csproj ./FootballStatsApi.Domain/
-COPY ./src/FootballStatsApi.Scraper.LeagueSummary/FootballStatsApi.Scraper.LeagueSummary.csproj ./FootballStatsApi.Scraper.LeagueSummary/
-COPY ./src/FootballStatsApi.Scraper.Shared/FootballStatsApi.Scraper.Shared.csproj ./FootballStatsApi.Scraper.Shared/
+COPY ./FootballStatsApi.Domain/FootballStatsApi.Domain.csproj ./FootballStatsApi.Domain/
+COPY ./FootballStatsApi.Scraper.LeagueSummary/FootballStatsApi.Scraper.LeagueSummary.csproj ./FootballStatsApi.Scraper.LeagueSummary/
+COPY ./FootballStatsApi.Scraper.Shared/FootballStatsApi.Scraper.Shared.csproj ./FootballStatsApi.Scraper.Shared/
 
 RUN dotnet restore ./FootballStatsApi.Scraper.LeagueSummary/FootballStatsApi.Scraper.LeagueSummary.csproj
 
-COPY ./src/FootballStatsApi.Domain ./FootballStatsApi.Domain
-COPY ./src/FootballStatsApi.Scraper.LeagueSummary ./FootballStatsApi.Scraper.LeagueSummary
-COPY ./src/FootballStatsApi.Scraper.Shared ./FootballStatsApi.Scraper.Shared
+COPY ./FootballStatsApi.Domain ./FootballStatsApi.Domain
+COPY ./FootballStatsApi.Scraper.LeagueSummary ./FootballStatsApi.Scraper.LeagueSummary
+COPY ./FootballStatsApi.Scraper.Shared ./FootballStatsApi.Scraper.Shared
 
 RUN dotnet publish FootballStatsApi.Scraper.LeagueSummary/FootballStatsApi.Scraper.LeagueSummary.csproj -c Release -o /publish --no-restore
 

@@ -17,9 +17,8 @@ services:
       - rabbitmq
     build:
       context: .
-      dockerfile: src/FootballStatsApi.Scraper.Orchestration/Dockerfile
+      dockerfile: FootballStatsApi.Scraper.Orchestration/Dockerfile
     image: fsa-orchestration:latest
-    container_name: fsa-orchestration
     environment:
       ConnectionStrings__AMQP: amqp://guest:guest@rabbitmq
       ConnectionStrings__Football: Server=db;User Id=postgres;Password=admin;Database=football;
@@ -30,11 +29,10 @@ services:
       - rabbitmq
     build:
       context: .
-      dockerfile: src/FootballStatsApi.Scraper.LeagueSummary/Dockerfile
+      dockerfile: FootballStatsApi.Scraper.LeagueSummary/Dockerfile
     image: fsa-scraper:latest
     security_opt: 
       - seccomp:unconfined
-    #container_name: fsa-scraper
     environment:
       ConnectionStrings__AMQP: amqp://guest:guest@rabbitmq
       ConnectionStrings__Football: Server=db;User Id=postgres;Password=admin;Database=football;
@@ -44,7 +42,7 @@ services:
       - db-migrations
     build:
       context: .
-      dockerfile: src/FootballStatsApi.Web/app/Dockerfile
+      dockerfile: FootballStatsApi.Web/app/Dockerfile
     image: fsa-web:latest
     ports:
       - "8070:5000"
@@ -74,10 +72,7 @@ services:
     container_name: fsa-dbmigrations
     build:
       context: .
-      dockerfile: ./src/FootballStatsApi.Database/Dockerfile
+      dockerfile: FootballStatsApi.Database/Dockerfile
     image: fsa-dbmigrations:latest
     environment:
       ConnectionStrings__Football: Server=db;User Id=postgres;Password=admin;Database=football;
-
-
-    

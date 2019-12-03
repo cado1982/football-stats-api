@@ -7,7 +7,7 @@ using System.Collections.Generic;
 
 namespace FootballStatsApi.Scraper.Shared
 {
-    public class AmqpService : IAmqpService //, IDisposable
+    public class AmqpService : IAmqpService, IDisposable
     {
         private readonly ILogger<AmqpService> _logger;
         private IConnection _connection;
@@ -36,6 +36,7 @@ namespace FootballStatsApi.Scraper.Shared
 
         public async Task Connect()
         {
+            _logger.LogInformation("Attempting to connect to RabbitMQ");
             _connectAttempts++;
             var isFaulted = false;
 

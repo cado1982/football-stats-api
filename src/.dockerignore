@@ -2,13 +2,10 @@
 .env
 .git
 .gitignore
-.gitlab-ci.yml
-.vs
-.vscode
+**/.vs
+**/.vscode
 docker-compose.yml
 docker-compose.*.yml
 **/bin
 **/obj
-bin/
-obj/
 **/.local-chromium
