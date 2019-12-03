@@ -5,21 +5,19 @@ VisualStudioVersion = 16.0.29403.142
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FootballStatsApi", "FootballStatsApi\app\FootballStatsApi.csproj", "{879C72DD-1AA0-4F87-9632-FE681DE9111C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FootballStatsApi.Models", "FootballStatsApi.Models\FootballStatsApi.Models.csproj", "{3D3A2D77-2E7C-4771-8D89-ECB59E23C4B7}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FootballStatsApi.Models", "FootballStatsApi.Models\FootballStatsApi.Models.csproj", "{3D3A2D77-2E7C-4771-8D89-ECB59E23C4B7}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FootballStatsApi.Domain", "FootballStatsApi.Domain\FootballStatsApi.Domain.csproj", "{A575ACB4-893F-4CC8-A6C4-C81282149D5A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FootballStatsApi.Domain", "FootballStatsApi.Domain\FootballStatsApi.Domain.csproj", "{A575ACB4-893F-4CC8-A6C4-C81282149D5A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FootballStatsApi.Database", "FootballStatsApi.Database\FootballStatsApi.Database.csproj", "{AF893BF5-E911-4340-B9C7-BCC6D3738EC9}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FootballStatsApi.Database", "FootballStatsApi.Database\FootballStatsApi.Database.csproj", "{AF893BF5-E911-4340-B9C7-BCC6D3738EC9}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FootballStatsApi.Identity", "FootballStatsApi.Identity\FootballStatsApi.Identity.csproj", "{715FFE03-2D4B-4C1E-966A-90CB22EB8168}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FootballStatsApi.Web", "FootballStatsApi.Web\app\FootballStatsApi.Web.csproj", "{E00C835F-B654-4002-97AF-A45CD2087FBC}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FootballStatsApi.Web", "FootballStatsApi.Web\app\FootballStatsApi.Web.csproj", "{E00C835F-B654-4002-97AF-A45CD2087FBC}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FootballStatsApi.Scraper.Orchestration", "FootballStatsApi.Scraper.Orchestration\FootballStatsApi.Scraper.Orchestration.csproj", "{4D1B4E9F-DD7C-40FA-91D1-20BED26571BD}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FootballStatsApi.Scraper.Orchestration", "FootballStatsApi.Scraper.Orchestration\FootballStatsApi.Scraper.Orchestration.csproj", "{4D1B4E9F-DD7C-40FA-91D1-20BED26571BD}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FootballStatsApi.Scraper.LeagueSummary", "FootballStatsApi.Scraper.LeagueSummary\FootballStatsApi.Scraper.LeagueSummary.csproj", "{AA5A5AD9-FBD1-472A-B232-11C792210A20}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FootballStatsApi.Scraper.LeagueSummary", "FootballStatsApi.Scraper.LeagueSummary\FootballStatsApi.Scraper.LeagueSummary.csproj", "{AA5A5AD9-FBD1-472A-B232-11C792210A20}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FootballStatsApi.Scraper.Shared", "FootballStatsApi.Scraper.Shared\FootballStatsApi.Scraper.Shared.csproj", "{608E7D7E-12D4-45F6-B4FF-5312D5C433B6}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FootballStatsApi.Scraper.Shared", "FootballStatsApi.Scraper.Shared\FootballStatsApi.Scraper.Shared.csproj", "{608E7D7E-12D4-45F6-B4FF-5312D5C433B6}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -43,10 +41,6 @@ Global
 		{AF893BF5-E911-4340-B9C7-BCC6D3738EC9}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{AF893BF5-E911-4340-B9C7-BCC6D3738EC9}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{AF893BF5-E911-4340-B9C7-BCC6D3738EC9}.Release|Any CPU.Build.0 = Release|Any CPU
-		{715FFE03-2D4B-4C1E-966A-90CB22EB8168}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{715FFE03-2D4B-4C1E-966A-90CB22EB8168}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{715FFE03-2D4B-4C1E-966A-90CB22EB8168}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{715FFE03-2D4B-4C1E-966A-90CB22EB8168}.Release|Any CPU.Build.0 = Release|Any CPU
 		{E00C835F-B654-4002-97AF-A45CD2087FBC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{E00C835F-B654-4002-97AF-A45CD2087FBC}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E00C835F-B654-4002-97AF-A45CD2087FBC}.Release|Any CPU.ActiveCfg = Release|Any CPU
