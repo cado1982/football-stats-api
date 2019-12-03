@@ -38,6 +38,18 @@ services:
     environment:
       ConnectionStrings__AMQP: amqp://guest:guest@rabbitmq
       ConnectionStrings__Football: Server=db;User Id=postgres;Password=admin;Database=football;
+  web:
+    depends_on:
+      - db
+      - db-migrations
+    build:
+      context: .
+      dockerfile: src/FootballStatsApi.Web/app/Dockerfile
+    image: fsa-web:latest
+    ports:
+      - "8070:5000"
+    environment:
+      ConnectionStrings__Football: Server=db;User Id=postgres;Password=admin;Database=football;
   db:
     image: postgres:11
     container_name: fsa-db
@@ -55,17 +67,6 @@ services:
       - "postgres"
       - "-c"
       - "max_connections=300"
-  # pg-admin:
-  #   image: dpage/pgadmin4
-  #   container_name: fsa-pgadmin
-  #   logging:
-  #     driver: none
-  #   expose:
-  #     - "5454"
-  #   environment:
-  #     - PGADMIN_DEFAULT_EMAIL=admin@mydomain.com
-  #     - PGADMIN_DEFAULT_PASSWORD=postgres
-  #     - PGADMIN_LISTEN_PORT=5454
   db-migrations:
     depends_on:
       - db
