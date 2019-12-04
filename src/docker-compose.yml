@@ -88,4 +88,4 @@ services:
       dockerfile: FootballStatsApi.Database/Dockerfile
     image: fsa-dbmigrations:latest
     environment:
-      ConnectionStrings__Football: Server=db;User Id=postgres;Password=admin;Database=football;
+      ConnectionStrings__FootballAdmin: Server=db;User Id=postgres;Password=admin;Database=football;

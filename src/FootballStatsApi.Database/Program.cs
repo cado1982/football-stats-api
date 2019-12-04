@@ -21,7 +21,7 @@ namespace FootballStatsApi.Database
 
             var upgrader =
                 DeployChanges.To
-                    .PostgresqlDatabase(configuration.GetConnectionString("Football"))
+                    .PostgresqlDatabase(configuration.GetConnectionString("FootballAdmin"))
                     .WithTransaction()
                     .WithScriptsEmbeddedInAssembly(Assembly.GetExecutingAssembly())
                     .LogToConsole()

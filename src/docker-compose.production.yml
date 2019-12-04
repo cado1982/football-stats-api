@@ -1,0 +1,60 @@
+version: '3'
+services:
+  rabbitmq:
+    image: rabbitmq:3-management
+    container_name: fsa-rabbitmq
+    restart: always
+    expose:
+      - 5672
+    ports:
+      - "15672:15672"
+  scraper-orchestration:
+    depends_on:
+      - db-migrations
+      - rabbitmq
+    image: registry.gitlab.com/cado82/football-stats-api/scraper/orchestration:latest
+    environment:
+      ConnectionStrings__AMQP:
+      ConnectionStrings__Football:
+  scraper:
+    depends_on:
+      - db-migrations
+      - rabbitmq
+    image: registry.gitlab.com/cado82/football-stats-api/scraper/leaguesummary:latest
+    security_opt: 
+      - seccomp:unconfined
+    environment:
+      ConnectionStrings__AMQP:
+      ConnectionStrings__Football:
+  web-app:
+    depends_on:
+      - db-migrations
+      - web-nginx
+    image: registry.gitlab.com/cado82/football-stats-api/web/app:latest
+    expose:
+      - 5000
+    environment:
+      ConnectionStrings__Football:
+      ASPNETCORE_ENVIRONMENT: Production
+  web-nginx:
+    image: registry.gitlab.com/cado82/football-stats-api/web/nginx:latest
+    ports:
+      - "8080:80"
+  api-app:
+    depends_on:
+      - db-migrations
+      - api-nginx
+    image: registry.gitlab.com/cado82/football-stats-api/api/app:latest
+    expose:
+      - 5000
+    environment:
+      ConnectionStrings__Football:
+      ASPNETCORE_ENVIRONMENT: Production
+  api-nginx:
+    image: registry.gitlab.com/cado82/football-stats-api/api/nginx:latest
+    ports:
+      - "8090:80"
+  db-migrations:
+    image: registry.gitlab.com/cado82/football-stats-api/db/migrations:latest
+    environment:
+      ConnectionStrings__FootballAdmin:
