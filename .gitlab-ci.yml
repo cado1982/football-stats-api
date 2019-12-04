@@ -21,12 +21,12 @@ before_script:
 build:
   stage: build
   script:
-    - docker build --pull -f src/FootballStatsApi.Scraper.Orchestration/Dockerfile -t $SCRAPER_ORCHESTRATION_IMAGE_NAME:$CI_COMMIT_REF_NAME-$CI_COMMIT_SHORT_SHA .
-    - docker build --pull -f src/FootballStatsApi.Scraper.LeagueSummary/Dockerfile -t $SCRAPER_LEAGUE_SUMMARY_IMAGE_NAME:$CI_COMMIT_REF_NAME-$CI_COMMIT_SHORT_SHA .
-    - docker build --pull -f src/FootballStatsApi.Web/app/Dockerfile -t $WEB_APP_IMAGE_NAME:$CI_COMMIT_REF_NAME-$CI_COMMIT_SHORT_SHA .
-    - docker build --pull -f src/FootballStatsApi.Web/nginx/Dockerfile -t $WEB_NGINX_IMAGE_NAME:$CI_COMMIT_REF_NAME-$CI_COMMIT_SHORT_SHA .
-    - docker build --pull -f src/FootballStatsApi/app/Dockerfile -t $API_APP_IMAGE_NAME:$CI_COMMIT_REF_NAME-$CI_COMMIT_SHORT_SHA .
-    - docker build --pull -f src/FootballStatsApi/nginx/Dockerfile -t $API_NGINX_IMAGE_NAME:$CI_COMMIT_REF_NAME-$CI_COMMIT_SHORT_SHA .
+    - docker build --pull -f ./src/FootballStatsApi.Scraper.Orchestration/Dockerfile -t $SCRAPER_ORCHESTRATION_IMAGE_NAME:$CI_COMMIT_REF_NAME-$CI_COMMIT_SHORT_SHA ./src
+    - docker build --pull -f ./src/FootballStatsApi.Scraper.LeagueSummary/Dockerfile -t $SCRAPER_LEAGUE_SUMMARY_IMAGE_NAME:$CI_COMMIT_REF_NAME-$CI_COMMIT_SHORT_SHA ./src
+    - docker build --pull -f ./src/FootballStatsApi.Web/app/Dockerfile -t $WEB_APP_IMAGE_NAME:$CI_COMMIT_REF_NAME-$CI_COMMIT_SHORT_SHA ./src
+    - docker build --pull -f ./src/FootballStatsApi.Web/nginx/Dockerfile -t $WEB_NGINX_IMAGE_NAME:$CI_COMMIT_REF_NAME-$CI_COMMIT_SHORT_SHA ./src
+    - docker build --pull -f ./src/FootballStatsApi/app/Dockerfile -t $API_APP_IMAGE_NAME:$CI_COMMIT_REF_NAME-$CI_COMMIT_SHORT_SHA ./src
+    - docker build --pull -f ./src/FootballStatsApi/nginx/Dockerfile -t $API_NGINX_IMAGE_NAME:$CI_COMMIT_REF_NAME-$CI_COMMIT_SHORT_SHA ./src
     - docker push $SCRAPER_ORCHESTRATION_IMAGE_NAME:$CI_COMMIT_REF_NAME-$CI_COMMIT_SHORT_SHA
     - docker push $SCRAPER_LEAGUE_SUMMARY_IMAGE_NAME:$CI_COMMIT_REF_NAME-$CI_COMMIT_SHORT_SHA
     - docker push $WEB_APP_IMAGE_NAME:$CI_COMMIT_REF_NAME-$CI_COMMIT_SHORT_SHA
