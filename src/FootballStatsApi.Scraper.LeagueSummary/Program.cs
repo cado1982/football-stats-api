@@ -43,6 +43,7 @@ namespace FootballStatsApi.Scraper.LeagueSummary
 
                 var amqpService = _serviceProvider.GetService<IAmqpService>();
                 amqpService.Connect().Wait();
+                amqpService.Declare();
 
                 var listeners = _serviceProvider.GetServices<IListener>();
 

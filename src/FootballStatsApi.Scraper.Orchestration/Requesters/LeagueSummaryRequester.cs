@@ -15,7 +15,6 @@ namespace FootballStatsApi.Scraper.Orchestration.Requesters
 {
     public class LeagueSummaryRequester : IRequester
     {
-        private int _delaySeconds = 60 * 60; // 1 hour
         private bool _isRunning = false;
         private readonly ILogger<LeagueSummaryRequester> _logger;
         private readonly IAmqpService _amqpService;
@@ -44,7 +43,7 @@ namespace FootballStatsApi.Scraper.Orchestration.Requesters
 
             while (_isRunning)
             {
-                await Task.Delay(_delaySeconds * 1000);
+                await Task.Delay(Timers.LeagueSummaryIntervalSeconds * 1000);
                 await Process();
             }
         }

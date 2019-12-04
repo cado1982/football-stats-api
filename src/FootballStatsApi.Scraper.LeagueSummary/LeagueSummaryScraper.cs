@@ -87,6 +87,7 @@ namespace FootballStatsApi.Scraper.LeagueSummary
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Error running LeagueSummaryScraper");
+                throw;
             }
         }
     }

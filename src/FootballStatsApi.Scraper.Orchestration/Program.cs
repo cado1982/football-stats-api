@@ -34,6 +34,7 @@ namespace FootballStatsApi.Scraper.Orchestration
 
             var amqpService = _serviceProvider.GetService<IAmqpService>();
             amqpService.Connect().Wait();
+            amqpService.Declare();
 
             var leagueSummaryRequester = _serviceProvider.GetService<LeagueSummaryRequester>();
             var fixtureDetailsRequester = _serviceProvider.GetService<FixtureDetailsRequester>();

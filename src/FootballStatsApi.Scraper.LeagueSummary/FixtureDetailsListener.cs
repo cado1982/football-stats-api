@@ -9,6 +9,7 @@ using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
 using System.Text;
 using Newtonsoft.Json;
+using System.Threading.Tasks;
 
 namespace FootballStatsApi.Scraper.LeagueSummary
 {
@@ -37,45 +38,33 @@ namespace FootballStatsApi.Scraper.LeagueSummary
 
         public void Listen()
         {
-            _amqpService.Channel.QueueDeclare(QueueName.GetFixtureDetails, true, false, false, new Dictionary<string, object>
+            _amqpService.Consume(QueueName.GetFixtureDetails, ProcessMessage, autoAck: false);
+        }
+
+        private async void ProcessMessage(object model, BasicDeliverEventArgs ea)
+        {
+            try
             {
-                { "x-message-ttl", 60 * 60 * 1000 } // 1 hour
-            });
-            _amqpService.Channel.QueueBind(QueueName.GetFixtureDetails, ExchangeName.Topic, RoutingKey.FixtureDetails);
-
-            var consumer = new EventingBasicConsumer(_amqpService.Channel);
-            consumer.Received += async (model, ea) =>
+                var body = Encoding.UTF8.GetString(ea.Body);
+                var message = JsonConvert.DeserializeObject<GetFixtureDetailsMessage>(body);
+                await _scraper.Run(message.FixtureId);
+                _amqpService.Ack(ea.DeliveryTag);
+                return;
+            }
+            catch (Exception ex)
             {
-                var isFaulted = false;
+                _logger.LogError(ex, "Unable to process message");
+            }
 
-                try
-                {
-                    var body = Encoding.UTF8.GetString(ea.Body);
-                    var message = JsonConvert.DeserializeObject<GetFixtureDetailsMessage>(body);
-                    await _scraper.Run(message.FixtureId);
-                    _amqpService.Channel.BasicAck(ea.DeliveryTag, false);
-                }
-                catch (Exception ex)
-                {
-                    _logger.LogError(ex, "Unable to process message");
-                    isFaulted = true;
-                }
-
-                if (isFaulted) 
-                {
-                    try
-                    {
-                        _amqpService.Channel.BasicNack(ea.DeliveryTag, false, false);    
-                    }
-                    catch (Exception ex)
-                    {
-                        _logger.LogError(ex, "Unable to nack amqp message");
-                        throw;
-                    }
-                }
-            };
-
-            _amqpService.Channel.BasicConsume(QueueName.GetFixtureDetails, false, consumer);
+            try
+            {
+                _amqpService.Nack(ea.DeliveryTag, requeue: false);    
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Unable to nack amqp message");
+                throw;
+            }
         }
     }
 }
