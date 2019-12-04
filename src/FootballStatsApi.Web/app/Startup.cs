@@ -114,11 +114,10 @@ namespace FootballStatsApi.Web
 
         private X509Certificate2 GetSigningCertificate()
         {
-            var cert = Configuration["TokenSigningCert"];
-            var secret = Configuration["TokenSigningCertSecret"];
-                
-            byte[] decodedPfxBytes = Convert.FromBase64String(cert);
-            return new X509Certificate2(decodedPfxBytes, secret);
+            var certLocation = Configuration["TokenSigningCert"];
+            var certPassword = Configuration["TokenSigningCertSecret"];
+
+            return new X509Certificate2(certLocation, certPassword);
         }
     }
 }

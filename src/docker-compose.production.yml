@@ -36,6 +36,8 @@ services:
     environment:
       ConnectionStrings__Football:
       ASPNETCORE_ENVIRONMENT: Production
+      TokenSigningCert:
+      TokenSigningCertSecret:
   web-nginx:
     image: registry.gitlab.com/cado82/football-stats-api/web/nginx:latest
     ports:
