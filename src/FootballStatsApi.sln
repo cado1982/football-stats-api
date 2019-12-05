@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.29403.142
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FootballStatsApi", "FootballStatsApi\app\FootballStatsApi.csproj", "{879C72DD-1AA0-4F87-9632-FE681DE9111C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FootballStatsApi", "FootballStatsApi\FootballStatsApi.csproj", "{879C72DD-1AA0-4F87-9632-FE681DE9111C}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FootballStatsApi.Models", "FootballStatsApi.Models\FootballStatsApi.Models.csproj", "{3D3A2D77-2E7C-4771-8D89-ECB59E23C4B7}"
 EndProject
@@ -11,7 +11,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FootballStatsApi.Domain", "
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FootballStatsApi.Database", "FootballStatsApi.Database\FootballStatsApi.Database.csproj", "{AF893BF5-E911-4340-B9C7-BCC6D3738EC9}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FootballStatsApi.Web", "FootballStatsApi.Web\app\FootballStatsApi.Web.csproj", "{E00C835F-B654-4002-97AF-A45CD2087FBC}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FootballStatsApi.Web", "FootballStatsApi.Web\FootballStatsApi.Web.csproj", "{E00C835F-B654-4002-97AF-A45CD2087FBC}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FootballStatsApi.Scraper.Orchestration", "FootballStatsApi.Scraper.Orchestration\FootballStatsApi.Scraper.Orchestration.csproj", "{4D1B4E9F-DD7C-40FA-91D1-20BED26571BD}"
 EndProject

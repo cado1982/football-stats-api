@@ -11,9 +11,8 @@ variables:
   SCRAPER_ORCHESTRATION_IMAGE_NAME: registry.gitlab.com/cado82/football-stats-api/scraper/orchestration
   SCRAPER_LEAGUE_SUMMARY_IMAGE_NAME: registry.gitlab.com/cado82/football-stats-api/scraper/leaguesummary
   WEB_APP_IMAGE_NAME: registry.gitlab.com/cado82/football-stats-api/web/app
-  WEB_NGINX_IMAGE_NAME: registry.gitlab.com/cado82/football-stats-api/web/nginx
+  NGINX_IMAGE_NAME: registry.gitlab.com/cado82/football-stats-api/nginx
   API_APP_IMAGE_NAME: registry.gitlab.com/cado82/football-stats-api/api/app
-  API_NGINX_IMAGE_NAME: registry.gitlab.com/cado82/football-stats-api/api/nginx
   DB_MIGRATIONS_IMAGE_NAME: registry.gitlab.com/cado82/football-stats-api/db/migrations
 
 before_script:
@@ -25,16 +24,14 @@ build:
     - docker build --pull -f ./src/FootballStatsApi.Scraper.Orchestration/Dockerfile -t $SCRAPER_ORCHESTRATION_IMAGE_NAME:$CI_COMMIT_REF_NAME-$CI_COMMIT_SHORT_SHA ./src
     - docker build --pull -f ./src/FootballStatsApi.Scraper.LeagueSummary/Dockerfile -t $SCRAPER_LEAGUE_SUMMARY_IMAGE_NAME:$CI_COMMIT_REF_NAME-$CI_COMMIT_SHORT_SHA ./src
     - docker build --pull -f ./src/FootballStatsApi.Web/app/Dockerfile -t $WEB_APP_IMAGE_NAME:$CI_COMMIT_REF_NAME-$CI_COMMIT_SHORT_SHA ./src
-    - docker build --pull -f ./src/FootballStatsApi.Web/nginx/Dockerfile -t $WEB_NGINX_IMAGE_NAME:$CI_COMMIT_REF_NAME-$CI_COMMIT_SHORT_SHA ./src
+    - docker build --pull -f ./src/nginx/Dockerfile -t $NGINX_IMAGE_NAME:$CI_COMMIT_REF_NAME-$CI_COMMIT_SHORT_SHA ./src
     - docker build --pull -f ./src/FootballStatsApi/app/Dockerfile -t $API_APP_IMAGE_NAME:$CI_COMMIT_REF_NAME-$CI_COMMIT_SHORT_SHA ./src
-    - docker build --pull -f ./src/FootballStatsApi/nginx/Dockerfile -t $API_NGINX_IMAGE_NAME:$CI_COMMIT_REF_NAME-$CI_COMMIT_SHORT_SHA ./src
     - docker build --pull -f ./src/FootballStatsApi.Database/Dockerfile -t $DB_MIGRATIONS_IMAGE_NAME:$CI_COMMIT_REF_NAME-$CI_COMMIT_SHORT_SHA ./src
     - docker push $SCRAPER_ORCHESTRATION_IMAGE_NAME:$CI_COMMIT_REF_NAME-$CI_COMMIT_SHORT_SHA
     - docker push $SCRAPER_LEAGUE_SUMMARY_IMAGE_NAME:$CI_COMMIT_REF_NAME-$CI_COMMIT_SHORT_SHA
     - docker push $WEB_APP_IMAGE_NAME:$CI_COMMIT_REF_NAME-$CI_COMMIT_SHORT_SHA
-    - docker push $WEB_NGINX_IMAGE_NAME:$CI_COMMIT_REF_NAME-$CI_COMMIT_SHORT_SHA
+    - docker push $NGINX_IMAGE_NAME:$CI_COMMIT_REF_NAME-$CI_COMMIT_SHORT_SHA
     - docker push $API_APP_IMAGE_NAME:$CI_COMMIT_REF_NAME-$CI_COMMIT_SHORT_SHA
-    - docker push $API_NGINX_IMAGE_NAME:$CI_COMMIT_REF_NAME-$CI_COMMIT_SHORT_SHA
     - docker push $DB_MIGRATIONS_IMAGE_NAME:$CI_COMMIT_REF_NAME-$CI_COMMIT_SHORT_SHA
 
 release:
@@ -43,23 +40,20 @@ release:
     - docker pull $SCRAPER_ORCHESTRATION_IMAGE_NAME:$CI_COMMIT_REF_NAME-$CI_COMMIT_SHORT_SHA
     - docker pull $SCRAPER_LEAGUE_SUMMARY_IMAGE_NAME:$CI_COMMIT_REF_NAME-$CI_COMMIT_SHORT_SHA
     - docker pull $WEB_APP_IMAGE_NAME:$CI_COMMIT_REF_NAME-$CI_COMMIT_SHORT_SHA
-    - docker pull $WEB_NGINX_IMAGE_NAME:$CI_COMMIT_REF_NAME-$CI_COMMIT_SHORT_SHA
+    - docker pull $NGINX_IMAGE_NAME:$CI_COMMIT_REF_NAME-$CI_COMMIT_SHORT_SHA
     - docker pull $API_APP_IMAGE_NAME:$CI_COMMIT_REF_NAME-$CI_COMMIT_SHORT_SHA
-    - docker pull $API_NGINX_IMAGE_NAME:$CI_COMMIT_REF_NAME-$CI_COMMIT_SHORT_SHA
     - docker pull $DB_MIGRATIONS_IMAGE_NAME:$CI_COMMIT_REF_NAME-$CI_COMMIT_SHORT_SHA
     - docker tag $SCRAPER_ORCHESTRATION_IMAGE_NAME:$CI_COMMIT_REF_NAME-$CI_COMMIT_SHORT_SHA $SCRAPER_ORCHESTRATION_IMAGE_NAME:latest
     - docker tag $SCRAPER_LEAGUE_SUMMARY_IMAGE_NAME:$CI_COMMIT_REF_NAME-$CI_COMMIT_SHORT_SHA $SCRAPER_LEAGUE_SUMMARY_IMAGE_NAME:latest
     - docker tag $WEB_APP_IMAGE_NAME:$CI_COMMIT_REF_NAME-$CI_COMMIT_SHORT_SHA $WEB_APP_IMAGE_NAME:latest
-    - docker tag $WEB_NGINX_IMAGE_NAME:$CI_COMMIT_REF_NAME-$CI_COMMIT_SHORT_SHA $WEB_NGINX_IMAGE_NAME:latest
+    - docker tag $NGINX_IMAGE_NAME:$CI_COMMIT_REF_NAME-$CI_COMMIT_SHORT_SHA $NGINX_IMAGE_NAME:latest
     - docker tag $API_APP_IMAGE_NAME:$CI_COMMIT_REF_NAME-$CI_COMMIT_SHORT_SHA $API_APP_IMAGE_NAME:latest
-    - docker tag $API_NGINX_IMAGE_NAME:$CI_COMMIT_REF_NAME-$CI_COMMIT_SHORT_SHA $API_NGINX_IMAGE_NAME:latest
     - docker tag $DB_MIGRATIONS_IMAGE_NAME:$CI_COMMIT_REF_NAME-$CI_COMMIT_SHORT_SHA $DB_MIGRATIONS_IMAGE_NAME:latest
     - docker push $SCRAPER_ORCHESTRATION_IMAGE_NAME:latest
     - docker push $SCRAPER_LEAGUE_SUMMARY_IMAGE_NAME:latest
     - docker push $WEB_APP_IMAGE_NAME:latest
-    - docker push $WEB_NGINX_IMAGE_NAME:latest
+    - docker push $NGINX_IMAGE_NAME:latest
     - docker push $API_APP_IMAGE_NAME:latest
-    - docker push $API_NGINX_IMAGE_NAME:latest
     - docker push $DB_MIGRATIONS_IMAGE_NAME:latest
   only:
     - master
