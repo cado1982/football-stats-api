@@ -42,7 +42,7 @@ services:
       - db-migrations
     build:
       context: .
-      dockerfile: FootballStatsApi.Web/app/Dockerfile
+      dockerfile: FootballStatsApi.Web/Dockerfile
     image: fsa-web:latest
     ports:
       - "8070:5000"
@@ -55,7 +55,7 @@ services:
       - db-migrations
     build:
       context: .
-      dockerfile: FootballStatsApi/app/Dockerfile
+      dockerfile: FootballStatsApi/Dockerfile
     image: fsa-api:latest
     ports:
       - "8060:5000"

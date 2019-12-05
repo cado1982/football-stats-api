@@ -35,7 +35,7 @@ services:
   web-app:
     depends_on:
       - db-migrations
-    image: registry.gitlab.com/cado82/football-stats-api/web/app:latest
+    image: registry.gitlab.com/cado82/football-stats-api/web:latest
     restart: "always"
     expose:
       - 5000
@@ -57,7 +57,7 @@ services:
   api-app:
     depends_on:
       - db-migrations
-    image: registry.gitlab.com/cado82/football-stats-api/api/app:latest
+    image: registry.gitlab.com/cado82/football-stats-api/api:latest
     restart: "always"
     expose:
       - 5000
