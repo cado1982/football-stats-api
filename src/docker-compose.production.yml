@@ -4,10 +4,14 @@ services:
     image: rabbitmq:3-management
     container_name: fsa-rabbitmq
     restart: always
+    hostname: rabbitmq
     expose:
       - 5672
     ports:
       - "15672:15672"
+    environment:
+      RABBITMQ_DEFAULT_USER:
+      RABBITMQ_DEFAULT_PASS:
   scraper-orchestration:
     depends_on:
       - db-migrations
@@ -29,21 +33,25 @@ services:
   web-app:
     depends_on:
       - db-migrations
-      - web-nginx
     image: registry.gitlab.com/cado82/football-stats-api/web/app:latest
     expose:
       - 5000
     environment:
       ConnectionStrings__Football:
       ASPNETCORE_ENVIRONMENT: Production
+      TokenSigningCert:
+      TokenSigningCertSecret:
+    volumes:
+      - "/etc/ssl/certs/FootballStatsApiCert.p12:/etc/ssl/certs/FootballStatsApiCert.p12"
   web-nginx:
+    depends_on:
+      - web-app
     image: registry.gitlab.com/cado82/football-stats-api/web/nginx:latest
     ports:
       - "8080:80"
   api-app:
     depends_on:
       - db-migrations
-      - api-nginx
     image: registry.gitlab.com/cado82/football-stats-api/api/app:latest
     expose:
       - 5000
@@ -51,6 +59,8 @@ services:
       ConnectionStrings__Football:
       ASPNETCORE_ENVIRONMENT: Production
   api-nginx:
+    depends_on:
+      - api-app
     image: registry.gitlab.com/cado82/football-stats-api/api/nginx:latest
     ports:
       - "8090:80"
