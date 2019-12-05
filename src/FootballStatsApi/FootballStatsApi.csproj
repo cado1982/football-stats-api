@@ -15,8 +15,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\FootballStatsApi.Domain\FootballStatsApi.Domain.csproj" />
-    <ProjectReference Include="..\..\FootballStatsApi.Models\FootballStatsApi.Models.csproj" />
+    <ProjectReference Include="..\FootballStatsApi.Domain\FootballStatsApi.Domain.csproj" />
+    <ProjectReference Include="..\FootballStatsApi.Models\FootballStatsApi.Models.csproj" />
   </ItemGroup>
 
   <PropertyGroup>

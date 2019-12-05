@@ -3,16 +3,21 @@ services:
   rabbitmq:
     image: rabbitmq:3-management
     container_name: fsa-rabbitmq
-    restart: always
+    restart: "always"
+    hostname: rabbitmq
     expose:
       - 5672
     ports:
       - "15672:15672"
+    environment:
+      RABBITMQ_DEFAULT_USER:
+      RABBITMQ_DEFAULT_PASS:
   scraper-orchestration:
     depends_on:
       - db-migrations
       - rabbitmq
     image: registry.gitlab.com/cado82/football-stats-api/scraper/orchestration:latest
+    restart: "always"
     environment:
       ConnectionStrings__AMQP:
       ConnectionStrings__Football:
@@ -21,6 +26,7 @@ services:
       - db-migrations
       - rabbitmq
     image: registry.gitlab.com/cado82/football-stats-api/scraper/leaguesummary:latest
+    restart: "always"
     security_opt: 
       - seccomp:unconfined
     environment:
@@ -29,8 +35,8 @@ services:
   web-app:
     depends_on:
       - db-migrations
-      - web-nginx
     image: registry.gitlab.com/cado82/football-stats-api/web/app:latest
+    restart: "always"
     expose:
       - 5000
     environment:
@@ -38,25 +44,28 @@ services:
       ASPNETCORE_ENVIRONMENT: Production
       TokenSigningCert:
       TokenSigningCertSecret:
-  web-nginx:
-    image: registry.gitlab.com/cado82/football-stats-api/web/nginx:latest
+    volumes:
+      - "/etc/ssl/certs/FootballStatsApiCert.p12:/etc/ssl/certs/FootballStatsApiCert.p12"
+  nginx:
+    depends_on:
+      - web-app
+      - api-app
+    image: registry.gitlab.com/cado82/football-stats-api/nginx:latest
+    restart: "always"
     ports:
-      - "8080:80"
+      - "80:80"
   api-app:
     depends_on:
       - db-migrations
-      - api-nginx
     image: registry.gitlab.com/cado82/football-stats-api/api/app:latest
+    restart: "always"
     expose:
       - 5000
     environment:
       ConnectionStrings__Football:
       ASPNETCORE_ENVIRONMENT: Production
-  api-nginx:
-    image: registry.gitlab.com/cado82/football-stats-api/api/nginx:latest
-    ports:
-      - "8090:80"
   db-migrations:
     image: registry.gitlab.com/cado82/football-stats-api/db/migrations:latest
+    restart: "no"
     environment:
       ConnectionStrings__FootballAdmin:

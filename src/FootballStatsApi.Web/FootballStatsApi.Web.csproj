@@ -6,7 +6,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\FootballStatsApi.Domain\FootballStatsApi.Domain.csproj" />
+    <ProjectReference Include="..\FootballStatsApi.Domain\FootballStatsApi.Domain.csproj" />
   </ItemGroup>
 
   <ItemGroup>
