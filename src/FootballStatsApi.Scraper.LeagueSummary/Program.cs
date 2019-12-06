@@ -12,22 +12,15 @@ using PuppeteerSharp;
 
 namespace FootballStatsApi.Scraper.LeagueSummary
 {
-    public class Program
+    public static class Program
     {
         private static IServiceProvider _serviceProvider;
         private static IConfigurationRoot _configuration;
-        private static Browser _browser;
-
-        public static void Main(string[] args)
+        
+        public static void Main()
         {
             try
             {
-                AppDomain.CurrentDomain.ProcessExit += async (s, e) =>
-                {
-                    await _browser?.CloseAsync();
-                    _browser?.Dispose();
-                };
-
                 var builder = new ConfigurationBuilder()
                 .SetBasePath(Directory.GetCurrentDirectory())
                 .AddJsonFile("appsettings.json")
@@ -42,7 +35,7 @@ namespace FootballStatsApi.Scraper.LeagueSummary
                 _serviceProvider = services.BuildServiceProvider();
 
                 var amqpService = _serviceProvider.GetService<IAmqpService>();
-                amqpService.Connect().Wait();
+                amqpService.Connect().GetAwaiter().GetResult();
                 amqpService.Declare();
 
                 var listeners = _serviceProvider.GetServices<IListener>();
@@ -69,8 +62,18 @@ namespace FootballStatsApi.Scraper.LeagueSummary
             services.AddSingleton<LeagueSummaryScraper>();
             services.AddSingleton<FixtureDetailsScraper>();
 
-            var dbInfo = new DatabaseConnectionInfo();
-            dbInfo.ConnectionString = _configuration.GetConnectionString("Football");
+            var chromeSettings = new ChromeSettings
+            {
+                Host = _configuration["ChromeRemoteDebuggingHost"],
+                Port = _configuration["ChromeRemoteDebuggingPort"]
+            };
+            services.AddSingleton(chromeSettings);
+            services.AddSingleton<ChromeHelper>();
+
+            var dbInfo = new DatabaseConnectionInfo
+            {
+                ConnectionString = _configuration.GetConnectionString("Football")
+            };
             services.AddSingleton(dbInfo);
 
             var amqpUri = new Uri(_configuration.GetConnectionString("AMQP"));
@@ -86,13 +89,6 @@ namespace FootballStatsApi.Scraper.LeagueSummary
 
             services.AddSingleton<ILeagueSummaryManager, LeagueSummaryManager>();
             services.AddSingleton<IFixtureDetailsManager, FixtureDetailsManager>();
-
-            _browser = Puppeteer.LaunchAsync(new LaunchOptions
-            {
-                Headless = true
-            }).Result;
-            services.AddSingleton(_browser);
-            
         }
     }
 }

@@ -1,5 +1,12 @@
 version: '3'
 services:
+  chrome:
+    image: registry.gitlab.com/cado82/football-stats-api/scraper/chrome:latest
+    security_opt: 
+      - seccomp:unconfined
+    restart: "always"
+    expose:
+      - 9222
   rabbitmq:
     image: rabbitmq:3-management
     container_name: fsa-rabbitmq
@@ -25,13 +32,14 @@ services:
     depends_on:
       - db-migrations
       - rabbitmq
+      - chrome
     image: registry.gitlab.com/cado82/football-stats-api/scraper/leaguesummary:latest
     restart: "always"
-    security_opt: 
-      - seccomp:unconfined
     environment:
       ConnectionStrings__AMQP:
       ConnectionStrings__Football:
+      ChromeRemoteDebuggingHost: chrome
+      ChromeRemoteDebuggingPort: 9222
   web-app:
     depends_on:
       - db-migrations

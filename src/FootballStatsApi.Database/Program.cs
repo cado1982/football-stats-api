@@ -36,7 +36,7 @@ namespace FootballStatsApi.Database
                 if (!isConnected)
                 {
                     LogError($"Unable to connect to db. {error}");
-                    Task.Delay(5000).Wait();
+                    Task.Delay(5000).GetAwaiter().GetResult();
                 } else
                 {
                     LogSuccess("Connected");
