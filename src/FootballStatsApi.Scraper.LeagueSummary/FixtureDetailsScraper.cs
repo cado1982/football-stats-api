@@ -11,17 +11,15 @@ namespace FootballStatsApi.Scraper.LeagueSummary
 {
     public class FixtureDetailsScraper
     {
-        private readonly IAmqpService _amqpService;
         private readonly ILogger<FixtureDetailsScraper> _logger;
-        private readonly Browser _browser;
+        private readonly ChromeHelper _chromeHelper;
         private readonly ICompetitionRepository _competitionRepository;
         private readonly IFixtureDetailsManager _fixtureDetailsManager;
         private readonly IConnectionProvider _connectionProvider;
 
         public FixtureDetailsScraper(
-            Browser browser,
-            IAmqpService amqpService,
             ILogger<FixtureDetailsScraper> logger,
+            ChromeHelper chromeHelper,
             ICompetitionRepository competitionRepository,
             IFixtureDetailsManager fixtureDetailsManager,
             IConnectionProvider connectionProvider)
@@ -29,9 +27,8 @@ namespace FootballStatsApi.Scraper.LeagueSummary
             _competitionRepository = competitionRepository;
             _fixtureDetailsManager = fixtureDetailsManager;
             _connectionProvider = connectionProvider;
-            _amqpService = amqpService;
             _logger = logger;
-            _browser = browser;
+            _chromeHelper = chromeHelper;
         }
 
         public async Task Run(int fixtureId)
@@ -40,44 +37,43 @@ namespace FootballStatsApi.Scraper.LeagueSummary
             {
                 _logger.LogDebug($"Entering Run({fixtureId})");
 
-                using (var conn = await _connectionProvider.GetOpenConnectionAsync())
-                using (var trans = conn.BeginTransaction())
+                using var conn = await _connectionProvider.GetOpenConnectionAsync();
+                using var trans = conn.BeginTransaction();
+
+                var browser = await Puppeteer.ConnectAsync(await _chromeHelper.GetConnectOptionsAsync());
+
+                using var page = await browser.NewPageAsync();
+
+                var url = $"https://understat.com/match/{fixtureId}";
+
+                _logger.LogInformation("Loading " + url);
+
+                var response = await page.GoToAsync(url, new NavigationOptions { WaitUntil = new WaitUntilNavigation[] { WaitUntilNavigation.Networkidle2 } });
+
+                if (!response.Ok)
                 {
-                    var page = await _browser.NewPageAsync();
-
-                    var url = $"https://understat.com/match/{fixtureId}";
-
-                    _logger.LogInformation("Loading " + url);
-
-                    var response = await page.GoToAsync(url, new NavigationOptions { WaitUntil = new WaitUntilNavigation[] { WaitUntilNavigation.Networkidle2 } });
-
-                    if (!response.Ok)
-                    {
-                        _logger.LogError($"Unable to load {url}. Http Status {response.Status}");
-                        return;
-                    }
-
-                    _logger.LogInformation($"Success loading {url}");
-
-                    var sd = await page.EvaluateExpressionAsync("shotsData");
-                    var rd = await page.EvaluateExpressionAsync("rostersData");
-                    var mi = await page.EvaluateExpressionAsync("match_info");
-
-                    var shots = sd.ToObject<FixtureShots>();
-                    var rosters = rd.ToObject<FixtureRosters>();
-                    var matchInfo = mi.ToObject<FixtureMatchInfo>();
-
-                    await _fixtureDetailsManager.ProcessRosters(rosters, matchInfo, conn);
-                    await _fixtureDetailsManager.ProcessShots(shots, rosters, matchInfo, conn);
-                    await _fixtureDetailsManager.ProcessMatchInfo(matchInfo, conn);
-                    await _fixtureDetailsManager.ConfirmDetailsSaved(fixtureId, conn);
-
-                    trans.Commit();
-
-                    await page.CloseAsync();
-
-                    _logger.LogDebug($"Exiting Run({fixtureId})");
+                    _logger.LogError($"Unable to load {url}. Http Status {response.Status}");
+                    return;
                 }
+
+                _logger.LogInformation($"Success loading {url}");
+
+                var sd = await page.EvaluateExpressionAsync("shotsData");
+                var rd = await page.EvaluateExpressionAsync("rostersData");
+                var mi = await page.EvaluateExpressionAsync("match_info");
+
+                var shots = sd.ToObject<FixtureShots>();
+                var rosters = rd.ToObject<FixtureRosters>();
+                var matchInfo = mi.ToObject<FixtureMatchInfo>();
+
+                await _fixtureDetailsManager.ProcessRosters(rosters, matchInfo, conn);
+                await _fixtureDetailsManager.ProcessShots(shots, rosters, matchInfo, conn);
+                await _fixtureDetailsManager.ProcessMatchInfo(matchInfo, conn);
+                await _fixtureDetailsManager.ConfirmDetailsSaved(fixtureId, conn);
+
+                trans.Commit();
+
+                _logger.LogDebug($"Exiting Run({fixtureId})");
             }
             catch (Exception ex)
             {

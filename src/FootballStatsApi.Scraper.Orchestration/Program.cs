@@ -33,13 +33,13 @@ namespace FootballStatsApi.Scraper.Orchestration
             _serviceProvider = services.BuildServiceProvider();
 
             var amqpService = _serviceProvider.GetService<IAmqpService>();
-            amqpService.Connect().Wait();
+            amqpService.Connect().GetAwaiter().GetResult();
             amqpService.Declare();
 
             var leagueSummaryRequester = _serviceProvider.GetService<LeagueSummaryRequester>();
             var fixtureDetailsRequester = _serviceProvider.GetService<FixtureDetailsRequester>();
 
-            Task.WhenAll(leagueSummaryRequester.Run(), fixtureDetailsRequester.Run()).Wait();
+            Task.WhenAll(leagueSummaryRequester.Run(), fixtureDetailsRequester.Run()).GetAwaiter().GetResult();
         }
 
         private static void ConfigureServices(IServiceCollection services)

@@ -1,5 +1,16 @@
 version: '3'
 services:
+  chrome:
+    build:
+      context: .
+      dockerfile: chrome/Dockerfile
+    image: fsa-chrome
+    security_opt: 
+      - seccomp:unconfined
+    expose:
+      - 9222
+    ports:
+      - "9222:9222"
   rabbitmq:
     image: rabbitmq:3-management
     container_name: fsa-rabbitmq
@@ -27,6 +38,7 @@ services:
       - db
       - db-migrations
       - rabbitmq
+      - chrome
     build:
       context: .
       dockerfile: FootballStatsApi.Scraper.LeagueSummary/Dockerfile
@@ -36,6 +48,8 @@ services:
     environment:
       ConnectionStrings__AMQP: amqp://guest:guest@rabbitmq
       ConnectionStrings__Football: Server=db;User Id=postgres;Password=admin;Database=football;
+      ChromeRemoteDebuggingHost: chrome
+      ChromeRemoteDebuggingPort: 9222
   web:
     depends_on:
       - db
