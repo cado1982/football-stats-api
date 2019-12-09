@@ -37,43 +37,56 @@ namespace FootballStatsApi.Scraper.LeagueSummary
             {
                 _logger.LogDebug($"Entering Run({fixtureId})");
 
-                using var conn = await _connectionProvider.GetOpenConnectionAsync();
-                using var trans = conn.BeginTransaction();
+                FixtureRosters rosters = null;
+                FixtureShots shots = null;
+                FixtureMatchInfo matchInfo = null;
 
-                var browser = await Puppeteer.ConnectAsync(await _chromeHelper.GetConnectOptionsAsync());
-
-                using var page = await browser.NewPageAsync();
-
-                var url = $"https://understat.com/match/{fixtureId}";
-
-                _logger.LogInformation("Loading " + url);
-
-                var response = await page.GoToAsync(url, new NavigationOptions { WaitUntil = new WaitUntilNavigation[] { WaitUntilNavigation.Networkidle2 } });
-
-                if (!response.Ok)
+                using (var conn = await _connectionProvider.GetOpenConnectionAsync())
+                using (var trans = conn.BeginTransaction())
                 {
-                    _logger.LogError($"Unable to load {url}. Http Status {response.Status}");
-                    return;
+                    var browser = await Puppeteer.ConnectAsync(await _chromeHelper.GetConnectOptionsAsync());
+
+                    try
+                    {
+                        using (var page = await browser.NewPageAsync())
+                        {
+                            var url = $"https://understat.com/match/{fixtureId}";
+
+                            _logger.LogInformation("Loading " + url);
+
+                            var response = await page.GoToAsync(url, new NavigationOptions { WaitUntil = new WaitUntilNavigation[] { WaitUntilNavigation.Networkidle2 } });
+
+                            if (!response.Ok)
+                            {
+                                _logger.LogError($"Unable to load {url}. Http Status {response.Status}");
+                                return;
+                            }
+
+                            _logger.LogInformation($"Success loading {url}");
+
+                            var sd = await page.EvaluateExpressionAsync("shotsData");
+                            var rd = await page.EvaluateExpressionAsync("rostersData");
+                            var mi = await page.EvaluateExpressionAsync("match_info");
+
+                            shots = sd.ToObject<FixtureShots>();
+                            rosters = rd.ToObject<FixtureRosters>();
+                            matchInfo = mi.ToObject<FixtureMatchInfo>();   
+                        }
+                    }
+                    finally
+                    {
+                        browser.Disconnect();
+                    }
+
+                    await _fixtureDetailsManager.ProcessRosters(rosters, matchInfo, conn);
+                    await _fixtureDetailsManager.ProcessShots(shots, rosters, matchInfo, conn);
+                    await _fixtureDetailsManager.ProcessMatchInfo(matchInfo, conn);
+                    await _fixtureDetailsManager.ConfirmDetailsSaved(fixtureId, conn);
+
+                    trans.Commit();
+
+                    _logger.LogDebug($"Exiting Run({fixtureId})");
                 }
-
-                _logger.LogInformation($"Success loading {url}");
-
-                var sd = await page.EvaluateExpressionAsync("shotsData");
-                var rd = await page.EvaluateExpressionAsync("rostersData");
-                var mi = await page.EvaluateExpressionAsync("match_info");
-
-                var shots = sd.ToObject<FixtureShots>();
-                var rosters = rd.ToObject<FixtureRosters>();
-                var matchInfo = mi.ToObject<FixtureMatchInfo>();
-
-                await _fixtureDetailsManager.ProcessRosters(rosters, matchInfo, conn);
-                await _fixtureDetailsManager.ProcessShots(shots, rosters, matchInfo, conn);
-                await _fixtureDetailsManager.ProcessMatchInfo(matchInfo, conn);
-                await _fixtureDetailsManager.ConfirmDetailsSaved(fixtureId, conn);
-
-                trans.Commit();
-
-                _logger.LogDebug($"Exiting Run({fixtureId})");
             }
             catch (Exception ex)
             {

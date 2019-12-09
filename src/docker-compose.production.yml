@@ -28,6 +28,7 @@ services:
     environment:
       ConnectionStrings__AMQP:
       ConnectionStrings__Football:
+      DOTNET_ENVIRONMENT: Production
   scraper:
     depends_on:
       - db-migrations
@@ -40,6 +41,7 @@ services:
       ConnectionStrings__Football:
       ChromeRemoteDebuggingHost: chrome
       ChromeRemoteDebuggingPort: 9222
+      DOTNET_ENVIRONMENT: Production
   web-app:
     depends_on:
       - db-migrations

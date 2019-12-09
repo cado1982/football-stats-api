@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-using System.Threading.Tasks;
 using FootballStatsApi.Domain.Helpers;
 using FootballStatsApi.Domain.Repositories;
 using FootballStatsApi.Scraper.Shared;
@@ -13,9 +12,9 @@ using RabbitMQ;
 
 namespace FootballStatsApi.Scraper.Orchestration.Requesters
 {
-    public class LeagueSummaryRequester : IRequester
+
+    public class LeagueSummaryRequester : TimedService
     {
-        private bool _isRunning = false;
         private readonly ILogger<LeagueSummaryRequester> _logger;
         private readonly IAmqpService _amqpService;
         private readonly ICompetitionRepository _competitionRepository;
@@ -25,7 +24,7 @@ namespace FootballStatsApi.Scraper.Orchestration.Requesters
             ILogger<LeagueSummaryRequester> logger,
             IAmqpService amqpService,
             ICompetitionRepository competitionRepository,
-            IConnectionProvider connectionProvider)
+            IConnectionProvider connectionProvider) : base(logger)
         {
             _logger = logger;
             _amqpService = amqpService;
@@ -33,45 +32,35 @@ namespace FootballStatsApi.Scraper.Orchestration.Requesters
             _connectionProvider = connectionProvider;
         }
 
-        public async Task Run()
+        protected override TimeSpan TimerInterval { get => TimeSpan.FromSeconds(Timers.LeagueSummaryIntervalSeconds); }
+
+        protected override async void Process(object state)
         {
-            _logger.LogDebug("LeagueSummaryRequester Run()");
-
-            _isRunning = true;
-
-            await Process();
-
-            while (_isRunning)
+            try
             {
-                await Task.Delay(Timers.LeagueSummaryIntervalSeconds * 1000);
-                await Process();
-            }
-        }
+                _logger.LogInformation("Running process iteration");
 
-        private async Task Process()
-        {
-            _logger.LogInformation("Running process iteration");
-
-            using (var conn = await _connectionProvider.GetOpenConnectionAsync())
-            {
-                // 1. Get all competitions
-                var competitions = await _competitionRepository.GetAsync(conn);
-
-                // 2. Fire off a GetLeagueSummaryMessage for each competition
-                foreach (var competition in competitions)
+                using (var conn = await _connectionProvider.GetOpenConnectionAsync())
                 {
-                    var message = new GetLeagueSummaryMessage();
-                    message.CompetitionId = competition.Id;
+                    // 1. Get all competitions
+                    var competitions = await _competitionRepository.GetAsync(conn);
 
-                    _logger.LogInformation($"Sending AMQP message to '{RoutingKey.LeagueSummary}'. {JsonConvert.SerializeObject(message)}");
-                    _amqpService.Send(message, RoutingKey.LeagueSummary);
+                    // 2. Fire off a GetLeagueSummaryMessage for each competition
+                    foreach (var competition in competitions)
+                    {
+                        var message = new GetLeagueSummaryMessage();
+                        message.CompetitionId = competition.Id;
+
+                        _logger.LogInformation($"Sending AMQP message to '{RoutingKey.LeagueSummary}'. {JsonConvert.SerializeObject(message)}");
+                        _amqpService.Send(message, RoutingKey.LeagueSummary);
+                    }
                 }
             }
-        }
-
-        public void Stop()
-        {
-            this._isRunning = false;
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Unable to process LeagueSummary iteration");
+                throw;
+            }
         }
     }
 }

@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Newtonsoft.Json;
 using System.Collections.Generic;
 using RabbitMQ.Client.Events;
+using System.Threading;
 
 namespace FootballStatsApi.Scraper.Shared
 {
@@ -25,8 +26,10 @@ namespace FootballStatsApi.Scraper.Shared
             _factory.Uri = amqpUri;
         }
 
-        public async Task Connect()
+        public async Task Connect(CancellationToken cancellationToken)
         {
+            cancellationToken.ThrowIfCancellationRequested();
+
             _logger.LogInformation("Attempting to connect to RabbitMQ");
             _connectAttempts++;
 
@@ -47,7 +50,7 @@ namespace FootballStatsApi.Scraper.Shared
 
             // This code will only run if the catch block was hit above.
             await Task.Delay(5000);
-            await Connect();
+            await Connect(cancellationToken);
         }
 
         public void Send(IAmqpMessage message, string routingKey)
@@ -61,14 +64,24 @@ namespace FootballStatsApi.Scraper.Shared
             _channel.BasicPublish(ExchangeName.Topic, routingKey, props, messageBodyBytes);
         }
 
-        public void Consume(string queueName, EventHandler<BasicDeliverEventArgs> messageHandler, bool autoAck)
+        public string Consume(string queueName, EventHandler<BasicDeliverEventArgs> messageHandler, bool autoAck)
         {
             if (_channel == null) throw new InvalidOperationException("Channel is not been established");
 
             var consumer = new EventingBasicConsumer(_channel);
             consumer.Received += messageHandler;
 
-            _channel.BasicConsume(queueName, autoAck, consumer);
+            var consumerTag = _channel.BasicConsume(queueName, autoAck, consumer);
+
+            return consumerTag;
+        }
+
+        public void CancelConsume(string consumerTag)
+        {
+            if (_channel == null) throw new InvalidOperationException("Channel is not been established");
+            if (String.IsNullOrWhiteSpace(consumerTag)) throw new ArgumentNullException(nameof(consumerTag));
+
+            _channel.BasicCancel(consumerTag);
         }
 
         public void Declare()
@@ -144,8 +157,14 @@ namespace FootballStatsApi.Scraper.Shared
             _channel?.Close();
             _connection?.Close();
 
-            _channel.Dispose();
-            _connection.Dispose();
+            _channel?.Dispose();
+            _connection?.Dispose();
+        }
+
+        public Task Disconnect(CancellationToken cancellationToken)
+        {
+            Dispose();
+            return Task.CompletedTask;
         }
     }
 }

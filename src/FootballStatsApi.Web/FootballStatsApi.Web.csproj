@@ -3,7 +3,9 @@
   <PropertyGroup>
     <TargetFramework>netcoreapp3.0</TargetFramework>
     <UserSecretsId>aspnet-FootballStatsApi.Web-3977488B-8F61-4860-A5EB-49CB72612A20</UserSecretsId>
+    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
   </PropertyGroup>
+
 
   <ItemGroup>
     <ProjectReference Include="..\FootballStatsApi.Domain\FootballStatsApi.Domain.csproj" />

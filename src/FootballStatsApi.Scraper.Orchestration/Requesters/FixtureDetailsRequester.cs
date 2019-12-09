@@ -1,27 +1,26 @@
-using System.Threading.Tasks;
+using System;
 using FootballStatsApi.Domain.Helpers;
 using FootballStatsApi.Domain.Repositories;
 using FootballStatsApi.Scraper.Shared;
 using FootballStatsApi.Scraper.Shared.Messages;
 using Microsoft.Extensions.Logging;
-using Newtonsoft.Json;
-using RabbitMQ;
 
 namespace FootballStatsApi.Scraper.Orchestration.Requesters
 {
-    public class FixtureDetailsRequester : IRequester
+    public class FixtureDetailsRequester : TimedService
     {
-        private bool _isRunning = false;
         private readonly ILogger<FixtureDetailsRequester> _logger;
         private readonly IAmqpService _amqpService;
         private readonly IFixtureRepository _fixtureRepository;
         private readonly IConnectionProvider _connectionProvider;
 
+        protected override TimeSpan TimerInterval => TimeSpan.FromSeconds(Timers.FixtureDetailsIntervalSeconds);
+
         public FixtureDetailsRequester(
             ILogger<FixtureDetailsRequester> logger,
             IAmqpService amqpService,
             IFixtureRepository fixtureRepository,
-            IConnectionProvider connectionProvider)
+            IConnectionProvider connectionProvider) : base(logger)
         {
             _logger = logger;
             _amqpService = amqpService;
@@ -29,22 +28,7 @@ namespace FootballStatsApi.Scraper.Orchestration.Requesters
             _connectionProvider = connectionProvider;
         }
 
-        public async Task Run()
-        {
-            _logger.LogDebug("FixtureDetailsRequester Run()");
-
-            _isRunning = true;
-
-            await Process();
-
-            while (_isRunning)
-            {
-                await Task.Delay(Timers.FixtureDetailsIntervalSeconds * 1000);
-                await Process();
-            }
-        }
-
-        private async Task Process()
+        protected override async void Process(object state)
         {
             _logger.LogInformation("Running process iteration");
 
@@ -66,11 +50,6 @@ namespace FootballStatsApi.Scraper.Orchestration.Requesters
 
                 _logger.LogInformation($"Sent {fixtureIds.Count} AMQP messages to request fixture details");
             }
-        }
-
-        public void Stop()
-        {
-            this._isRunning = false;
         }
     }
 }

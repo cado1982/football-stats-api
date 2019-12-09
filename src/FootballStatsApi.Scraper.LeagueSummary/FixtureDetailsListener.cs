@@ -10,17 +10,20 @@ using RabbitMQ.Client.Events;
 using System.Text;
 using Newtonsoft.Json;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Hosting;
+using System.Threading;
 
 namespace FootballStatsApi.Scraper.LeagueSummary
 {
 
-    public class FixtureDetailsListener : IListener
+    public class FixtureDetailsListener
     {
         private readonly ILogger<FixtureDetailsListener> _logger;
         private readonly IAmqpService _amqpService;
         private readonly ICompetitionRepository _competitionRepository;
         private readonly FixtureDetailsScraper _scraper;
         private readonly IConnectionProvider _connectionProvider;
+        private string _consumerTag;
 
         public FixtureDetailsListener(
             ILogger<FixtureDetailsListener> logger,
@@ -36,9 +39,20 @@ namespace FootballStatsApi.Scraper.LeagueSummary
             _amqpService = amqpService;
         }
 
-        public void Listen()
+        public Task StartAsync(CancellationToken cancellationToken)
         {
-            _amqpService.Consume(QueueName.GetFixtureDetails, ProcessMessage, autoAck: false);
+            _consumerTag = _amqpService.Consume(QueueName.GetFixtureDetails, ProcessMessage, autoAck: false);
+
+            return Task.CompletedTask;
+        }
+
+        public Task StopAsync(CancellationToken cancellationToken)
+        {
+            if (String.IsNullOrWhiteSpace(_consumerTag)) return Task.CompletedTask;
+
+            _amqpService.CancelConsume(_consumerTag);
+
+            return Task.CompletedTask;
         }
 
         private async void ProcessMessage(object model, BasicDeliverEventArgs ea)

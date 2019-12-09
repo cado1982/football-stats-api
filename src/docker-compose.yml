@@ -33,6 +33,7 @@ services:
     environment:
       ConnectionStrings__AMQP: amqp://guest:guest@rabbitmq
       ConnectionStrings__Football: Server=db;User Id=postgres;Password=admin;Database=football;
+      DOTNET_ENVIRONMENT: Development
   scraper:
     depends_on:
       - db
@@ -50,6 +51,7 @@ services:
       ConnectionStrings__Football: Server=db;User Id=postgres;Password=admin;Database=football;
       ChromeRemoteDebuggingHost: chrome
       ChromeRemoteDebuggingPort: 9222
+      DOTNET_ENVIRONMENT: Development
   web:
     depends_on:
       - db
