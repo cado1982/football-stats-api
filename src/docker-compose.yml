@@ -5,6 +5,8 @@ services:
       context: .
       dockerfile: chrome/Dockerfile
     image: fsa-chrome
+    logging:
+      driver: none
     security_opt: 
       - seccomp:unconfined
     expose:

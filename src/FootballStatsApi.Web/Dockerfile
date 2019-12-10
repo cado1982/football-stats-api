@@ -15,6 +15,7 @@ RUN dotnet publish FootballStatsApi.Web/FootballStatsApi.Web.csproj -c Release -
 FROM mcr.microsoft.com/dotnet/core/aspnet:3.0
 WORKDIR /public
 COPY --from=build /publish .
+COPY ./certs/FootballStatsApiCert.p12 /etc/ssl/certs/
 ENV ASPNETCORE_URLS http://+:5000
 EXPOSE 5000
 ENTRYPOINT ["dotnet", "FootballStatsApi.Web.dll"]

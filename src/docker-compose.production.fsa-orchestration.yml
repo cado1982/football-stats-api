@@ -1,0 +1,28 @@
+
+version: '3'
+services:
+  rabbitmq: # fsa-orchestration
+    image: rabbitmq:3-management
+    container_name: fsa-rabbitmq
+    restart: "always"
+    hostname: rabbitmq
+    expose:
+      - 5672
+    ports:
+      - "15672:15672"
+      - "5672:5672"
+    environment:
+      RABBITMQ_DEFAULT_USER:
+      RABBITMQ_DEFAULT_PASS:
+  scraper-orchestration: # fsa-orchestration
+    image: registry.gitlab.com/cado82/football-stats-api/scraper/orchestration:latest
+    restart: "always"
+    environment:
+      ConnectionStrings__AMQP:
+      ConnectionStrings__Football:
+      DOTNET_ENVIRONMENT: Production
+  db-migrations: # fsa-orchestration
+    image: registry.gitlab.com/cado82/football-stats-api/db/migrations:latest
+    restart: "no"
+    environment:
+      ConnectionStrings__FootballAdmin:
