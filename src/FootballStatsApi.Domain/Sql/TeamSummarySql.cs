@@ -19,7 +19,7 @@ namespace FootballStatsApi.Domain.Sql
             ts.expected_goals_against as expectedgoalsagainst,
             ts.expected_points as expectedpoints,
             ts.ppda,
-            ts.deep_passes,
+            ts.deep_passes as deeppasses,
             t.id,
             t.name
         FROM 
@@ -43,7 +43,7 @@ namespace FootballStatsApi.Domain.Sql
             ts.expected_goals_against as expectedgoalsagainst,
             ts.expected_points as expectedpoints,
             ts.ppda,
-            ts.deep_passes,
+            ts.deep_passes as deeppasses,
             t.id,
             t.name
         FROM 
