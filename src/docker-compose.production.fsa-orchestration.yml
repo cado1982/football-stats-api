@@ -1,7 +1,7 @@
 
 version: '3'
 services:
-  rabbitmq: # fsa-orchestration
+  rabbitmq:
     image: rabbitmq:3-management
     container_name: fsa-rabbitmq
     restart: "always"
@@ -14,14 +14,14 @@ services:
     environment:
       RABBITMQ_DEFAULT_USER:
       RABBITMQ_DEFAULT_PASS:
-  scraper-orchestration: # fsa-orchestration
+  scraper-orchestration:
     image: registry.gitlab.com/cado82/football-stats-api/scraper/orchestration:latest
     restart: "always"
     environment:
       ConnectionStrings__AMQP:
       ConnectionStrings__Football:
       DOTNET_ENVIRONMENT: Production
-  db-migrations: # fsa-orchestration
+  db-migrations:
     image: registry.gitlab.com/cado82/football-stats-api/db/migrations:latest
     restart: "no"
     environment:

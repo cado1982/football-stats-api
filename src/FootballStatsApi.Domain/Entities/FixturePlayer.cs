@@ -13,13 +13,6 @@
         public double ExpectedGoalsBuildup { get; set; }
         public int PositionOrder { get; set; }
         public Team Team { get; set; }
-        public int KeyPasses { get; set; }
-        public int Assists { get; set; }
-        public int Goals { get; set; }
-        public int OwnGoals { get; set; }
-        public int Shots { get; set; }
-        public double ExpectedGoals { get; set; }
-        public double ExpectedAssists { get; set; }
     }
 }
 

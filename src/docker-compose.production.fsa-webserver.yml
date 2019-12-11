@@ -1,0 +1,31 @@
+version: '3'
+services:
+  api-app:
+    image: registry.gitlab.com/cado82/football-stats-api/api/app:latest
+    restart: "always"
+    expose:
+      - 5000
+    environment:
+      ConnectionStrings__Football:
+      ASPNETCORE_ENVIRONMENT: Production
+  web-app:
+    image: registry.gitlab.com/cado82/football-stats-api/web/app:latest
+    restart: "always"
+    expose:
+      - 5000
+    environment:
+      ConnectionStrings__Football:
+      ASPNETCORE_ENVIRONMENT: Production
+      TokenSigningCert: /etc/ssl/certs/FootballStatsApiCert.p12
+      TokenSigningCertSecret:
+      SmtpHost: email-smtp.eu-west-1.amazonaws.com
+      SmtpUsername: 
+      SmtpPort: 25
+      SmtpPassword: 
+      SmtpFromAddress: noreply@footballstatsapi.com
+  nginx:
+    image: registry.gitlab.com/cado82/football-stats-api/nginx:latest
+    restart: "always"
+    ports:
+      - "80:80"
+      - "8080:8080"
