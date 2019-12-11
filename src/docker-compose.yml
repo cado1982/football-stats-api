@@ -67,11 +67,6 @@ services:
     environment:
       ConnectionStrings__Football: Server=db;User Id=postgres;Password=admin;Database=football;
       ASPNETCORE_ENVIRONMENT: Development
-      SmtpHost: email-smtp.eu-west-1.amazonaws.com
-      SmtpUsername: AKIAXURGM4H2LG2EZBE7
-      SmtpPort: 25
-      SmtpPassword: BBm5jJvjdIkk7OhbXM+Jgfbk3m2g+QTQb74M+FB6i6FW
-      SmtpFromAddress: noreply@footballstatsapi.com
   api:
     depends_on:
       - db

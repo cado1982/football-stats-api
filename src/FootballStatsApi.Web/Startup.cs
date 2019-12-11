@@ -67,18 +67,15 @@ namespace FootballStatsApi.Web
                 options.SignIn.RequireConfirmedPhoneNumber = false;
             });
 
-            // if (!Environment.IsDevelopment())
-            // {
-                services.AddTransient<IEmailSender, EmailSender>();
-                services.AddSingleton(new SmtpConnectionInfo
-                {
-                    Host = Configuration["SmtpHost"],
-                    Username = Configuration["SmtpUsername"],
-                    Port = Configuration["SmtpPort"] == null ? 0 : int.Parse(Configuration["SmtpPort"]),
-                    Password = Configuration["SmtpPassword"],
-                    FromAddress = Configuration["SmtpFromAddress"]
-                });
-            //}
+            services.AddTransient<IEmailSender, EmailSender>();
+            services.AddSingleton(new SmtpConnectionInfo
+            {
+                Host = Configuration["SmtpHost"],
+                Username = Configuration["SmtpUsername"],
+                Port = Configuration["SmtpPort"] == null ? 0 : int.Parse(Configuration["SmtpPort"]),
+                Password = Configuration["SmtpPassword"],
+                FromAddress = Configuration["SmtpFromAddress"]
+            });
 
             // Data Protection - Provides storage and encryption for anti-forgery tokens
             if (Environment.IsDevelopment())
