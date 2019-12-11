@@ -13,13 +13,14 @@ using FootballStatsApi.Domain;
 using FootballStatsApi.Domain.Entities.Identity;
 using Microsoft.AspNetCore.DataProtection;
 using System.Security.Cryptography.X509Certificates;
+using FootballStatsApi.Web.Models;
 
 namespace FootballStatsApi.Web
 {
     public class Startup
     {
         public IConfiguration Configuration { get; }
-        public IHostEnvironment Environment { get; } 
+        public IHostEnvironment Environment { get; }
 
         public Startup(IConfiguration configuration, IHostEnvironment environment)
         {
@@ -64,6 +65,16 @@ namespace FootballStatsApi.Web
 
                 options.SignIn.RequireConfirmedEmail = true;
                 options.SignIn.RequireConfirmedPhoneNumber = false;
+            });
+
+            services.AddTransient<IEmailSender, EmailSender>();
+            services.AddSingleton(new SmtpConnectionInfo
+            {
+                Host = Configuration["SmtpHost"],
+                Username = Configuration["SmtpUsername"],
+                Port = Configuration["SmtpPort"] == null ? 0 : int.Parse(Configuration["SmtpPort"]),
+                Password = Configuration["SmtpPassword"],
+                FromAddress = Configuration["SmtpFromAddress"]
             });
 
             // Data Protection - Provides storage and encryption for anti-forgery tokens
