@@ -47,15 +47,8 @@
             fp.position,
             fp.yellow_cards as yellowcards,
             fp.red_cards as redcards,
-            fp.key_passes as keypasses,
-            fp.assists as assists,
             fp.expected_goals_chain as expectedgoalschain,
             fp.expected_goals_buildup as expectedgoalsbuildup,
-            fp.goals,
-            fp.own_goals as owngoals,
-            fp.shots as shots,
-            fp.expected_goals as expected_goals,
-            fp.expected_assists as expected_assists
             p.id,
             p.name,
             rb.id,
@@ -190,16 +183,9 @@
                 red_cards,
                 replaced_by_id,
                 replaced_id,
-                key_passes,
-                assists,
                 expected_goals_chain,
                 expected_goals_buildup,
-                position_order,
-                goals,
-                own_goals,
-                shots,
-                expected_goals,
-                expected_assists
+                position_order
             ) VALUES (
                 @PlayerId,
                 @FixtureId,
@@ -210,16 +196,9 @@
                 @RedCards,
                 @ReplacedById,
                 @ReplacedId,
-                @KeyPasses,
-                @Assists,
                 @ExpectedGoalsChain,
                 @ExpectedGoalsBuildup,
-                @PositionOrder,
-                @Goals,
-                @OwnGoals,
-                @Shots,
-                @ExpectedGoals,
-                @ExpectedAssists
+                @PositionOrder
             )
             ON CONFLICT(player_id, fixture_id) DO NOTHING;";
 

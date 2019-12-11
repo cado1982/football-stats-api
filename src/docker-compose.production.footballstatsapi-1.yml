@@ -1,13 +1,13 @@
 version: '3'
 services:
-  chrome: # footballstatsapi-1
+  chrome:
     image: registry.gitlab.com/cado82/football-stats-api/scraper/chrome:latest
     security_opt: 
       - seccomp:unconfined
     restart: "always"
     expose:
       - 9222
-  scraper: # footballstatsapi-1
+  scraper:
     image: registry.gitlab.com/cado82/football-stats-api/scraper/leaguesummary:latest
     restart: "always"
     environment:

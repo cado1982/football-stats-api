@@ -88,8 +88,8 @@ namespace FootballStatsApi.Scraper.LeagueSummary
 
             foreach (var player in players)
             {
-                var rosterOutPlayer = players.Find(p => p.RosterOut == player.RosterOut);
-                var rosterInPlayer = players.Find(p => p.RosterIn == player.RosterIn);
+                var rosterOutPlayer = players.Find(p => p.PlayerId == player.RosterOut);
+                var rosterInPlayer = players.Find(p => p.PlayerId == player.RosterIn);
 
                 var fixturePlayer = new Entities.FixturePlayer
                 {
