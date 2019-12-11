@@ -129,16 +129,9 @@ namespace FootballStatsApi.Domain.Repositories
                     RedCards = p.RedCards,
                     ReplacedById = p.ReplacedBy?.Id,
                     ReplacedId = p.Replaced?.Id,
-                    KeyPasses = p.KeyPasses,
-                    Assists = p.Assists,
                     ExpectedGoalsChain = p.ExpectedGoalsChain,
                     ExpectedGoalsBuildup = p.ExpectedGoalsBuildup,
-                    PositionOrder = p.PositionOrder,
-                    Goals = p.Goals,
-                    OwnGoals = p.OwnGoals,
-                    Shots = p.Shots,
-                    ExpectedGoals = p.ExpectedGoals,
-                    ExpectedAssists = p.ExpectedAssists
+                    PositionOrder = p.PositionOrder
                 }));
             }
             catch (Exception ex)
@@ -195,10 +188,6 @@ namespace FootballStatsApi.Domain.Repositories
                     SeasonId = f.Season,
                     CompetitionId = f.Competition.Id,
                     IsResult = f.IsResult,
-                    HomeGoals = f.HomeGoals,
-                    AwayGoals = f.AwayGoals,
-                    ExpectedHomeGoals = f.HomeExpectedGoals,
-                    ExpectedAwayGoals = f.AwayExpectedGoals,
                     HomeWinForecast = f.ForecastHomeWin,
                     DrawForecast = f.ForecastDraw,
                     AwayWinForecast = f.ForecastAwayWin,
@@ -241,17 +230,9 @@ namespace FootballStatsApi.Domain.Repositories
                 parameters.Add("@FixtureId", fixture.FixtureId);
                 parameters.Add("@HomeDeep", fixture.HomeDeepPasses);
                 parameters.Add("@AwayDeep", fixture.AwayDeepPasses);
-                parameters.Add("@ExpectedHomeGoals", fixture.HomeExpectedGoals);
-                parameters.Add("@ExpectedAwayGoals", fixture.AwayExpectedGoals);
-                parameters.Add("@HomeGoals", fixture.HomeGoals);
-                parameters.Add("@AwayGoals", fixture.AwayGoals);
-                parameters.Add("@HomeShots", fixture.HomeShots);
-                parameters.Add("@AwayShots", fixture.AwayShots);
                 parameters.Add("@HomeWinForecast", fixture.ForecastHomeWin);
                 parameters.Add("@DrawForecast", fixture.ForecastDraw);
                 parameters.Add("@AwayWinForecast", fixture.ForecastAwayWin);
-                parameters.Add("@HomeShotsOnTarget", fixture.HomeShotsOnTarget);
-                parameters.Add("@AwayShotsOnTarget", fixture.AwayShotsOnTarget);
                 parameters.Add("@HomePpda", fixture.HomePpda);
                 parameters.Add("@AwayPpda", fixture.AwayPpda);
 

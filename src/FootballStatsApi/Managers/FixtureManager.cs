@@ -28,16 +28,32 @@ namespace FootballStatsApi.Managers
             _connectionProvider = connectionProvider;
         }
 
-        public async Task<FixtureDetails> GetDetailsAsync(int fixtureId)
+        //public async Task<FixtureBasic> GetAsync(int? competitionId, int? season, int? teamId)
+        //{
+        //    try
+        //    {
+        //        using (var conn = await _connectionProvider.GetOpenConnectionAsync())
+        //        {
+                    
+        //        }
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        _logger.LogError(ex, "Unable to get fixtures for competition {competitionId}competitions");
+        //        throw;
+        //    }
+        //}
+
+        public async Task<FixtureBasic> GetDetailsAsync(int fixtureId)
         {
             try
             {
                 using (var conn = await _connectionProvider.GetOpenConnectionAsync())
                 {
                     var details = await _fixtureRepository.GetFixtureDetailsAsync(fixtureId, conn);
-                    //var shots = await _fixtureRepository.GetFixtureShotsAsync(fixtureId, conn);
-
-                    return details.ToModel();
+                    var shots = await _fixtureRepository.GetFixtureShotsAsync(fixtureId, conn);
+                    
+                    return details.ToModel(shots);
                 }
             }
             catch (Exception ex)

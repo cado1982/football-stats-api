@@ -8,55 +8,29 @@ namespace FootballStatsApi.Extensions
 {
     public static class FixtureDetailsExtensions
     {
-        public static Models.FixtureDetails ToModel(this Entities.FixtureDetails entity)
+        public static Models.FixtureBasic ToModel(this Entities.FixtureDetails entity, List<Entities.FixtureShot> shots)
         {
             if (entity == null) return null;
 
-            return new Models.FixtureDetails
+            return new Models.FixtureBasic
             {
                 HomeTeam = entity.HomeTeam.ToModel(),
                 AwayTeam = entity.AwayTeam.ToModel(),
                 Competition = entity.Competition.ToModel(),
-                DeepPasses = new HomeAway<int>
-                {
-                    Home = entity.HomeDeepPasses,
-                    Away = entity.AwayDeepPasses
-                },
-                Ppda = new HomeAway<double>
-                {
-                    Home = entity.HomePpda,
-                    Away = entity.AwayPpda
-                },
-                Forecast = new FixtureForecast
-                {
-                    HomeWin = entity.ForecastHomeWin,
-                    Draw = entity.ForecastDraw,
-                    AwayWin = entity.ForecastAwayWin
-                },
-                ExpectedPoints = new HomeAway<double>
-                {
-                    Home = (entity.ForecastHomeWin * 3) + (entity.ForecastDraw * 1),
-                    Away = (entity.ForecastAwayWin * 3) + (entity.ForecastDraw * 1)
-                },
-                ExpectedGoals = new HomeAway<double>
-                {
-                    Home = entity.HomeExpectedGoals,
-                    Away = entity.AwayExpectedGoals
-                },
                 Goals = new HomeAway<int>
                 {
-                    Home = entity.HomeGoals,
-                    Away = entity.AwayGoals
+                    Home = shots.Count(s => s.Team.Id == entity.HomeTeam.Id && s.Result == "Goal") + shots.Count(s => s.Team.Id == entity.AwayTeam.Id && s.Result == "OwnGoal"),
+                    Away = shots.Count(s => s.Team.Id == entity.AwayTeam.Id && s.Result == "Goal") + shots.Count(s => s.Team.Id == entity.HomeTeam.Id && s.Result == "OwnGoal")
                 },
                 Shots = new HomeAway<int>
                 {
-                    Home = entity.HomeShots,
-                    Away = entity.AwayShots
+                    Home = shots.Count(s => s.Team.Id == entity.HomeTeam.Id && s.Result != "OwnGoal"),
+                    Away = shots.Count(s => s.Team.Id == entity.AwayTeam.Id && s.Result != "OwnGoal")
                 },
                 ShotsOnTarget = new HomeAway<int>
                 {
-                    Home = entity.HomeShotsOnTarget,
-                    Away = entity.AwayShotsOnTarget
+                    Home = shots.Count(s => s.Team.Id == entity.HomeTeam.Id && (s.Result == "Goal" || s.Result == "SavedShot")),
+                    Away = shots.Count(s => s.Team.Id == entity.AwayTeam.Id && (s.Result == "Goal" || s.Result == "SavedShot")),
                 },
                 DateTime = entity.DateTime,
                 FixtureId = entity.FixtureId,
@@ -64,19 +38,19 @@ namespace FootballStatsApi.Extensions
             };
         }
 
-        public static Entities.FixtureDetails ToEntity(this Models.FixtureDetails model)
+        public static Entities.FixtureDetails ToEntity(this Models.FixtureBasic model)
         {
             throw new NotImplementedException();
         }
 
-        public static IEnumerable<Models.FixtureDetails> ToModels(this IEnumerable<Entities.FixtureDetails> entities)
+        public static IEnumerable<Models.FixtureBasic> ToModels(this IEnumerable<Entities.FixtureDetails> entities, List<Entities.FixtureShot> shots)
         {
             if (entities == null) return null;
 
-            return entities.Select(e => e.ToModel());
+            return entities.Select(e => e.ToModel(shots));
         }
 
-        public static IEnumerable<Entities.FixtureDetails> ToEntities(this IEnumerable<Models.FixtureDetails> models)
+        public static IEnumerable<Entities.FixtureDetails> ToEntities(this IEnumerable<Models.FixtureBasic> models)
         {
             throw new NotImplementedException();
         }

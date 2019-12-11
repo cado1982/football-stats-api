@@ -6,14 +6,12 @@ namespace FootballStatsApi.Extensions
 {
     public static class FixturePlayerExtensions
     {
-        public static Models.FixturePlayer ToModel(this Entities.FixturePlayer entity)
+        public static Models.FixturePlayerBasic ToModel(this Entities.FixturePlayer entity)
         {
             if (entity == null) return null;
 
-            return new Models.FixturePlayer
+            return new Models.FixturePlayerBasic
             {
-                ExpectedGoalsBuildup = entity.ExpectedGoalsBuildup,
-                ExpectedGoalsChain = entity.ExpectedGoalsChain,
                 Minutes = entity.Minutes,
                 Player = entity.Player.ToModel(),
                 Position = entity.Position,
@@ -24,14 +22,12 @@ namespace FootballStatsApi.Extensions
             };
         }
 
-        public static Entities.FixturePlayer ToEntity(this Models.FixturePlayer model)
+        public static Entities.FixturePlayer ToEntity(this Models.FixturePlayerBasic model)
         {
             if (model == null) return null;
 
             return new Entities.FixturePlayer
             {
-                ExpectedGoalsBuildup = model.ExpectedGoalsBuildup,
-                ExpectedGoalsChain = model.ExpectedGoalsChain,
                 Minutes = model.Minutes,
                 Player = model.Player.ToEntity(),
                 Position = model.Position,
@@ -42,14 +38,14 @@ namespace FootballStatsApi.Extensions
             };
         }
 
-        public static IEnumerable<Models.FixturePlayer> ToModels(this IEnumerable<Entities.FixturePlayer> entities)
+        public static IEnumerable<Models.FixturePlayerBasic> ToModels(this IEnumerable<Entities.FixturePlayer> entities)
         {
             if (entities == null) return null;
 
             return entities.Select(e => e.ToModel());
         }
 
-        public static IEnumerable<Entities.FixturePlayer> ToEntities(this IEnumerable<Models.FixturePlayer> models)
+        public static IEnumerable<Entities.FixturePlayer> ToEntities(this IEnumerable<Models.FixturePlayerBasic> models)
         {
             if (models == null) return null;
 

@@ -52,17 +52,9 @@ namespace FootballStatsApi.Scraper.LeagueSummary
                 FixtureId = matchInfo.Id,
                 HomeDeepPasses = matchInfo.HomeDeepPasses,
                 AwayDeepPasses = matchInfo.AwayDeepPasses,
-                HomeExpectedGoals = matchInfo.HomeExpectedGoals,
-                AwayExpectedGoals = matchInfo.AwayExpectedGoals,
-                HomeGoals = matchInfo.HomeGoals,
-                AwayGoals = matchInfo.AwayGoals,
-                HomeShots = matchInfo.HomeShots,
-                AwayShots = matchInfo.AwayShots,
                 ForecastHomeWin = matchInfo.HomeWinForecast,
                 ForecastDraw = matchInfo.DrawForecast,
                 ForecastAwayWin = matchInfo.AwayWinForecast,
-                HomeShotsOnTarget = matchInfo.HomeShotsOnTarget,
-                AwayShotsOnTarget = matchInfo.AwayShotsOnTarget,
                 HomePpda = matchInfo.HomePpda,
                 AwayPpda = matchInfo.AwayPpda
             };

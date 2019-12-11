@@ -26,6 +26,27 @@ namespace FootballStatsApi.Controllers.v1
             _fixtureManager = fixtureManager;
         }
 
+        //[HttpGet]
+        //public async Task<IActionResult> GetFixtures([FromQuery] int? competitionId, [FromQuery] int? season, [FromQuery] int? teamId)
+        //{
+        //    try
+        //    {
+        //        if (competitionId == null && season == null && teamId == null)
+        //        {
+        //            return BadRequest("At least one of competitionId, season, or teamId must be provided");
+        //        }
+
+        //        var fixtures = await _fixtureManager.GetAsync(fixture);
+
+        //        return Ok(fixtures);
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        _logger.LogError(ex, $"Unable to get fixtures");
+        //        return StatusCode((int)HttpStatusCode.InternalServerError);
+        //    }
+        //}
+
         /// <summary>
         /// Gets the details of a fixture.
         /// </summary>
