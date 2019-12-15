@@ -6,6 +6,7 @@ using System.Net;
 using System.Threading.Tasks;
 using FootballStatsApi.Managers;
 using FootballStatsApi.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -13,8 +14,9 @@ using Microsoft.Extensions.Logging;
 namespace FootballStatsApi.Controllers.v1
 {
     [ApiController]
-    [Route("v1/competitions")]
+    [Route("competitions")]
     [Produces("application/json")]
+    [Authorize]
     public class CompetitionController : ControllerBase
     {
         private readonly ILogger<CompetitionController> _logger;

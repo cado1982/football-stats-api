@@ -16,7 +16,7 @@ namespace FootballStatsApi.Handlers
             _next = next ?? throw new ArgumentNullException(nameof(next));
         }
 
-        public async Task InvokeAsync(HttpContext context, ILogger<ApiKeyMiddleware> logger, IUserManager userManager)
+        public async Task InvokeAsync(HttpContext context, ILogger<RateLimitMiddleware> logger, IUserManager userManager)
         {
             logger.LogTrace("Entered InvokeAsync");
 

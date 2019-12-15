@@ -1,6 +1,5 @@
 ﻿using Dapper;
 using FootballStatsApi.Domain.Entities;
-using FootballStatsApi.Domain.Repositories.Interface;
 using FootballStatsApi.Domain.Sql;
 using Microsoft.Extensions.Logging;
 using System;

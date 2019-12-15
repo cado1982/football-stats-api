@@ -5,7 +5,7 @@ using System.Data;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace FootballStatsApi.Domain.Repositories.Interface
+namespace FootballStatsApi.Domain.Repositories
 {
     public interface IRateLimitRepository
     {

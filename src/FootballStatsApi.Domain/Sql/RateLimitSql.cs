@@ -14,13 +14,11 @@ namespace FootballStatsApi.Domain.Sql
                 ""user_id"",
 	            ""ip_address"",
 	            ""response_ms"",
-	            ""endpoint"",
-                ""timestamp""
+	            ""endpoint""
             ) VALUES (
                 @UserId,
                 @IpAddress,
                 @ResponseMs,
-                @Endpoint,
-                @Timestamp);";
+                @Endpoint);";
     }
 }

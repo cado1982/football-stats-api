@@ -13,6 +13,9 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
 using Microsoft.EntityFrameworkCore;
 using FootballStatsApi.Domain;
+using System.Net;
+using NpgsqlTypes;
+using Dapper;
 
 namespace FootballStatsApi
 {
@@ -30,6 +33,9 @@ namespace FootballStatsApi
         {
             services.AddDbContext<ApplicationDbContext>(options => options.UseNpgsql(Configuration.GetConnectionString("Football")));
 
+            var ipAddressHandler = new PassThroughHandler<IPAddress>(NpgsqlDbType.Inet);
+            SqlMapper.AddTypeHandler(ipAddressHandler);
+
             services.AddTransient<IPlayerSummaryManager, PlayerSummaryManager>();
             services.AddTransient<ITeamSummaryManager, TeamSummaryManager>();
             services.AddTransient<IUserManager, UserManager>();
@@ -40,15 +46,22 @@ namespace FootballStatsApi
             services.AddTransient<ITeamSummaryRepository, TeamSummaryRepository>();
             services.AddTransient<ICompetitionRepository, CompetitionRepository>();
             services.AddTransient<IFixtureRepository, FixtureRepository>();
+            services.AddTransient<IRateLimitRepository, RateLimitRepository>();
 
             services.AddSingleton(new DatabaseConnectionInfo { ConnectionString = Configuration.GetConnectionString("Football") });
             services.AddSingleton<IConnectionProvider, ConnectionProvider>();
 
+            services.AddAuthentication(options =>
+            {
+                options.DefaultAuthenticateScheme = ApiKeyAuthenticationOptions.DefaultScheme;
+                options.DefaultChallengeScheme = ApiKeyAuthenticationOptions.DefaultScheme;
+            }).AddApiKeySupport(options => { });
+
             // Register the Swagger generator, defining 1 or more Swagger documents
             services.AddSwaggerGen(c =>
             {
-                c.SwaggerDoc("v1", new OpenApiInfo 
-                { 
+                c.SwaggerDoc("v1", new OpenApiInfo
+                {
                     Title = "Football Stats",
                     Version = "v1",
                     Contact = new OpenApiContact
@@ -85,9 +98,10 @@ namespace FootballStatsApi
             services.AddControllers();
         }
 
-        // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
+            app.Map("/v1", ConfigureApi);
+
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
@@ -105,12 +119,17 @@ namespace FootballStatsApi
                 c.SwaggerEndpoint("/swagger/v1/swagger.json", "V1");
                 c.RoutePrefix = String.Empty;
             });
-            
+        }
+
+        private static void ConfigureApi(IApplicationBuilder app)
+        {
             app.UseRouting();
 
+            app.UseAuthentication();
             app.UseAuthorization();
 
-            app.UseMiddleware<ApiKeyMiddleware>();
+            app.UseMiddleware<RequestLogMiddleware>();
+            // app.UseMiddleware<RateLimitMiddleware>();
 
             app.UseEndpoints(endpoints =>
             {
