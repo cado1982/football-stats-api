@@ -7,6 +7,7 @@ services:
     build:
       context: .
       dockerfile: FootballStatsApi/Dockerfile
+      container_name: fsa-api-integrationtests-api
     expose: 
       - 5000
     environment:
@@ -20,6 +21,7 @@ services:
     build:
       context: .
       dockerfile: FootballStatsApi.IntegrationTests/Dockerfile
+    container_name: fsa-api-integrationtests
     restart: "no"
     environment:
       ConnectionStrings__Football: Server=db;User Id=postgres;Password=admin;Database=football;
@@ -29,6 +31,7 @@ services:
     logging:
       driver: none
     restart: always
+    container_name: fsa-api-integrationtests-db
     environment:
       POSTGRES_PASSWORD: admin
       POSTGRES_DB: football
@@ -44,5 +47,6 @@ services:
     build:
       context: .
       dockerfile: FootballStatsApi.Database/Dockerfile
+    container_name: fsa-api-integrationtests-db-migrations
     environment:
       ConnectionStrings__FootballAdmin: Server=db;User Id=postgres;Password=admin;Database=football;

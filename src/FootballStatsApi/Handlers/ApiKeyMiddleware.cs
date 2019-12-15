@@ -1,5 +1,8 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
+using System.Security.Principal;
 using System.Threading.Tasks;
 using FootballStatsApi.Managers;
 using Microsoft.AspNetCore.Http;
@@ -40,6 +43,15 @@ namespace FootballStatsApi.Handlers
                 context.Response.StatusCode = StatusCodes.Status401Unauthorized;
                 return;
             }
+
+            var claims = new List<Claim>
+            {
+                new Claim(ClaimTypes.Sid, user.Id.ToString())
+            };
+            var identity = new ClaimsIdentity(claims);
+        
+            var principal = new GenericPrincipal(identity, new string[0]);
+            context.User = principal;
 
             await _next(context);
         }
