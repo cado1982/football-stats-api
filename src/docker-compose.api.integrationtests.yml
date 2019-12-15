@@ -1,0 +1,48 @@
+version: '3'
+services:
+  api:
+    depends_on:
+      - db
+      - db-migrations
+    build:
+      context: .
+      dockerfile: FootballStatsApi/Dockerfile
+    expose: 
+      - 5000
+    environment:
+      ConnectionStrings__Football: Server=db;User Id=postgres;Password=admin;Database=football;
+      ASPNETCORE_ENVIRONMENT: Development
+  integration-tests:
+    depends_on: 
+      - api
+      - db-migrations
+      - db
+    build:
+      context: .
+      dockerfile: FootballStatsApi.IntegrationTests/Dockerfile
+    restart: "no"
+    environment:
+      ConnectionStrings__Football: Server=db;User Id=postgres;Password=admin;Database=football;
+      ApiEndpoint: http://api:5000
+  db:
+    image: postgres:11
+    logging:
+      driver: none
+    restart: always
+    environment:
+      POSTGRES_PASSWORD: admin
+      POSTGRES_DB: football
+    expose:
+      - "5432"
+    command:
+      - "postgres"
+      - "-c"
+      - "max_connections=300"
+  db-migrations:
+    depends_on:
+      - db
+    build:
+      context: .
+      dockerfile: FootballStatsApi.Database/Dockerfile
+    environment:
+      ConnectionStrings__FootballAdmin: Server=db;User Id=postgres;Password=admin;Database=football;
