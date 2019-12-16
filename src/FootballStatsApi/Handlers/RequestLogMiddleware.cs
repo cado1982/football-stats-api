@@ -1,14 +1,11 @@
 using System;
 using System.Diagnostics;
 using System.Linq;
-using System.Net;
-using System.Security;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using FootballStatsApi.Domain.Entities;
 using FootballStatsApi.Domain.Helpers;
 using FootballStatsApi.Domain.Repositories;
-using FootballStatsApi.Managers;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 
@@ -23,7 +20,7 @@ namespace FootballStatsApi.Handlers
             _next = next ?? throw new ArgumentNullException(nameof(next));
         }
 
-        public async Task InvokeAsync(HttpContext context, ILogger<RequestLogMiddleware> logger, IRateLimitRepository rateLimitRepository, IConnectionProvider connectionProvider)
+        public async Task InvokeAsync(HttpContext context, ILogger<RequestLogMiddleware> logger, IRequestLogRepository requestLogRepository, IConnectionProvider connectionProvider)
         {
             logger.LogTrace("Entered InvokeAsync");
 
@@ -38,22 +35,23 @@ namespace FootballStatsApi.Handlers
             requestLog.ResponseMs = (int)sw.ElapsedMilliseconds;
             requestLog.HttpMethod = context.Request.Method;
             requestLog.QueryString = context.Request.QueryString.Value;
+            requestLog.StatusCode = context.Response.StatusCode;
 
             var userIdClaim = context.User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Sid);
 
             if (userIdClaim == null) 
             {
-                throw new InvalidOperationException("UserId claim is missing");
+                logger.LogError("UserId claim is missing");
+                context.Response.StatusCode = StatusCodes.Status500InternalServerError;
+                return;
             }
 
             requestLog.UserId = int.Parse(userIdClaim.Value);
 
             using (var conn = await connectionProvider.GetOpenConnectionAsync())
             {
-                await rateLimitRepository.InsertRequestLog(requestLog, conn);
+                await requestLogRepository.InsertRequestLog(requestLog, conn);
             }
-            
-            //await _next(context);
         }
     }
 }

@@ -46,7 +46,7 @@ namespace FootballStatsApi
             services.AddTransient<ITeamSummaryRepository, TeamSummaryRepository>();
             services.AddTransient<ICompetitionRepository, CompetitionRepository>();
             services.AddTransient<IFixtureRepository, FixtureRepository>();
-            services.AddTransient<IRateLimitRepository, RateLimitRepository>();
+            services.AddTransient<IRequestLogRepository, RequestLogRepository>();
 
             services.AddSingleton(new DatabaseConnectionInfo { ConnectionString = Configuration.GetConnectionString("Football") });
             services.AddSingleton<IConnectionProvider, ConnectionProvider>();
@@ -129,7 +129,7 @@ namespace FootballStatsApi
             app.UseAuthorization();
 
             app.UseMiddleware<RequestLogMiddleware>();
-            // app.UseMiddleware<RateLimitMiddleware>();
+            app.UseMiddleware<RateLimitMiddleware>();
 
             app.UseEndpoints(endpoints =>
             {

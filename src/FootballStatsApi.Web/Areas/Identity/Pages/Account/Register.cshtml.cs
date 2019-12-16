@@ -76,7 +76,7 @@ namespace FootballStatsApi.Web.Areas.Identity.Pages.Account
             ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
             if (ModelState.IsValid)
             {
-                var user = new User { UserName = Input.Email, Email = Input.Email, ApiKey = Guid.NewGuid() };
+                var user = new User { UserName = Input.Email, Email = Input.Email, ApiKey = Guid.NewGuid(), SubscriptionId = Constants.DefaultSubscriptionId };
                 var result = await _userManager.CreateAsync(user, Input.Password);
                 if (result.Succeeded)
                 {

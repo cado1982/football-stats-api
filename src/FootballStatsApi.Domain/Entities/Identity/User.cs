@@ -7,5 +7,7 @@ namespace FootballStatsApi.Domain.Entities.Identity
     {
         [PersonalData]
         public Guid ApiKey { get; set; }
+
+        public int SubscriptionId { get; set; }
     }
 }

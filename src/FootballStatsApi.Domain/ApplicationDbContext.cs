@@ -38,7 +38,8 @@ namespace FootballStatsApi.Domain
                 b.Property(u => u.LockoutEnd).HasColumnName("lockout_end");
                 b.Property(u => u.LockoutEnabled).HasColumnName("lockout_enabled");
                 b.Property(u => u.AccessFailedCount).HasColumnName("access_failed_count");
-                b.Property(e => e.ApiKey).HasColumnName("api_key");
+                b.Property(u => u.ApiKey).HasColumnName("api_key");
+                b.Property(u => u.SubscriptionId).HasColumnName("subscription_id");
             });
 
             builder.Entity<IdentityUserToken<int>>(b =>
