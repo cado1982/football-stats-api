@@ -13,5 +13,7 @@ namespace FootballStatsApi.Domain.Entities
         public int ResponseMs { get; set; }
         public string Endpoint { get; set; }
         public DateTime Timestamp { get; set; }
+        public string HttpMethod { get; set; }
+        public string QueryString { get; set; }
     }
 }

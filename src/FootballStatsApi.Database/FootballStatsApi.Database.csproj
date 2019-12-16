@@ -27,6 +27,7 @@
     <None Remove="Scripts\Script0018_Add data protection.sql" />
     <None Remove="Scripts\Script0019_Remove unnecessary stats columns.sql" />
     <None Remove="Scripts\Script0020_Add request log table.sql" />
+    <None Remove="Scripts\Script0021_Add query string and http method.sql" />
   </ItemGroup>
 
   <ItemGroup>
@@ -53,9 +54,10 @@
     <EmbeddedResource Include="Scripts\Script0015_Add meta data to fixture table.sql" />
     <EmbeddedResource Include="Scripts\Script0016_Remove nullable from columns in fixture table.sql" />
     <EmbeddedResource Include="Scripts\Script0017_Set default values on fixture stats.sql" />
-    <EmbeddedResource Include="Scripts\Script0020_Add request log table.sql" />
-    <EmbeddedResource Include="Scripts\Script0019_Remove unnecessary stats columns.sql" />
     <EmbeddedResource Include="Scripts\Script0018_Add data protection.sql" />
+    <EmbeddedResource Include="Scripts\Script0019_Remove unnecessary stats columns.sql" />
+    <EmbeddedResource Include="Scripts\Script0020_Add request log table.sql" />
+    <EmbeddedResource Include="Scripts\Script0021_Add query string and http method.sql" />
 </ItemGroup>
 
   <ItemGroup>

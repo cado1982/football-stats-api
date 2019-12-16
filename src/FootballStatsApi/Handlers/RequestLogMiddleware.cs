@@ -36,6 +36,8 @@ namespace FootballStatsApi.Handlers
             requestLog.Endpoint = context.Request.PathBase + context.Request.Path;
             requestLog.IpAddress = context.Connection.RemoteIpAddress;
             requestLog.ResponseMs = (int)sw.ElapsedMilliseconds;
+            requestLog.HttpMethod = context.Request.Method;
+            requestLog.QueryString = context.Request.QueryString.Value;
 
             var userIdClaim = context.User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Sid);
 
