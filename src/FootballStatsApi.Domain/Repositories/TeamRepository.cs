@@ -34,6 +34,25 @@ namespace FootballStatsApi.Domain.Repositories
             }
         }
 
+        public async Task<List<Team>> GetTeamsAsync(int competitionId, int season, IDbConnection connection)
+        {
+            try
+            {
+                var parameters = new DynamicParameters();
+
+                parameters.Add("CompetitionId", competitionId);
+                parameters.Add("SeasonId", season);
+
+                var result = await connection.QueryAsync<Team>(TeamSql.GetByCompetitionAndSeason, parameters);
+                return result.ToList();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, $"Unable to get teams for competition {0} and season {1}", competitionId, season);
+                throw;
+            }
+        }
+
         public async Task InsertMultipleAsync(List<Team> teams, IDbConnection connection)
         {
             try
