@@ -63,5 +63,24 @@ namespace FootballStatsApi.Managers
                 throw;
             }
         }
+
+        public async Task<List<TeamBasicStats>> GetBasicStatsAsync(int season, int competitionId)
+        {
+            try
+            {
+                using (var conn = await _connectionProvider.GetOpenConnectionAsync())
+                {
+                    var entities = await _teamRepository.GetBasicStatsAsync(competitionId, season, conn);
+                    var models = entities.ToModels().ToList();
+
+                    return models;
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, $"Unable to get basic stats for teams in competition {0} and season {1}", competitionId, season);
+                throw;
+            }
+        }
     }
 }

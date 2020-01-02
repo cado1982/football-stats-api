@@ -19,7 +19,17 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FootballStatsApi.Scraper.Le
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FootballStatsApi.Scraper.Shared", "FootballStatsApi.Scraper.Shared\FootballStatsApi.Scraper.Shared.csproj", "{608E7D7E-12D4-45F6-B4FF-5312D5C433B6}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FootballStatsApi.IntegrationTests", "FootballStatsApi.IntegrationTests\FootballStatsApi.IntegrationTests.csproj", "{37202799-E0B6-4CCC-B14E-E03B3D3B12C3}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FootballStatsApi.IntegrationTests", "FootballStatsApi.IntegrationTests\FootballStatsApi.IntegrationTests.csproj", "{37202799-E0B6-4CCC-B14E-E03B3D3B12C3}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "External Items", "External Items", "{A1CBEB03-2BE8-4EA7-839A-008FCEDEB302}"
+	ProjectSection(SolutionItems) = preProject
+		.dockerignore = .dockerignore
+		docker-compose.api.integrationtests.yml = docker-compose.api.integrationtests.yml
+		docker-compose.production.footballstatsapi-1.yml = docker-compose.production.footballstatsapi-1.yml
+		docker-compose.production.fsa-orchestration.yml = docker-compose.production.fsa-orchestration.yml
+		docker-compose.production.fsa-webserver.yml = docker-compose.production.fsa-webserver.yml
+		docker-compose.yml = docker-compose.yml
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

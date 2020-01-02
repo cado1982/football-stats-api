@@ -38,7 +38,7 @@ namespace FootballStatsApi.Controllers.v1
         {
             try
             {
-                var teams = await _teamManager.GetAsync(season, competition);
+                var teams = await _teamManager.GetBasicStatsAsync(season, competition);
                 
                 return Ok(teams);
             }
