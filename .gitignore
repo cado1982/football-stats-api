@@ -12,6 +12,9 @@
 *.userosscache
 *.sln.docstates
 
+src/FootballStatsApi.Web/wwwroot/lib/
+src/FootballStatsApi.Web/wwwroot/css/
+
 # User-specific files (MonoDevelop/Xamarin Studio)
 *.userprefs
 
