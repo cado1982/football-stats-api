@@ -92,7 +92,7 @@ namespace FootballStatsApi.Web
 
             services.AddSingleton<IEmailSender, EmailSender>();
 
-            services.AddControllersWithViews();
+            services.AddControllersWithViews().AddRazorRuntimeCompilation();
             services.AddRazorPages();
         }
 

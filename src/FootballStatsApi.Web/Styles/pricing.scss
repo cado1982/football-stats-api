@@ -1,0 +1,42 @@
+﻿@import "colors.scss";
+
+#pricing {
+    background-color: $brand-color;
+    text-align: center;
+    > h1 {
+        color: $text-light-color;
+        margin-bottom: 1em;
+    }
+}
+
+.price {
+    background-color: $body-color;
+    box-shadow: 0 0 30px $box-shadow-color;
+    padding: 1em;
+    .price-header {
+        border-bottom: 1px solid $separator-color;
+        color: $brand-dark-color;
+        text-shadow: 0 0.1em 0 $text-dark-shadow-color;
+        padding-bottom: 1em;
+    }
+    .price-description {
+        ul {
+            font-size: 0.8em;
+        }
+    }
+}
+
+.cost {
+    font-size: 2em;
+    .cost-symbol {
+        font-size: 0.5em;
+        vertical-align: text-top;
+    }
+    .cost-value {
+        letter-spacing: 0.1em;
+    }
+    .cost-duration {
+        font-size: 0.6em;
+    }
+}
+

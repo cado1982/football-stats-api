@@ -1,0 +1,13 @@
+﻿@import "colors.scss";
+
+.jumbotron {
+    background: $brand-color;
+    background: linear-gradient(315deg, $brand-light-color, $brand-color);
+    color: $text-light-color;
+    border-radius: 0;
+    margin-bottom: 0;
+    h1 {
+        font-weight: 600;
+        letter-spacing: 0.03em;
+    }
+}

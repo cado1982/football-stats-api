@@ -1,0 +1,24 @@
+﻿@import "colors.scss";
+
+footer {
+    margin-top: 1em;
+    border-top: 1px solid $separator-color;
+    padding: 1em;
+}
+
+
+.footer-links {
+
+    ul {
+        padding-left: 0;
+        list-style-type: none;
+
+        li {
+            display: inline;
+            margin-left: 1em;
+        }
+        li:first-of-type {
+            margin-left: 0;
+        }
+    }
+}

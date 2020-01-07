@@ -1,0 +1,9 @@
+﻿@import "colors.scss";
+
+#newsletter {
+    display: flex;
+    flex-direction: column;
+    > h3 {
+        color: $brand-dark-color;
+    }
+}

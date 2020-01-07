@@ -1,0 +1,19 @@
+﻿@import "colors.scss";
+
+$fa-font-path: "../fonts/webfonts";
+
+@import "../node_modules/@fortawesome/fontawesome-free/scss/fontawesome.scss";
+@import "../node_modules/@fortawesome/fontawesome-free/scss/solid.scss";
+
+.header-text-shadow {   
+    text-shadow: 0 3px 6px $text-dark-shadow-color;
+}
+
+ul > li {
+    list-style-type: none;
+}
+
+ul {
+    padding: 0 !important;
+    margin: 0 !important;
+}

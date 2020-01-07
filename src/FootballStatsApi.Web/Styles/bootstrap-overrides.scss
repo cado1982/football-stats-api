@@ -1,0 +1,44 @@
+﻿@import "colors.scss";
+
+$font-family-sans-serif: "Montserrat", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+
+$body-bg: $body-color;
+$body-color: $text-dark-color; 
+
+$primary: $brand-dark-color;
+
+$spacer: 1rem;
+$spacers: ();
+$spacers: map-merge(
+  (
+    0: 0,
+    1: ($spacer * .25),
+    2: ($spacer * .5),
+    3: $spacer,
+    4: ($spacer * 1.5),
+    5: ($spacer * 3),
+    6: ($spacer * 4.5),
+    7: ($spacer * 6),
+    8: ($spacer * 7.5)
+  ),
+  $spacers
+);
+
+$headings-color: $brand-dark-color;
+
+$enable-responsive-font-sizes: true;
+
+// Variables must be above this and css below.
+@import "../node_modules/bootstrap/scss/bootstrap";
+
+body > .container-fluid {
+    padding: 0;
+} 
+
+nav.bg-dark {
+    background-color: $brand-dark-color !important;
+}
+
+.input-validation-error, .field-validation-error {
+    @extend .is-invalid;
+}

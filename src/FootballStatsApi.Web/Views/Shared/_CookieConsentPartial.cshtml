@@ -8,17 +8,25 @@
 
 @if (showBanner)
 {
-    <div id="cookieConsent" class="alert alert-info alert-dismissible fade show" role="alert">
-        Use this space to summarize your privacy and cookie use policy. <a asp-page="/Privacy">Learn More</a>.
-        <button type="button" class="accept-policy close" data-dismiss="alert" aria-label="Close" data-cookie-string="@cookieString">
-            <span aria-hidden="true">Accept</span>
-        </button>
-    </div>
+    <nav id="cookieConsent" role="alert" class="fixed-bottom py-3 bg-primary text-light">
+        <div class="container">
+            <div>
+                <p class="navbar-text">
+                    Moneteer uses cookies stored on your device to improve its services. Click Accept to acknowledge that you agree to the use of cookies.
+                </p>
+                <div class="navbar-right">
+                    <button type="button" class="btn btn-warning navbar-btn" data-cookie-string="@cookieString">Accept</button>
+                    <a asp-controller="Home" asp-action="Privacy" class="btn btn-default text-light navbar-btn">Learn More</a>
+                </div>
+            </div>
+        </div>
+    </nav>
     <script>
         (function () {
-            var button = document.querySelector("#cookieConsent button[data-cookie-string]");
-            button.addEventListener("click", function (event) {
-                document.cookie = button.dataset.cookieString;
+            document.querySelector("#cookieConsent button[data-cookie-string]").addEventListener("click", function (el) {
+                console.log(el.target.dataset.cookieString);
+                document.cookie = el.target.dataset.cookieString;
+                document.querySelector("#cookieConsent").classList.add("d-none");
             }, false);
         })();
     </script>

@@ -1,0 +1,15 @@
+﻿@import "colors.scss";
+
+.navbar-brand > h3 {
+    padding: 0;
+    margin: 0;
+    color: $text-light-color;
+}
+
+.navbar-nav > .nav-item > .nav-link {
+    color: $text-light-color;
+}
+ 
+.navbar-nav > .nav-item > .nav-link.btn {
+    color: $text-dark-color;
+}
