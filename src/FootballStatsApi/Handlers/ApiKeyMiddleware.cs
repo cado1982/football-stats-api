@@ -4,7 +4,7 @@ using System.Linq;
 using System.Security.Claims;
 using System.Security.Principal;
 using System.Threading.Tasks;
-using FootballStatsApi.Managers;
+using FootballStatsApi.Logic.Managers;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 

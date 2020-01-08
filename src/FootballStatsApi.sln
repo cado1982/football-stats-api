@@ -32,6 +32,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "External Items", "External 
 		docker-compose.yml = docker-compose.yml
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FootballStatsApi.Logic", "FootballStatsApi.Logic\FootballStatsApi.Logic.csproj", "{7D8D10CE-156D-4383-984C-63A117B311D5}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -74,6 +76,10 @@ Global
 		{37202799-E0B6-4CCC-B14E-E03B3D3B12C3}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{37202799-E0B6-4CCC-B14E-E03B3D3B12C3}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{37202799-E0B6-4CCC-B14E-E03B3D3B12C3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7D8D10CE-156D-4383-984C-63A117B311D5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7D8D10CE-156D-4383-984C-63A117B311D5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7D8D10CE-156D-4383-984C-63A117B311D5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7D8D10CE-156D-4383-984C-63A117B311D5}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

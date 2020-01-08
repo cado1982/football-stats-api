@@ -15,6 +15,8 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Extensions.Logging;
 using FootballStatsApi.Domain.Entities.Identity;
+using FootballStatsApi.Logic.Managers;
+using FootballStatsApi.Models;
 
 namespace FootballStatsApi.Web.Areas.Identity.Pages.Account
 {
@@ -22,6 +24,7 @@ namespace FootballStatsApi.Web.Areas.Identity.Pages.Account
     public class RegisterModel : PageModel
     {
         private readonly SignInManager<User> _signInManager;
+        private readonly ISubscriptionManager _subscriptionManager;
         private readonly UserManager<User> _userManager;
         private readonly ILogger<RegisterModel> _logger;
         private readonly IEmailSender _emailSender;
@@ -29,11 +32,13 @@ namespace FootballStatsApi.Web.Areas.Identity.Pages.Account
         public RegisterModel(
             UserManager<User> userManager,
             SignInManager<User> signInManager,
+            ISubscriptionManager subscriptionManager,
             ILogger<RegisterModel> logger,
             IEmailSender emailSender)
         {
             _userManager = userManager;
             _signInManager = signInManager;
+            _subscriptionManager = subscriptionManager;
             _logger = logger;
             _emailSender = emailSender;
         }
@@ -43,7 +48,9 @@ namespace FootballStatsApi.Web.Areas.Identity.Pages.Account
 
         public string ReturnUrl { get; set; }
 
-        public IList<AuthenticationScheme> ExternalLogins { get; set; }
+        public Subscription Subscription { get; set; }
+
+        //public IList<AuthenticationScheme> ExternalLogins { get; set; }
 
         public class InputModel
         {
@@ -64,19 +71,25 @@ namespace FootballStatsApi.Web.Areas.Identity.Pages.Account
             public string ConfirmPassword { get; set; }
         }
 
-        public async Task OnGetAsync(string returnUrl = null)
+        public async Task<IActionResult> OnGetAsync(string plan, string returnUrl = null)
         {
             ReturnUrl = returnUrl;
-            ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
+            Subscription = await _subscriptionManager.GetSubscriptionByName(plan);
+
+            if (Subscription == null) return NotFound();
+
+            return Page();
         }
 
         public async Task<IActionResult> OnPostAsync(string returnUrl = null)
         {
             returnUrl = returnUrl ?? Url.Content("~/");
-            ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
+            //ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
             if (ModelState.IsValid)
             {
-                var user = new User { UserName = Input.Email, Email = Input.Email, ApiKey = Guid.NewGuid(), SubscriptionId = Constants.DefaultSubscriptionId };
+                if (Subscription == null || !Subscription.IsActive || Subscription.IsInternal) return NotFound();
+
+                var user = new User { UserName = Input.Email, Email = Input.Email, ApiKey = Guid.NewGuid(), SubscriptionId = Subscription.Id };
                 var result = await _userManager.CreateAsync(user, Input.Password);
                 if (result.Succeeded)
                 {

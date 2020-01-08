@@ -2,8 +2,478 @@
     ViewData["Title"] = "Home Page";
 }
 
-    <div class="position-relative text-center">
-        <img src="~/images/hero.jpg" class="w-100" />
-        <h1 class="position-absolute text-light header-text-shadow" style="font-size: 3rem; top: 40%; left: 50%; transform: translate(-50%, -50%)">Easy to consume, detailed European football stats for your next project</h1>
+    <div class="hero-image text-center">
+        <h1 class="display-1 font-weight-bold header-text-shadow">Football Stats Api</h1>
+        @*<h1 class="position-absolute text-light header-text-shadow" style="font-size: 3rem; top: 40%; left: 50%; transform: translate(-50%, -50%)">Easy to consume, detailed European football stats for your next project</h1>*@
     </div>
+
+<div class="text-center py-6 px-2 px-md-6">
+    <h1 class="display-4">What we provide</h1>
+    <div class="my-5 mx-2 mx-md-7">
+        <h4 class="m-4 text-dark">Coverage for the EPL, La Liga, Bundesliga, Serie A, Ligue 1, and RFPL.</h4>
+        <h4 class="m-4 text-dark">Detailed player, team, and fixture stats including expected goals, expected assists, and key passes.</h4>
+        <h4 class="m-4 text-dark">Historic data back to the 2014/2015 season.</h4>
+    </div>
+</div>
+
+<div class="bg-primary text-center py-6 px-2 px-md-6">
+    <h1 class="display-4 text-light">Pricing</h1>
+    <h5 class="mt-3 text-light">Whether you are an occasional hobby user, or an organisation running detailed analysis we have a plan for you.</h5>
+    <div class="my-7 mx-2 mx-md-7 card-deck">
+        <div class="card ">
+            <div class="card-body">
+                <h4 class="card-title">Hobby</h4>
+                <div>FREE</div>
+                <hr />
+                <ul>
+                    <li class="my-2">60 requests / hour</li>
+                    <li class="my-2">All 6 leagues*</li>
+                    <li class="my-2">Basic team stats</li>
+                    <li class="my-2">Basic player stats</li>
+                    <li class="my-2">Basic fixture stats</li>
+                    <li class="my-2">Historic stats*</li>
+                </ul>
+            </div>
+            <div class="card-footer">
+                <a asp-controller="Home" asp-action="Subscribe" asp-route-plan="hobby" class="btn btn-warning w-100">Select Hobby plan</a>
+            </div>
+        </div>
+        <div class="card ">
+            <div class="card-body">
+                <h4 class="card-title">Amateur</h4>
+                <div>TBD</div>
+                <hr />
+                <ul>
+                    <li class="my-2">3,600 requests / hour</li>
+                    <li class="my-2">All Hobby features</li>
+                    <li class="my-2">Detailed team stats</li>
+                    <li class="my-2">Detailed player stats</li>
+                    <li class="my-2">Detailed fixture stats</li>
+                </ul>
+            </div>
+            <div class="card-footer">
+                <a class="flex-grow-0 btn btn-dark text-light disabled w-100">Coming Soon</a>
+            </div>
+        </div>
+        <div class="card card-popular">
+            <div class="card-body">
+                <h4 class="card-title">Pro</h4>
+                <div>TBD</div>
+                <hr />
+                <ul>
+                    <li class="my-2">100,000 requests / hour</li>
+                    <li class="my-2">All Amateur features</li>
+                    <li class="my-2">Expert team stats</li>
+                    <li class="my-2">Expert player stats</li>
+                    <li class="my-2">Expert fixture stats</li>
+                </ul>
+            </div>
+
+            <div class="card-footer">
+                <a class="flex-grow-0 btn btn-dark text-light disabled w-100">Coming Soon</a>
+            </div>
+        </div>
+        <div class="card ">
+            <div class="card-body">
+                <h4 class="card-title">Enterprise</h4>
+                <div>Enquire</div>
+                <hr />
+                <ul>
+                    <li class="my-2">Custom requests / hour</li>
+                    <li class="my-2">All Pro features</li>
+                    <li class="my-2">Custom stats</li>
+                    <li class="my-2">Custom endpoints</li>
+                    <li class="my-2">Priority support channel</li>
+                    <li class="my-2">Service level agreements</li>
+                </ul>
+            </div>
+
+            <div class="card-footer">
+                <a class="flex-grow-0 btn btn-dark text-light disabled w-100">Coming Soon</a>
+            </div>
+        </div>
+    </div>
+    <div class="mt-7 text-muted">*EPL, La Liga, Bundesliga, Serie A, Ligue 1, and RFPL</div>
+    <div class="text-muted">*Historic stats back to 2014/2015</div>
+</div>
+
+<div class="text-center py-6 px-2 px-md-6">
+    <h1 class="display-4">Included Stats</h1>
+
+    <div class="container">
+        <div class="row">
+            <div class="col-12 col-lg-8 offset-lg-2">
+                <h4 class="text-left mt-5">Player</h4>
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th scope="col"></th>
+                            <th scope="col">Basic</th>
+                            <th scope="col">Detailed</th>
+                            <th scope="col">Expert</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Goals</td>
+                            <td><i class="fas fa-check-circle text-success"></i></td>
+                            <td><i class="fas fa-check-circle text-success"></i></td>
+                            <td><i class="fas fa-check-circle text-success"></i></td>
+                        </tr>
+                        <tr>
+                            <td>Assists</td>
+                            <td><i class="fas fa-check-circle text-success"></i></td>
+                            <td><i class="fas fa-check-circle text-success"></i></td>
+                            <td><i class="fas fa-check-circle text-success"></i></td>
+                        </tr>
+                        <tr>
+                            <td>Shots</td>
+                            <td><i class="fas fa-check-circle text-success"></i></td>
+                            <td><i class="fas fa-check-circle text-success"></i></td>
+                            <td><i class="fas fa-check-circle text-success"></i></td>
+                        </tr>
+                        <tr>
+                            <td>Key Passes</td>
+                            <td><i class="fas fa-check-circle text-success"></i></td>
+                            <td><i class="fas fa-check-circle text-success"></i></td>
+                            <td><i class="fas fa-check-circle text-success"></i></td>
+                        </tr>
+                        <tr>
+                            <td>Cards</td>
+                            <td><i class="fas fa-check-circle text-success"></i></td>
+                            <td><i class="fas fa-check-circle text-success"></i></td>
+                            <td><i class="fas fa-check-circle text-success"></i></td>
+                        </tr>
+                        <tr>
+                            <td>Positions</td>
+                            <td><i class="fas fa-check-circle text-success"></i></td>
+                            <td><i class="fas fa-check-circle text-success"></i></td>
+                            <td><i class="fas fa-check-circle text-success"></i></td>
+                        </tr>
+                        <tr>
+                            <td>Minutes Played</td>
+                            <td><i class="fas fa-check-circle text-success"></i></td>
+                            <td><i class="fas fa-check-circle text-success"></i></td>
+                            <td><i class="fas fa-check-circle text-success"></i></td>
+                        </tr>
+                        <tr>
+                            <td>Expected Goals</td>
+                            <td><i class="fas fa-times-circle text-danger"></i></td>
+                            <td><i class="fas fa-check-circle text-success"></i></td>
+                            <td><i class="fas fa-check-circle text-success"></i></td>
+                        </tr>
+                        <tr>
+                            <td>Expected Assists</td>
+                            <td><i class="fas fa-times-circle text-danger"></i></td>
+                            <td><i class="fas fa-check-circle text-success"></i></td>
+                            <td><i class="fas fa-check-circle text-success"></i></td>
+                        </tr>
+                        <tr>
+                            <td>Expected Goals Chain</td>
+                            <td><i class="fas fa-times-circle text-danger"></i></td>
+                            <td><i class="fas fa-check-circle text-success"></i></td>
+                            <td><i class="fas fa-check-circle text-success"></i></td>
+                        </tr>
+                        <tr>
+                            <td>Expected Goals Buildup</td>
+                            <td><i class="fas fa-times-circle text-danger"></i></td>
+                            <td><i class="fas fa-check-circle text-success"></i></td>
+                            <td><i class="fas fa-check-circle text-success"></i></td>
+                        </tr>
+                        <tr>
+                            <td>Shot Zones</td>
+                            <td><i class="fas fa-times-circle text-danger"></i></td>
+                            <td><i class="fas fa-times-circle text-danger"></i></td>
+                            <td><i class="fas fa-check-circle text-success"></i></td>
+                        </tr>
+                        <tr>
+                            <td>Shot Types</td>
+                            <td><i class="fas fa-times-circle text-danger"></i></td>
+                            <td><i class="fas fa-times-circle text-danger"></i></td>
+                            <td><i class="fas fa-check-circle text-success"></i></td>
+                        </tr>
+                        <tr>
+                            <td>Individual Shots</td>
+                            <td><i class="fas fa-times-circle text-danger"></i></td>
+                            <td><i class="fas fa-times-circle text-danger"></i></td>
+                            <td><i class="fas fa-check-circle text-success"></i></td>
+                        </tr>
+                        <tr>
+                            <td>Situational</td>
+                            <td><i class="fas fa-times-circle text-danger"></i></td>
+                            <td><i class="fas fa-times-circle text-danger"></i></td>
+                            <td><i class="fas fa-check-circle text-success"></i></td>
+                        </tr>
+                        @*<td><i class="fas fa-times-circle text-danger"></i></td>*@
+                        @*<td><i class="fas fa-check-circle text-success"></i></td>*@
+                    </tbody>
+                </table>
+
+                <h4 class="text-left mt-5">Team</h4>
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th scope="col"></th>
+                            <th scope="col">Basic</th>
+                            <th scope="col">Detailed</th>
+                            <th scope="col">Expert</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Won / Drawn / Lost</td>
+                            <td><i class="fas fa-check-circle text-success"></i></td>
+                            <td><i class="fas fa-check-circle text-success"></i></td>
+                            <td><i class="fas fa-check-circle text-success"></i></td>
+                        </tr>
+                        <tr>
+                            <td>Goals</td>
+                            <td><i class="fas fa-check-circle text-success"></i></td>
+                            <td><i class="fas fa-check-circle text-success"></i></td>
+                            <td><i class="fas fa-check-circle text-success"></i></td>
+                        </tr>
+                        <tr>
+                            <td>Goals Against</td>
+                            <td><i class="fas fa-check-circle text-success"></i></td>
+                            <td><i class="fas fa-check-circle text-success"></i></td>
+                            <td><i class="fas fa-check-circle text-success"></i></td>
+                        </tr>
+                        <tr>
+                            <td>Points</td>
+                            <td><i class="fas fa-check-circle text-success"></i></td>
+                            <td><i class="fas fa-check-circle text-success"></i></td>
+                            <td><i class="fas fa-check-circle text-success"></i></td>
+                        </tr>
+                        <tr>
+                            <td>Expected Goals</td>
+                            <td><i class="fas fa-times-circle text-danger"></i></td>
+                            <td><i class="fas fa-check-circle text-success"></i></td>
+                            <td><i class="fas fa-check-circle text-success"></i></td>
+                        </tr>
+                        <tr>
+                            <td>Expected Goals Against</td>
+                            <td><i class="fas fa-times-circle text-danger"></i></td>
+                            <td><i class="fas fa-check-circle text-success"></i></td>
+                            <td><i class="fas fa-check-circle text-success"></i></td>
+                        </tr>
+                        <tr>
+                            <td>Expected Points</td>
+                            <td><i class="fas fa-times-circle text-danger"></i></td>
+                            <td><i class="fas fa-check-circle text-success"></i></td>
+                            <td><i class="fas fa-check-circle text-success"></i></td>
+                        </tr>
+                        <tr>
+                            <td>PPDA</td>
+                            <td><i class="fas fa-times-circle text-danger"></i></td>
+                            <td><i class="fas fa-check-circle text-success"></i></td>
+                            <td><i class="fas fa-check-circle text-success"></i></td>
+                        </tr>
+                        <tr>
+                            <td>Deep Passes</td>
+                            <td><i class="fas fa-times-circle text-danger"></i></td>
+                            <td><i class="fas fa-check-circle text-success"></i></td>
+                            <td><i class="fas fa-check-circle text-success"></i></td>
+                        </tr>
+                        <tr>
+                            <td>Situational</td>
+                            <td><i class="fas fa-times-circle text-danger"></i></td>
+                            <td><i class="fas fa-times-circle text-danger"></i></td>
+                            <td><i class="fas fa-check-circle text-success"></i></td>
+                        </tr>
+                        <tr>
+                            <td>Formations</td>
+                            <td><i class="fas fa-times-circle text-danger"></i></td>
+                            <td><i class="fas fa-times-circle text-danger"></i></td>
+                            <td><i class="fas fa-check-circle text-success"></i></td>
+                        </tr>
+                        <tr>
+                            <td>Game State</td>
+                            <td><i class="fas fa-times-circle text-danger"></i></td>
+                            <td><i class="fas fa-times-circle text-danger"></i></td>
+                            <td><i class="fas fa-check-circle text-success"></i></td>
+                        </tr>
+                        <tr>
+                            <td>Shot Timing</td>
+                            <td><i class="fas fa-times-circle text-danger"></i></td>
+                            <td><i class="fas fa-times-circle text-danger"></i></td>
+                            <td><i class="fas fa-check-circle text-success"></i></td>
+                        </tr>
+                        <tr>
+                            <td>Shot Zones</td>
+                            <td><i class="fas fa-times-circle text-danger"></i></td>
+                            <td><i class="fas fa-times-circle text-danger"></i></td>
+                            <td><i class="fas fa-check-circle text-success"></i></td>
+                        </tr>
+                        <tr>
+                            <td>Attack Speed</td>
+                            <td><i class="fas fa-times-circle text-danger"></i></td>
+                            <td><i class="fas fa-times-circle text-danger"></i></td>
+                            <td><i class="fas fa-check-circle text-success"></i></td>
+                        </tr>
+                        <tr>
+                            <td>Shot Results</td>
+                            <td><i class="fas fa-times-circle text-danger"></i></td>
+                            <td><i class="fas fa-times-circle text-danger"></i></td>
+                            <td><i class="fas fa-check-circle text-success"></i></td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <h4 class="text-left mt-5">Fixture</h4>
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th scope="col"></th>
+                            <th scope="col">Basic</th>
+                            <th scope="col">Detailed</th>
+                            <th scope="col">Expert</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Goals</td>
+                            <td><i class="fas fa-check-circle text-success"></i></td>
+                            <td><i class="fas fa-check-circle text-success"></i></td>
+                            <td><i class="fas fa-check-circle text-success"></i></td>
+                        </tr>
+                        <tr>
+                            <td>Shots</td>
+                            <td><i class="fas fa-check-circle text-success"></i></td>
+                            <td><i class="fas fa-check-circle text-success"></i></td>
+                            <td><i class="fas fa-check-circle text-success"></i></td>
+                        </tr>
+                        <tr>
+                            <td>Shots On Target</td>
+                            <td><i class="fas fa-check-circle text-success"></i></td>
+                            <td><i class="fas fa-check-circle text-success"></i></td>
+                            <td><i class="fas fa-check-circle text-success"></i></td>
+                        </tr>
+                        <tr>
+                            <td>Substitutions</td>
+                            <td><i class="fas fa-check-circle text-success"></i></td>
+                            <td><i class="fas fa-check-circle text-success"></i></td>
+                            <td><i class="fas fa-check-circle text-success"></i></td>
+                        </tr>
+                        <tr>
+                            <td>Expected Goals</td>
+                            <td><i class="fas fa-times-circle text-danger"></i></td>
+                            <td><i class="fas fa-check-circle text-success"></i></td>
+                            <td><i class="fas fa-check-circle text-success"></i></td>
+                        </tr>
+                        <tr>
+                            <td>Expected Points</td>
+                            <td><i class="fas fa-times-circle text-danger"></i></td>
+                            <td><i class="fas fa-check-circle text-success"></i></td>
+                            <td><i class="fas fa-check-circle text-success"></i></td>
+                        </tr>
+                        <tr>
+                            <td>PPDA</td>
+                            <td><i class="fas fa-times-circle text-danger"></i></td>
+                            <td><i class="fas fa-check-circle text-success"></i></td>
+                            <td><i class="fas fa-check-circle text-success"></i></td>
+                        </tr>
+                        <tr>
+                            <td>Deep Passes</td>
+                            <td><i class="fas fa-times-circle text-danger"></i></td>
+                            <td><i class="fas fa-check-circle text-success"></i></td>
+                            <td><i class="fas fa-check-circle text-success"></i></td>
+                        </tr>
+                        <tr>
+                            <td>Expected Outcome</td>
+                            <td><i class="fas fa-times-circle text-danger"></i></td>
+                            <td><i class="fas fa-check-circle text-success"></i></td>
+                            <td><i class="fas fa-check-circle text-success"></i></td>
+                        </tr>
+                        <tr>
+                            <td>Individual Shots</td>
+                            <td><i class="fas fa-times-circle text-danger"></i></td>
+                            <td><i class="fas fa-times-circle text-danger"></i></td>
+                            <td><i class="fas fa-check-circle text-success"></i></td>
+                        </tr>
+                        <tr>
+                            <th scope="row">Player Stats</th>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td>Minutes Played</td>
+                            <td><i class="fas fa-check-circle text-success"></i></td>
+                            <td><i class="fas fa-check-circle text-success"></i></td>
+                            <td><i class="fas fa-check-circle text-success"></i></td>
+                        </tr>
+                        <tr>
+                            <td>Cards</td>
+                            <td><i class="fas fa-check-circle text-success"></i></td>
+                            <td><i class="fas fa-check-circle text-success"></i></td>
+                            <td><i class="fas fa-check-circle text-success"></i></td>
+                        </tr>
+                        <tr>
+                            <td>Positions</td>
+                            <td><i class="fas fa-check-circle text-success"></i></td>
+                            <td><i class="fas fa-check-circle text-success"></i></td>
+                            <td><i class="fas fa-check-circle text-success"></i></td>
+                        </tr>
+                        <tr>
+                            <td>Key Passes</td>
+                            <td><i class="fas fa-check-circle text-success"></i></td>
+                            <td><i class="fas fa-check-circle text-success"></i></td>
+                            <td><i class="fas fa-check-circle text-success"></i></td>
+                        </tr>
+                        <tr>
+                            <td>Assists</td>
+                            <td><i class="fas fa-check-circle text-success"></i></td>
+                            <td><i class="fas fa-check-circle text-success"></i></td>
+                            <td><i class="fas fa-check-circle text-success"></i></td>
+                        </tr>
+                        <tr>
+                            <td>Goals</td>
+                            <td><i class="fas fa-check-circle text-success"></i></td>
+                            <td><i class="fas fa-check-circle text-success"></i></td>
+                            <td><i class="fas fa-check-circle text-success"></i></td>
+                        </tr>
+                        <tr>
+                            <td>Own Goals</td>
+                            <td><i class="fas fa-check-circle text-success"></i></td>
+                            <td><i class="fas fa-check-circle text-success"></i></td>
+                            <td><i class="fas fa-check-circle text-success"></i></td>
+                        </tr>
+                        <tr>
+                            <td>Shots</td>
+                            <td><i class="fas fa-check-circle text-success"></i></td>
+                            <td><i class="fas fa-check-circle text-success"></i></td>
+                            <td><i class="fas fa-check-circle text-success"></i></td>
+                        </tr>
+                        <tr>
+                            <td>Expected Goals</td>
+                            <td><i class="fas fa-times-circle text-danger"></i></td>
+                            <td><i class="fas fa-check-circle text-success"></i></td>
+                            <td><i class="fas fa-check-circle text-success"></i></td>
+                        </tr>
+                        <tr>
+                            <td>Expected Assists</td>
+                            <td><i class="fas fa-times-circle text-danger"></i></td>
+                            <td><i class="fas fa-check-circle text-success"></i></td>
+                            <td><i class="fas fa-check-circle text-success"></i></td>
+                        </tr>
+                        <tr>
+                            <td>Expected Goals Chain</td>
+                            <td><i class="fas fa-times-circle text-danger"></i></td>
+                            <td><i class="fas fa-check-circle text-success"></i></td>
+                            <td><i class="fas fa-check-circle text-success"></i></td>
+                        </tr>
+                        <tr>
+                            <td>Expected Goals Buildup</td>
+                            <td><i class="fas fa-times-circle text-danger"></i></td>
+                            <td><i class="fas fa-check-circle text-success"></i></td>
+                            <td><i class="fas fa-check-circle text-success"></i></td>
+                        </tr>
+
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    
+</div>
 

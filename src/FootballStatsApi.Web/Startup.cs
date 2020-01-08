@@ -14,6 +14,9 @@ using FootballStatsApi.Domain.Entities.Identity;
 using Microsoft.AspNetCore.DataProtection;
 using System.Security.Cryptography.X509Certificates;
 using FootballStatsApi.Web.Models;
+using FootballStatsApi.Domain.Repositories;
+using FootballStatsApi.Logic.Managers;
+using FootballStatsApi.Domain.Helpers;
 
 namespace FootballStatsApi.Web
 {
@@ -30,9 +33,14 @@ namespace FootballStatsApi.Web
 
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddDbContext<ApplicationDbContext>(options => options.UseNpgsql(Configuration.GetConnectionString("Football")));
-            services.AddDbContext<DataProtectionKeysContext>(options => options.UseNpgsql(Configuration.GetConnectionString("Football")));
-            services.AddIdentity<User, Role>(options => options.SignIn.RequireConfirmedAccount = true)
+            var connectionString = Configuration.GetConnectionString("Football");
+
+            services.AddDbContext<ApplicationDbContext>(options => options.UseNpgsql(connectionString));
+            services.AddDbContext<DataProtectionKeysContext>(options => options.UseNpgsql(connectionString));
+            services.AddDefaultIdentity<User>(options =>
+            {
+                options.SignIn.RequireConfirmedAccount = true;
+            })
                 .AddEntityFrameworkStores<ApplicationDbContext>()
                 .AddDefaultTokenProviders();
 
@@ -90,7 +98,16 @@ namespace FootballStatsApi.Web
                         .ProtectKeysWithCertificate(GetSigningCertificate());
             }
 
+            services.AddAntiforgery();
+
             services.AddSingleton<IEmailSender, EmailSender>();
+
+            services.AddTransient<ISubscriptionRepository, SubscriptionRepository>();
+
+            services.AddTransient<ISubscriptionManager, SubscriptionManager>();
+
+            services.AddSingleton(new DatabaseConnectionInfo { ConnectionString = connectionString });
+            services.AddSingleton<IConnectionProvider, ConnectionProvider>();
 
             services.AddControllersWithViews().AddRazorRuntimeCompilation();
             services.AddRazorPages();

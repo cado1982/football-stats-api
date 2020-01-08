@@ -28,6 +28,7 @@
     <None Remove="Scripts\Script0019_Remove unnecessary stats columns.sql" />
     <None Remove="Scripts\Script0020_Add request log table.sql" />
     <None Remove="Scripts\Script0021_Add subscriptions table.sql" />
+    <None Remove="Scripts\Script0022_Add subscriptions table internal column.sql" />
   </ItemGroup>
 
   <ItemGroup>
@@ -57,6 +58,7 @@
     <EmbeddedResource Include="Scripts\Script0018_Add data protection.sql" />
     <EmbeddedResource Include="Scripts\Script0019_Remove unnecessary stats columns.sql" />
     <EmbeddedResource Include="Scripts\Script0020_Add request log table.sql" />
+    <EmbeddedResource Include="Scripts\Script0022_Add subscriptions table internal column.sql" />
     <EmbeddedResource Include="Scripts\Script0021_Add subscriptions table.sql" />
 </ItemGroup>
 

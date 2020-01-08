@@ -10,9 +10,6 @@
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
 
             <ul class="navbar-nav mr-lg-auto ml-lg-4">
-                <li class="nav-item">
-                    <a asp-controller="Pricing" asp-action="Index" class="nav-link">Pricing</a>
-                </li>
                 <li class="nav-item ml-lg-3">
                     <a href="" class="nav-link">Documentation</a>
                 </li>
@@ -31,7 +28,7 @@
                 else
                 {
                     <li class="nav-item mr-lg-4 my-2 my-lg-0">
-                        <a class="nav-link btn btn-warning" asp-area="Identity" asp-page="/Account/Register">Sign Up</a>
+                        <a class="nav-link btn btn-warning" asp-area="Identity" asp-page="/Account/Register" asp-route-plan="hobby">Sign Up</a>
                     </li>
 
                     <li class="nav-item">

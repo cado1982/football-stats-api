@@ -4,7 +4,7 @@ using System.Reflection;
 using FootballStatsApi.Domain.Helpers;
 using FootballStatsApi.Domain.Repositories;
 using FootballStatsApi.Handlers;
-using FootballStatsApi.Managers;
+using FootballStatsApi.Logic.Managers;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
