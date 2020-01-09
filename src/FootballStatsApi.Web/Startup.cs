@@ -37,7 +37,7 @@ namespace FootballStatsApi.Web
 
             services.AddDbContext<ApplicationDbContext>(options => options.UseNpgsql(connectionString));
             services.AddDbContext<DataProtectionKeysContext>(options => options.UseNpgsql(connectionString));
-            services.AddDefaultIdentity<User>(options =>
+            services.AddIdentity<User, Role>(options =>
             {
                 options.SignIn.RequireConfirmedAccount = true;
             })
