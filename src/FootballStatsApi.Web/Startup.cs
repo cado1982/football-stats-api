@@ -109,6 +109,8 @@ namespace FootballStatsApi.Web
             services.AddSingleton(new DatabaseConnectionInfo { ConnectionString = connectionString });
             services.AddSingleton<IConnectionProvider, ConnectionProvider>();
 
+            services.AddTransient<ConfigurationHelper>();
+
             services.AddControllersWithViews().AddRazorRuntimeCompilation();
             services.AddRazorPages();
         }

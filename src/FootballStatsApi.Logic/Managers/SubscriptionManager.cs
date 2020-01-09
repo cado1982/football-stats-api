@@ -27,5 +27,15 @@ namespace FootballStatsApi.Logic.Managers
                 return subscription.ToModel();
             }
         }
+
+        public async Task<Subscription> GetSubscriptionById(int id)
+        {
+            using (var conn = await _connectionProvider.GetOpenConnectionAsync())
+            {
+                var subscription = await _subscriptionRepository.GetByIdAsync(id, conn);
+
+                return subscription.ToModel();
+            }
+        }
     }
 }

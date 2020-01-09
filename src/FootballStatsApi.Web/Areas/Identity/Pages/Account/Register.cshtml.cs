@@ -48,9 +48,8 @@ namespace FootballStatsApi.Web.Areas.Identity.Pages.Account
 
         public string ReturnUrl { get; set; }
 
+        public int SubscriptionId { get; set; }
         public Subscription Subscription { get; set; }
-
-        //public IList<AuthenticationScheme> ExternalLogins { get; set; }
 
         public class InputModel
         {
@@ -71,25 +70,31 @@ namespace FootballStatsApi.Web.Areas.Identity.Pages.Account
             public string ConfirmPassword { get; set; }
         }
 
-        public async Task<IActionResult> OnGetAsync(string plan, string returnUrl = null)
+        public async Task<IActionResult> OnGetAsync(int subscriptionId, string returnUrl = null)
         {
             ReturnUrl = returnUrl;
-            Subscription = await _subscriptionManager.GetSubscriptionByName(plan);
+            SubscriptionId = subscriptionId;
+            var subscription = await _subscriptionManager.GetSubscriptionById(subscriptionId);
 
-            if (Subscription == null) return NotFound();
+            Subscription = subscription;
 
             return Page();
         }
 
-        public async Task<IActionResult> OnPostAsync(string returnUrl = null)
+        public async Task<IActionResult> OnPostAsync(int subscriptionId, string returnUrl = null)
         {
+            ReturnUrl = returnUrl;
+            SubscriptionId = subscriptionId;
+
+            var subscription = await _subscriptionManager.GetSubscriptionById(subscriptionId);
+
+            Subscription = subscription;
+            
             returnUrl = returnUrl ?? Url.Content("~/");
-            //ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
+
             if (ModelState.IsValid)
             {
-                if (Subscription == null || !Subscription.IsActive || Subscription.IsInternal) return NotFound();
-
-                var user = new User { UserName = Input.Email, Email = Input.Email, ApiKey = Guid.NewGuid(), SubscriptionId = Subscription.Id };
+                var user = new User { UserName = Input.Email, Email = Input.Email, ApiKey = Guid.NewGuid(), SubscriptionId = subscriptionId };
                 var result = await _userManager.CreateAsync(user, Input.Password);
                 if (result.Succeeded)
                 {

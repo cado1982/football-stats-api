@@ -10,5 +10,6 @@ namespace FootballStatsApi.Domain.Repositories
     public interface ISubscriptionRepository
     {
         Task<Subscription> GetByNameAsync(string name, IDbConnection connection);
+        Task<Subscription> GetByIdAsync(int id, IDbConnection connection);
     }
 }

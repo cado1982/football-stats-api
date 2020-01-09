@@ -109,34 +109,25 @@ namespace FootballStatsApi
                 app.UseDeveloperExceptionPage();
             }
 
-            app.UseStaticFiles();
+            app.UseFileServer();
 
             // Enable middleware to serve generated Swagger as a JSON endpoint.
             app.UseSwagger();
-
-            // Enable middleware to serve swagger-ui (HTML, JS, CSS, etc.),
-            // specifying the Swagger JSON endpoint.
-            app.UseSwaggerUI(c =>
-            {
-                c.SwaggerEndpoint("/swagger/v1/swagger.json", "V1");
-                c.RoutePrefix = String.Empty;
-            });
-        }
-
-        private static void ConfigureApi(IApplicationBuilder app)
-        {
             app.UseRouting();
-
-            app.UseAuthentication();
-            app.UseAuthorization();
-
-            app.UseMiddleware<RequestLogMiddleware>();
-            app.UseMiddleware<RateLimitMiddleware>();
 
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
             });
+        }
+
+        private static void ConfigureApi(IApplicationBuilder app)
+        {
+            app.UseAuthentication();
+            app.UseAuthorization();
+
+            app.UseMiddleware<RequestLogMiddleware>();
+            app.UseMiddleware<RateLimitMiddleware>();
         }
     }
 }

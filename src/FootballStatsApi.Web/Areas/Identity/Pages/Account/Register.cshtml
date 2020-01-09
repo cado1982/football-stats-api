@@ -3,10 +3,9 @@
 @{
     ViewData["Title"] = "Register";
 }
-@using System.Globalization;
 
 <div class="container my-5">
-    <form asp-route-returnUrl="@Model.ReturnUrl" method="post" novalidate>
+    <form asp-route-returnUrl="@Model.ReturnUrl" asp-route-subscriptionId="@Model.SubscriptionId" method="post" novalidate>
         <div class="row">
             <input type="hidden" asp-for="ReturnUrl" />
             <div class="card shadow-lg rounded col-md-8 col-lg-6 offset-md-2 offset-lg-3 p-0">

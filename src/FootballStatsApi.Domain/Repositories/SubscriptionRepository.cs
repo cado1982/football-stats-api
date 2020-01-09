@@ -31,5 +31,18 @@ namespace FootballStatsApi.Domain.Repositories
                 throw;
             }
         }
+
+        public async Task<Subscription> GetByIdAsync(int id, IDbConnection connection)
+        {
+            try
+            {
+                return await connection.QuerySingleOrDefaultAsync<Subscription>(SubscriptionSql.GetById, new { Id = id });
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Unable to get subscription with id {0}", id);
+                throw;
+            }
+        }
     }
 }

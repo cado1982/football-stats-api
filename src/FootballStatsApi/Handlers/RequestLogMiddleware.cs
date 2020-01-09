@@ -42,7 +42,7 @@ namespace FootballStatsApi.Handlers
             if (userIdClaim == null) 
             {
                 logger.LogError("UserId claim is missing");
-                context.Response.StatusCode = StatusCodes.Status500InternalServerError;
+                context.Response.StatusCode = StatusCodes.Status401Unauthorized;
                 return;
             }
 

@@ -1,12 +1,16 @@
 FROM mcr.microsoft.com/dotnet/core/sdk:3.0 AS build
 WORKDIR /app
 
+COPY ./FootballStatsApi.Models/FootballStatsApi.Models.csproj ./FootballStatsApi.Models/
 COPY ./FootballStatsApi.Domain/FootballStatsApi.Domain.csproj ./FootballStatsApi.Domain/
+COPY ./FootballStatsApi.Logic/FootballStatsApi.Logic.csproj ./FootballStatsApi.Logic/
 COPY ./FootballStatsApi.Web/FootballStatsApi.Web.csproj ./FootballStatsApi.Web/
 
 RUN dotnet restore ./FootballStatsApi.Web/FootballStatsApi.Web.csproj
 
+COPY ./FootballStatsApi.Models ./FootballStatsApi.Models
 COPY ./FootballStatsApi.Domain ./FootballStatsApi.Domain
+COPY ./FootballStatsApi.Logic ./FootballStatsApi.Logic
 COPY ./FootballStatsApi.Web ./FootballStatsApi.Web
 
 RUN dotnet publish FootballStatsApi.Web/FootballStatsApi.Web.csproj -c Release -o /publish --no-restore

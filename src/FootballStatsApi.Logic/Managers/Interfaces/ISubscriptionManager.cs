@@ -6,5 +6,6 @@ namespace FootballStatsApi.Logic.Managers
     public interface ISubscriptionManager
     {
         Task<Subscription> GetSubscriptionByName(string name);
+        Task<Subscription> GetSubscriptionById(int id);
     }
 }

@@ -1,4 +1,6 @@
-﻿<nav class="navbar navbar-toggleable-md navbar-expand-lg navbar-dark bg-dark">
+﻿@inject FootballStatsApi.Web.Helpers.ConfigurationHelper Configuration;
+
+<nav class="navbar navbar-toggleable-md navbar-expand-lg navbar-dark bg-dark">
     <div class="container-fluid">
         <a class="navbar-brand" href="/">
             <h3>Football Stats Api</h3>
@@ -11,7 +13,7 @@
 
             <ul class="navbar-nav mr-lg-auto ml-lg-4">
                 <li class="nav-item ml-lg-3">
-                    <a href="" class="nav-link">Documentation</a>
+                    <a href="@Configuration.ApiBaseUrl" class="nav-link">Documentation</a>
                 </li>
             </ul>
 
@@ -28,7 +30,7 @@
                 else
                 {
                     <li class="nav-item mr-lg-4 my-2 my-lg-0">
-                        <a class="nav-link btn btn-warning" asp-area="Identity" asp-page="/Account/Register" asp-route-plan="hobby">Sign Up</a>
+                        <a class="nav-link btn btn-warning" asp-area="Identity" asp-page="/Account/Register" asp-route-subscriptionid="1">Sign Up</a>
                     </li>
 
                     <li class="nav-item">

@@ -3,6 +3,7 @@ WORKDIR /app
 
 COPY ./FootballStatsApi.Domain/FootballStatsApi.Domain.csproj ./FootballStatsApi.Domain/
 COPY ./FootballStatsApi.Models/FootballStatsApi.Models.csproj ./FootballStatsApi.Models/
+COPY ./FootballStatsApi.Logic/FootballStatsApi.Logic.csproj ./FootballStatsApi.Logic/
 COPY ./FootballStatsApi/FootballStatsApi.csproj ./FootballStatsApi/
 
 WORKDIR /app/FootballStatsApi
@@ -13,6 +14,7 @@ WORKDIR /app
 
 COPY ./FootballStatsApi.Domain ./FootballStatsApi.Domain/
 COPY ./FootballStatsApi.Models ./FootballStatsApi.Models/
+COPY ./FootballStatsApi.Logic ./FootballStatsApi.Logic/
 COPY ./FootballStatsApi ./FootballStatsApi/
 
 WORKDIR /app/FootballStatsApi
