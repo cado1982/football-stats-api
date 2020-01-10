@@ -88,6 +88,11 @@ namespace FootballStatsApi.Web.Areas.Identity.Pages.Account
 
             var subscription = await _subscriptionManager.GetSubscriptionById(subscriptionId);
 
+            if (subscription == null || subscription.IsActive == false)
+            {
+                return NotFound("Subscription doesn't exist");
+            }
+
             Subscription = subscription;
             
             returnUrl = returnUrl ?? Url.Content("~/");

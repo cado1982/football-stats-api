@@ -7,6 +7,7 @@ using FootballStatsApi.Domain.Entities;
 using Microsoft.Extensions.Logging;
 using Dapper;
 using FootballStatsApi.Domain.Sql;
+using System.Linq;
 
 namespace FootballStatsApi.Domain.Repositories
 {
@@ -23,7 +24,23 @@ namespace FootballStatsApi.Domain.Repositories
         {
             try
             {
-                return await connection.QuerySingleOrDefaultAsync<Subscription>(SubscriptionSql.GetByName, new { Name = name });
+                var subscription = new Subscription();
+                subscription.Features = new List<SubscriptionFeature>();
+
+                await connection.QueryAsync<Subscription, SubscriptionFeature, Subscription>(SubscriptionSql.GetByName, (s, sf) => {
+                    subscription.Cost = s.Cost;
+                    subscription.DisplayName = s.DisplayName;
+                    subscription.Features.Add(sf);
+                    subscription.HourlyCallLimit = s.HourlyCallLimit;
+                    subscription.Id = s.Id;
+                    subscription.InternalName = s.InternalName;
+                    subscription.IsActive = s.IsActive;
+                    subscription.IsInternal = s.IsInternal;
+
+                    return s;
+                }, new { Name = name });
+
+                return subscription;
             }
             catch (Exception ex)
             {
@@ -36,11 +53,66 @@ namespace FootballStatsApi.Domain.Repositories
         {
             try
             {
-                return await connection.QuerySingleOrDefaultAsync<Subscription>(SubscriptionSql.GetById, new { Id = id });
+                var subscription = new Subscription();
+                subscription.Features = new List<SubscriptionFeature>();
+
+                await connection.QueryAsync<Subscription, SubscriptionFeature, Subscription>(SubscriptionSql.GetById, (s, sf) => {
+                    subscription.Cost = s.Cost;
+                    subscription.DisplayName = s.DisplayName;
+                    subscription.Features.Add(sf);
+                    subscription.HourlyCallLimit = s.HourlyCallLimit;
+                    subscription.Id = s.Id;
+                    subscription.InternalName = s.InternalName;
+                    subscription.IsActive = s.IsActive;
+                    subscription.IsInternal = s.IsInternal;
+
+                    return s;
+                }, new { Id = id });
+
+                return subscription;
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Unable to get subscription with id {0}", id);
+                throw;
+            }
+        }
+
+        public async Task<List<Subscription>> GetAllAsync(IDbConnection connection)
+        {
+            try
+            {
+                var lookup = new Dictionary<int, Subscription>();
+
+                var subscriptions = await connection.QueryAsync<Subscription, SubscriptionFeature, Subscription>(SubscriptionSql.GetAll, (s, sf) => 
+                {
+                    if (!lookup.TryGetValue(s.Id, out var found))
+                    {
+                        lookup.Add(s.Id, found = s);
+                        found.Features = new List<SubscriptionFeature>();
+                    }
+                    found.Features.Add(sf);
+                    return found;
+                });
+
+                return lookup.Values.ToList();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Unable to get subscriptions");
+                throw;
+            }
+        }
+
+        public async Task ChangeUsersSubscription(int userId, int newSubscriptionId, IDbConnection connection)
+        {
+            try
+            {
+                await connection.ExecuteAsync(SubscriptionSql.ChangeUsersSubscription, new { UserId = userId, SubscriptionId = newSubscriptionId });
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Unable to change user {0} to subscription {1}", userId, newSubscriptionId);
                 throw;
             }
         }

@@ -13,32 +13,34 @@
 
             <ul class="navbar-nav mr-lg-auto ml-lg-4">
                 <li class="nav-item ml-lg-3">
-                    <a href="@Configuration.ApiBaseUrl" class="nav-link">Documentation</a>
+                    <a asp-area="Documentation" asp-page="/Index" class="nav-link">Documentation</a>
                 </li>
             </ul>
+                <ul class="navbar-nav">
+                    @if (User.Identity.IsAuthenticated)
+                    {
+                        <li class="nav-item mr-lg-4">
+                            <a class="nav-link" asp-area="Identity" asp-page="/Account/Manage/Index">Account</a>
+                        </li>
 
-            <ul class="navbar-nav">
-                @if (User.Identity.IsAuthenticated)
-                {
-                    <li class="nav-item mr-lg-4">
-                        <a class="nav-link" asp-area="Identity" asp-page="/Account/Manage/Index">Account</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" asp-controller="Account" asp-action="Logout">Log Out</a>
-                    </li>
-                }
-                else
-                {
-                    <li class="nav-item mr-lg-4 my-2 my-lg-0">
-                        <a class="nav-link btn btn-warning" asp-area="Identity" asp-page="/Account/Register" asp-route-subscriptionid="1">Sign Up</a>
-                    </li>
+                        <li class="nav-item">
+                            <form method="post" asp-area="Identity" asp-page="/Account/Logout">
+                                <button class="btn btn-link nav-link" style="color: white;" type="submit">Log Out</button>
+                                </form>
+                        </li>
+                    }
+                    else
+                    {
+                        <li class="nav-item mr-lg-4 my-2 my-lg-0">
+                            <a class="nav-link btn btn-warning" asp-area="Identity" asp-page="/Account/Register" asp-route-subscriptionid="1">Sign Up</a>
+                        </li>
 
-                    <li class="nav-item">
-                        <a class="nav-link" asp-area="Identity" asp-page="/Account/Login">Log In</a>
-                    </li>
-                }
-            </ul>
-        </div>
+                        <li class="nav-item">
+                            <a class="nav-link" asp-area="Identity" asp-page="/Account/Login">Log In</a>
+                        </li>
+                    }
+                </ul>
+            </div>
 
     </div>
 </nav>

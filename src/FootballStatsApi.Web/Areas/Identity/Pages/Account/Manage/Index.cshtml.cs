@@ -1,6 +1,4 @@
-using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 using FootballStatsApi.Web.Models;
@@ -13,6 +11,10 @@ using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.WebUtilities;
 using System.Text;
 using Microsoft.Extensions.Logging;
+using FootballStatsApi.Web.Areas.Identity.Models;
+using FootballStatsApi.Logic.Managers;
+using IndexViewModel = FootballStatsApi.Web.Areas.Identity.Models.IndexViewModel;
+using System.Web;
 
 namespace FootballStatsApi.Web.Areas.Identity.Pages.Account.Manage
 {
@@ -20,6 +22,7 @@ namespace FootballStatsApi.Web.Areas.Identity.Pages.Account.Manage
     {
         private readonly UserManager<User> _userManager;
         private readonly ILogger<IndexModel> _logger;
+        private readonly ISubscriptionManager _subscriptionManager;
         private readonly SignInManager<User> _signInManager;
         private readonly IEmailSender _emailSender;
 
@@ -27,23 +30,26 @@ namespace FootballStatsApi.Web.Areas.Identity.Pages.Account.Manage
             IEmailSender emailSender,
             UserManager<User> userManager,
             ILogger<IndexModel> logger,
+            ISubscriptionManager subscriptionManager,
             SignInManager<User> signInManager)
         {
             _emailSender = emailSender;
             _userManager = userManager;
             _logger = logger;
+            _subscriptionManager = subscriptionManager;
             _signInManager = signInManager;
         }
 
-        public string Username { get; set; }
+        public IndexViewModel ViewModel { get; set; }
 
         [BindProperty]
-        public EmailChangeInputModel EmailChangeInput { get; set; }
-
-        public EmailChangeViewModel EmailChangeView { get; set; }
+        public IndexInputModel InputModel { get; set; }
 
         [TempData]
         public string EmailChangeStatusMessage { get; set; }
+
+        [TempData]
+        public string EmailChangeErrorMessage { get; set; }
 
         [TempData]
         public string TwoFactorStatusMessage { get; set; }
@@ -51,65 +57,8 @@ namespace FootballStatsApi.Web.Areas.Identity.Pages.Account.Manage
         [TempData]
         public string ChangePasswordStatusMessage { get; set; }
 
-        [BindProperty]
-        public TwoFactorInputModel TwoFactorInput { get; set; }
-
-        public TwoFactorViewModel TwoFactorView { get; set; }
-
-        public ApiKeyViewModel ApiKeyView { get; set; }
-
-        [BindProperty]
-        public ChangePasswordInputModel ChangePasswordInput { get; set; }
-
-        public class EmailChangeInputModel
-        {
-            [Required]
-            [EmailAddress]
-            [Display(Name = "New email")]
-            public string NewEmail { get; set; }
-        }
-
-        public class ChangePasswordInputModel
-        {
-            [Required]
-            [DataType(DataType.Password)]
-            [Display(Name = "Current password")]
-            public string OldPassword { get; set; }
-
-            [Required]
-            [StringLength(100, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.", MinimumLength = 6)]
-            [DataType(DataType.Password)]
-            [Display(Name = "New password")]
-            public string NewPassword { get; set; }
-
-            [DataType(DataType.Password)]
-            [Display(Name = "Confirm new password")]
-            [Compare("NewPassword", ErrorMessage = "The new password and confirmation password do not match.")]
-            public string ConfirmPassword { get; set; }
-        }
-
-        public class TwoFactorViewModel
-        {
-            public bool HasAuthenticator { get; set; }
-            public int RecoveryCodesLeft { get; set; }
-            public bool IsMachineRemembered { get; set; }
-        }
-
-        public class TwoFactorInputModel
-        {
-            public bool Is2faEnabled { get; set; }
-        }
-
-        public class ApiKeyViewModel
-        {
-            public Guid ApiKey { get; set; }
-        }
-
-        public class EmailChangeViewModel
-        {
-            public bool IsEmailConfirmed { get; set; }
-            public string Email { get; set; }
-        }
+        [TempData]
+        public string ChangePasswordErrorMessage { get; set; }
 
         private async Task LoadAsync(User user)
         {
@@ -119,36 +68,44 @@ namespace FootballStatsApi.Web.Areas.Identity.Pages.Account.Manage
             var is2faEnabled = await _userManager.GetTwoFactorEnabledAsync(user);
             var isMachineRemembered = await _signInManager.IsTwoFactorClientRememberedAsync(user);
             var recoveryCodesLeft = await _userManager.CountRecoveryCodesAsync(user);
+            var subscription = await _subscriptionManager.GetSubscriptionById(user.SubscriptionId);
 
-            EmailChangeInput = new EmailChangeInputModel
+            InputModel = new IndexInputModel
             {
-                NewEmail = email,
+                EmailChange = new EmailChangeInputModel
+                {
+                    NewEmail = email,
+                },
+                ChangePassword = new ChangePasswordInputModel(),
+                TwoFactor = new TwoFactorInputModel
+                {
+                    Is2faEnabled = is2faEnabled
+                }
             };
 
-            EmailChangeView = new EmailChangeViewModel
+            ViewModel = new IndexViewModel
             {
-                Email = email,
-                IsEmailConfirmed = isEmailConfirmed
+                ApiKey = new ApiKeyViewModel
+                {
+                    ApiKey = user.ApiKey
+                },
+                EmailChange = new EmailChangeViewModel
+                {
+                    Email = email,
+                    IsEmailConfirmed = isEmailConfirmed
+                },
+                TwoFactor = new TwoFactorViewModel
+                {
+                    HasAuthenticator = hasAuthenticator,
+                    IsMachineRemembered = isMachineRemembered,
+                    RecoveryCodesLeft = recoveryCodesLeft
+                },
+                Subscription = new SubscriptionViewModel
+                {
+                    ActiveSubscription = subscription
+                },
+                ChangePassword = new ChangePasswordViewModel()
             };
-
-            TwoFactorInput = new TwoFactorInputModel
-            {
-                Is2faEnabled = is2faEnabled
-            };
-
-            TwoFactorView = new TwoFactorViewModel
-            {
-                HasAuthenticator = hasAuthenticator,
-                IsMachineRemembered = isMachineRemembered,
-                RecoveryCodesLeft = recoveryCodesLeft
-            };
-
-            ApiKeyView = new ApiKeyViewModel
-            {
-                ApiKey = user.ApiKey
-            };
-
-            ChangePasswordInput = new ChangePasswordInputModel();
         }
 
         public async Task<IActionResult> OnGetAsync()
@@ -168,37 +125,7 @@ namespace FootballStatsApi.Web.Areas.Identity.Pages.Account.Manage
             await LoadAsync(user);
             return Page();
         }
-
-        // public async Task<IActionResult> OnPostAsync()
-        // {
-        //     var user = await _userManager.GetUserAsync(User);
-        //     if (user == null)
-        //     {
-        //         return NotFound($"Unable to load user with ID '{_userManager.GetUserId(User)}'.");
-        //     }
-
-        //     if (!ModelState.IsValid)
-        //     {
-        //         await LoadAsync(user);
-        //         return Page();
-        //     }
-
-        //     var phoneNumber = await _userManager.GetPhoneNumberAsync(user);
-        //     if (Input.PhoneNumber != phoneNumber)
-        //     {
-        //         var setPhoneResult = await _userManager.SetPhoneNumberAsync(user, Input.PhoneNumber);
-        //         if (!setPhoneResult.Succeeded)
-        //         {
-        //             var userId = await _userManager.GetUserIdAsync(user);
-        //             throw new InvalidOperationException($"Unexpected error occurred setting phone number for user with ID '{userId}'.");
-        //         }
-        //     }
-
-        //     await _signInManager.RefreshSignInAsync(user);
-        //     StatusMessage = "Your profile has been updated";
-        //     return RedirectToPage();
-        // }
-
+        
         public async Task<IActionResult> OnPostChangeEmailAsync()
         {
             var user = await _userManager.GetUserAsync(User);
@@ -210,30 +137,30 @@ namespace FootballStatsApi.Web.Areas.Identity.Pages.Account.Manage
             if (!ModelState.IsValid)
             {
                 await LoadAsync(user);
-                return Page();
+                return RedirectToPage("Index", "ChangeEmail", "ChangeEmail");
             }
 
             var email = await _userManager.GetEmailAsync(user);
-            if (EmailChangeInput.NewEmail != email)
+            if (InputModel.EmailChange.NewEmail != email)
             {
                 var userId = await _userManager.GetUserIdAsync(user);
-                var code = await _userManager.GenerateChangeEmailTokenAsync(user, EmailChangeInput.NewEmail);
+                var code = await _userManager.GenerateChangeEmailTokenAsync(user, InputModel.EmailChange.NewEmail);
                 var callbackUrl = Url.Page(
                     "/Account/ConfirmEmailChange",
                     pageHandler: null,
-                    values: new { userId = userId, email = EmailChangeInput.NewEmail, code = code },
+                    values: new { userId = userId, email = InputModel.EmailChange.NewEmail, code = code },
                     protocol: Request.Scheme);
                 await _emailSender.SendEmailAsync(
-                    EmailChangeInput.NewEmail,
+                    InputModel.EmailChange.NewEmail,
                     "Confirm your email",
                     $"Please confirm your account by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.");
 
                 EmailChangeStatusMessage = "Confirmation link to change email sent. Please check your email.";
-                return RedirectToPage();
+                return RedirectToPage("Index", "ChangeEmail", "ChangeEmail");
             }
 
             EmailChangeStatusMessage = "Your email is unchanged.";
-            return RedirectToPage();
+            return RedirectToPage("Index", "ChangeEmail", "ChangeEmail");
         }
 
         public async Task<IActionResult> OnPostSendVerificationEmailAsync()
@@ -247,7 +174,7 @@ namespace FootballStatsApi.Web.Areas.Identity.Pages.Account.Manage
             if (!ModelState.IsValid)
             {
                 await LoadAsync(user);
-                return Page();
+                return RedirectToPage("Index", "SendVerificationEmail", "ChangeEmail");
             }
 
             var userId = await _userManager.GetUserIdAsync(user);
@@ -265,7 +192,7 @@ namespace FootballStatsApi.Web.Areas.Identity.Pages.Account.Manage
                 $"Please confirm your account by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.");
 
             EmailChangeStatusMessage = "Verification email sent. Please check your email.";
-            return RedirectToPage();
+            return RedirectToPage("Index", "SendVerificationEmail", "ChangeEmail");
         }
 
         public async Task<IActionResult> OnPostTwoFactorForgetAsync()
@@ -278,7 +205,7 @@ namespace FootballStatsApi.Web.Areas.Identity.Pages.Account.Manage
 
             await _signInManager.ForgetTwoFactorClientAsync();
             TwoFactorStatusMessage = "The current browser has been forgotten. When you login again from this browser you will be prompted for your 2fa code.";
-            return RedirectToPage();
+            return RedirectToPage("Index", "TwoFactor", "TwoFactor");
         }
 
         public async Task<IActionResult> OnPostChangePasswordAsync()
@@ -292,25 +219,22 @@ namespace FootballStatsApi.Web.Areas.Identity.Pages.Account.Manage
             if (!ModelState.IsValid)
             {
                 await LoadAsync(user);
-                return Page();
+                return RedirectToPage("Index", "ChangePassword", "ChangePassword");
             }
 
-            var changePasswordResult = await _userManager.ChangePasswordAsync(user, ChangePasswordInput.OldPassword, ChangePasswordInput.NewPassword);
+            var changePasswordResult = await _userManager.ChangePasswordAsync(user, InputModel.ChangePassword.OldPassword, InputModel.ChangePassword.NewPassword);
             if (!changePasswordResult.Succeeded)
             {
-                foreach (var error in changePasswordResult.Errors)
-                {
-                    ModelState.AddModelError(string.Empty, error.Description);
-                }
+                ChangePasswordErrorMessage = string.Join("\n", changePasswordResult.Errors.Select(e => e.Description));
                 await LoadAsync(user);
-                return Page();
+                return RedirectToPage("Index", "ChangePassword", "ChangePassword");
             }
 
             await _signInManager.RefreshSignInAsync(user);
             _logger.LogInformation("User changed their password successfully.");
             ChangePasswordStatusMessage = "Your password has been changed.";
 
-            return RedirectToPage();
+            return RedirectToPage("Index", "ChangePassword", "ChangePassword");
         }
     }
 }

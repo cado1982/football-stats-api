@@ -13,5 +13,6 @@ namespace FootballStatsApi.Models
         public int Cost { get; set; }
         public bool IsActive { get; set; }
         public bool IsInternal { get; set; }
+        public List<string> Features { get; set; }
     }
 }

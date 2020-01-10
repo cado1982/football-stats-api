@@ -1,7 +1,7 @@
 ﻿@{
     ViewData["Title"] = "Home Page";
 }
-
+@model FootballStatsApi.Web.Models.IndexViewModel;
 
 <div class="hero-image text-center">
     <h1 class="display-1 font-weight-bold header-text-shadow">Football Stats Api</h1>
@@ -20,78 +20,52 @@
     <h1 class="display-4 text-light">Pricing</h1>
     <h5 class="mt-3 text-light">Whether you are an occasional hobby user, or an organisation running detailed analysis we have a plan for you.</h5>
     <div class="my-7 mx-2 card-deck">
-        <div class="card ">
-            <div class="card-body">
-                <h4 class="card-title">Hobby</h4>
-                <div>FREE</div>
-                <hr />
-                <ul>
-                    <li class="my-2">60 requests / hour</li>
-                    <li class="my-2">All 6 leagues*</li>
-                    <li class="my-2">Basic team stats</li>
-                    <li class="my-2">Basic player stats</li>
-                    <li class="my-2">Basic fixture stats</li>
-                    <li class="my-2">Historic stats*</li>
-                </ul>
+         @foreach (var subscription in Model.Subscriptions)
+         {
+            <div class="card @(@subscription.Id == 3 ? "card-popular" : "")">       
+                <div class="card-body">
+                    <h4 class="card-title">@subscription.DisplayName</h4>
+                    @if (subscription.Cost == 0)
+                    {
+                        <div>FREE</div>
+                    }
+                    else if (subscription.Cost == -1)
+                    {
+                        <div>TBD</div>
+                    }
+                    else if (subscription.Cost == -2)
+                    {
+                        <div>Enquire</div>
+                    }
+                    else
+                    {
+                        <div>$@((subscription.Cost / 100).ToString("c"))</div>
+                    }
+                    <hr />
+                    <ul>
+                        <li class="my-2">@(subscription.HourlyCallLimit == -1 ? "Custom" : @subscription.HourlyCallLimit.ToString("G")) requests / hour</li>
+                        @foreach (var feature in subscription.Features)
+                        {
+                            <li class="my-2">@feature</li>
+                        }
+                    </ul>
+                </div>
+                <div class="card-footer">
+                    @if (!subscription.IsActive)
+                    {
+                        <a class="btn btn-dark text-light disabled w-100">Coming Soon</a>
+                    }
+                    else if (Model.User == null)
+                    {
+                        <a asp-area="Identity" asp-page="/Account/Register" asp-route-subscriptionid="@subscription.Id" class="btn btn-warning w-100">Select @subscription.DisplayName plan</a>
+                    }
+                    else
+                    {
+                        <a asp-area="Identity" asp-page="/Account/Manage/Subscription" class="btn btn-warning w-100">Manage Subscription</a>
+                    }
+                </div>
             </div>
-            <div class="card-footer">
-                <a asp-controller="Home" asp-action="Subscribe" asp-route-subscriptionid="1" class="btn btn-warning w-100">Select Hobby plan</a>
-            </div>
-        </div>
-        <div class="card ">
-            <div class="card-body">
-                <h4 class="card-title">Amateur</h4>
-                <div>TBD</div>
-                <hr />
-                <ul>
-                    <li class="my-2">3,600 requests / hour</li>
-                    <li class="my-2">All Hobby features</li>
-                    <li class="my-2">Detailed team stats</li>
-                    <li class="my-2">Detailed player stats</li>
-                    <li class="my-2">Detailed fixture stats</li>
-                </ul>
-            </div>
-            <div class="card-footer">
-                <a class="flex-grow-0 btn btn-dark text-light disabled w-100">Coming Soon</a>
-            </div>
-        </div>
-        <div class="card card-popular">
-            <div class="card-body">
-                <h4 class="card-title">Pro</h4>
-                <div>TBD</div>
-                <hr />
-                <ul>
-                    <li class="my-2">100,000 requests / hour</li>
-                    <li class="my-2">All Amateur features</li>
-                    <li class="my-2">Expert team stats</li>
-                    <li class="my-2">Expert player stats</li>
-                    <li class="my-2">Expert fixture stats</li>
-                </ul>
-            </div>
-
-            <div class="card-footer">
-                <a class="flex-grow-0 btn btn-dark text-light disabled w-100">Coming Soon</a>
-            </div>
-        </div>
-        <div class="card ">
-            <div class="card-body">
-                <h4 class="card-title">Enterprise</h4>
-                <div>Enquire</div>
-                <hr />
-                <ul>
-                    <li class="my-2">Custom requests / hour</li>
-                    <li class="my-2">All Pro features</li>
-                    <li class="my-2">Custom stats</li>
-                    <li class="my-2">Custom endpoints</li>
-                    <li class="my-2">Priority support channel</li>
-                    <li class="my-2">Service level agreements</li>
-                </ul>
-            </div>
-
-            <div class="card-footer">
-                <a class="flex-grow-0 btn btn-dark text-light disabled w-100">Coming Soon</a>
-            </div>
-        </div>
+        }
     </div>
     <div class="mt-7 text-muted">*EPL, La Liga, Bundesliga, Serie A, Ligue 1, and RFPL</div>
     <div class="text-muted">*Historic stats back to 2014/2015</div>
@@ -472,8 +446,8 @@
                     </tbody>
                 </table>
             </div>
+            </div>
         </div>
-    </div>
     
 </div>
 

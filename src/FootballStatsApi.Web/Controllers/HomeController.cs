@@ -7,6 +7,10 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using FootballStatsApi.Web.Models;
 using FootballStatsApi.Logic.Managers;
+using FootballStatsApi.Domain.Entities.Identity;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Authorization;
+using System.ComponentModel.DataAnnotations;
 
 namespace FootballStatsApi.Web.Controllers
 {
@@ -14,16 +18,27 @@ namespace FootballStatsApi.Web.Controllers
     {
         private readonly ILogger<HomeController> _logger;
         private readonly ISubscriptionManager _subscriptionManager;
+        private readonly UserManager<User> _userManager;
 
-        public HomeController(ILogger<HomeController> logger, ISubscriptionManager subscriptionManager)
+        public HomeController(ILogger<HomeController> logger, ISubscriptionManager subscriptionManager, UserManager<User> userManager)
         {
             _logger = logger;
             _subscriptionManager = subscriptionManager;
+            _userManager = userManager;
         }
 
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
-            return View();
+            var subscriptions = await _subscriptionManager.GetAllSubscriptions();
+            var user = await _userManager.GetUserAsync(User);
+
+            var vm = new IndexViewModel
+            {
+                Subscriptions = subscriptions,
+                User = user
+            };
+
+            return View(vm);
         }
 
         public IActionResult Privacy()
@@ -47,15 +62,19 @@ namespace FootballStatsApi.Web.Controllers
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
 
-        public async Task<IActionResult> Subscribe(string plan)
+        [Authorize]
+        public async Task<IActionResult> UpgradeSubscription([FromQuery][Required] int subscriptionId)
         {
-            var subscription = await _subscriptionManager.GetSubscriptionByName(plan);
+            var user = await _userManager.GetUserAsync(User);
 
-            if (subscription == null) return NotFound();
+            if (user == null)
+            {
+                return NotFound($"Unable to load user with ID '{_userManager.GetUserId(User)}'.");
+            }
 
-            var redirectUri = $"/Identity/Account/Register?plan={subscription.InternalName}";
+            await _subscriptionManager.ChangeUsersSubscription(user.Id, subscriptionId);
 
-            return Redirect(redirectUri);
+            return RedirectToAction("Index");
         }
     }
 }

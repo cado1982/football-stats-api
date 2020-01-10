@@ -13,5 +13,6 @@ namespace FootballStatsApi.Domain.Entities
         public int Cost { get; set; }
         public bool IsActive { get; set; }
         public bool IsInternal { get; set; }
+        public List<SubscriptionFeature> Features { get; set; }
     }
 }
