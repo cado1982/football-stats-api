@@ -2,10 +2,21 @@
 @model AuthenticationModel
 @{
     ViewData["Title"] = "Authentication - Documentation";
+    ViewData["ActivePage"] = DocumentationNavPages.Authentication;
 }
 
-<div class="row">
-    <div class="col-md-6">
-        <h4>Manage Subscription</h4>
-    </div>
+<p>
+    <h4>Authentication</h4>
+    <hr />
+    <h5>Overview</h5>
+</p>
+
+<div class="mt-4">
+    <p>The Football Stats API uses API Keys for authentication.</p>
+    <p>You are assigned an API Key when you register your account which can be viewed in the <a asp-area="Identity" asp-page="/Account/Manage/Index" asp-fragment="ApiKey">Account Management</a> section of the website. It is also pre-filled in the documentation pages below if you are logged in.</p>
+    <div class="my-4 alert alert-warning">Your API Key should be kept secret and not shared with anyone.</div>
+    <p>Pass your API Key as an HTTP header when you make a call as follows:</p>
+    <p class="bg-dark text-light px-3 py-2"><samp>X-API-KEY: @(Model.ApiKey ?? "<YOUR-API-KEY-HERE>")</samp></p>
+
 </div>
+

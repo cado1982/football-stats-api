@@ -1,0 +1,54 @@
+﻿@page
+@model RateLimitingModel
+@{
+    ViewData["Title"] = "Rate Limiting- Documentation";
+    ViewData["ActivePage"] = DocumentationNavPages.RateLimiting;
+}
+
+<p>
+    <h4>Rate Limiting</h4>
+    <hr />
+</p>
+
+<div class="mt-4">
+    <p>Each subscription plan allows a certain amount of calls per hour.</p>
+    <p>You can view your subscription plan details, including how many calls your plan allows, from the <a asp-area="Identity" asp-page="/Account/Manage/Index" asp-fragment="Subscription">Account Management</a> section of the website.</p>
+    <p>When you make a call to the API, the following response headers are returned which indicate the state of rate limiting for your account.</p>
+    <div class="my-5">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Header Name</th>
+                    <th>Example Value</th>
+                    <th>Description</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><code>X-RateLimit-Limit</code></td>
+                    <td><code>60</code></td>
+                    <td>The amount of hourly calls permitted on your plan.</td>
+                </tr>
+                <tr>
+                    <td><code>X-RateLimit-Remaining</code></td>
+                    <td><code>35</code></td>
+                    <td>The amount of calls made this hour.</td>
+                </tr>
+                <tr>
+                    <td><code>X-RateLimit-Reset</code></td>
+                    <td><code>1578934800</code></td>
+                    <td>A unix timestamp for when the next hour starts.</td>
+                </tr>
+                <tr>
+                    <td><code>Retry-After</code></td>
+                    <td><code>829</code></td>
+                    <td>The amount of seconds until you should attempt a retry. This header is only returned if the account is rate limited.</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    
+    
+    <p>Should your account exceed the amount of calls allowed on your plan, the API will return a <code>429 - Too Many Requests</code> response code. You should inspect the value of the <code>Retry-After</code> header to find out how many seconds are left until the limits reset and then retry after that time.</p>
+</div>
+

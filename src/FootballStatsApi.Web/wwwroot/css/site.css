@@ -12172,6 +12172,12 @@ nav.bg-dark {
   background-color: #183467 !important; }
 
 
+#documentation-nav .nav-link:not(.active) {
+  color: #363636; }
+
+#documentation-nav .nav-link:not(.active):hover {
+  font-weight: bold; }
+
 .feature-image > img {
   width: 100%;
   height: auto; }

@@ -1,0 +1,18 @@
+﻿@page
+@model IntroductionModel
+@{
+    ViewData["Title"] = "Documentation";
+    ViewData["ActivePage"] = DocumentationNavPages.Introduction;
+}
+
+<p>
+    <h4>Introduction</h4>
+    <hr />
+</p>
+
+<div class="mt-4">
+    <p>Welcome to the documentation for the Football Stats API.</p>
+    <p>These documents will explain some features of the API and get you up and running to make calls to request data.</p>
+    <p>Use the navigation to switch between topics on the documentation.</p>
+    <p>If you have any questions. Check our <a asp-controller="Home" asp-action="Support">support</a> page and get in touch.</p>
+</div>

@@ -1,0 +1,11 @@
+﻿@import "colors.scss";
+
+#documentation-nav {
+    .nav-link:not(.active) {
+        color: $text-dark-color;
+    }
+
+    .nav-link:not(.active):hover {
+        font-weight: bold;
+    }
+}

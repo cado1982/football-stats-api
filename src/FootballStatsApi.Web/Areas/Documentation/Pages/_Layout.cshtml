@@ -1,0 +1,20 @@
+@{
+    Layout = "/Views/Shared/_Layout.cshtml";
+}
+
+    <div class="container mt-5 mb-7">
+        <h2 class="text-center">Documentation</h2>
+        <hr />
+        <div class="row mt-2">
+            <div class="col-md-3">
+                <partial name="_DocumentationNav" />
+            </div>
+            <div class="col-md-9">
+                @RenderBody()
+            </div>
+        </div>
+    </div>
+
+@section Scripts {
+    @RenderSection("Scripts", required: false)
+}

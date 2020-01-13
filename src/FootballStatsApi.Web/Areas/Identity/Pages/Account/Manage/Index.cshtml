@@ -18,7 +18,8 @@
     <div class="row">
         <div class="col-md-6 mt-2 mb-5">
             <h4 class="mb-4">Subscription</h4>
-            <p>You are currently using the <strong>@Model.ViewModel.Subscription.ActiveSubscription.DisplayName</strong> plan for @(Model.ViewModel.Subscription.ActiveSubscription.Cost > 0 ? "$" + Model.ViewModel.Subscription.ActiveSubscription.Cost.ToString("c") : "FREE").</p>
+            <p>You are currently subscribed to the <strong>@Model.ViewModel.Subscription.ActiveSubscription.DisplayName</strong> plan.</p>
+            <p>Your plan allows <samp>@Model.ViewModel.Subscription.ActiveSubscription.HourlyCallLimit</samp> API calls per hour.</p>
             @*<a class="btn btn-primary" asp-page="Subscription">Manage Subscription</a>*@
         </div>
     </div>

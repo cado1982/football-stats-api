@@ -1,0 +1,17 @@
+﻿@page
+@{
+    ViewData["Title"] = "Endpoints- Documentation";
+    ViewData["ActivePage"] = DocumentationNavPages.Endpoints;
+}
+@inject FootballStatsApi.Web.Helpers.ConfigurationHelper Configuration;
+
+<p>
+    <h4>Endpoints</h4>
+    <hr />
+</p>
+
+<div class="mt-4">
+    <p>The API is available at <a href="@Configuration.ApiBaseUrl">@Configuration.ApiBaseUrl</a></p>
+    <p>The list of endpoints is currently documented in <a href="@Configuration.ApiBaseUrl">Swagger</a></p>
+</div>
+

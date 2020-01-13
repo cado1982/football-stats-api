@@ -4,43 +4,27 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Logging;
+using FootballStatsApi.Domain.Entities.Identity;
 using FootballStatsApi.Logic.Managers;
 using FootballStatsApi.Models;
 using System.Collections.Generic;
-using FootballStatsApi.Domain.Entities.Identity;
 
 namespace FootballStatsApi.Web.Areas.Documentation.Pages
 {
-    public class AuthenticationModel : PageModel
+    public class IntroductionModel : PageModel
     {
         private readonly UserManager<User> _userManager;
         private readonly ISubscriptionManager _subscriptionManager;
-        private readonly ILogger<AuthenticationModel> _logger;
+        private readonly ILogger<IntroductionModel> _logger;
 
-        public List<Subscription> Subscriptions { get; set; }
-
-        public string ApiKey { get; set; }
-
-        public AuthenticationModel(
+        public IntroductionModel(
             UserManager<User> userManager,
             ISubscriptionManager subscriptionManager,
-            ILogger<AuthenticationModel> logger)
+            ILogger<IntroductionModel> logger)
         {
             _userManager = userManager;
             _subscriptionManager = subscriptionManager;
             _logger = logger;
-        }
-
-        public async Task<IActionResult> OnGetAsync()
-        {
-            var user = await _userManager.GetUserAsync(base.User);
-
-            if (user != null)
-            {
-                ApiKey = user.ApiKey.ToString();
-            }
-
-            return Page();
         }
     }
 }

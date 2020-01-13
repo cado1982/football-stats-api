@@ -28,7 +28,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Styles\" />
     <Folder Include="wwwroot\css\" />
     <Folder Include="wwwroot\lib\" />
     <Folder Include="wwwroot\images\" />

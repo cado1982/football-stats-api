@@ -31,8 +31,11 @@ namespace FootballStatsApi
 
         protected override async Task<AuthenticateResult> HandleAuthenticateAsync()
         {
+            Logger.LogTrace("Entering HandleAuthenticateAsync");
+
             if (!Request.Headers.TryGetValue(ApiKeyHeaderName, out var apiKeyHeaderValues))
             {
+                Logger.LogInformation("X-API-Key header is not present");
                 return AuthenticateResult.NoResult();
             }
 
@@ -40,6 +43,7 @@ namespace FootballStatsApi
 
             if (apiKeyHeaderValues.Count == 0 || string.IsNullOrWhiteSpace(providedApiKey))
             {
+                Logger.LogInformation("X-API-Key header is not found or is empty");
                 return AuthenticateResult.NoResult();
             }
 
@@ -52,16 +56,16 @@ namespace FootballStatsApi
                     new Claim(ClaimTypes.Sid, user.Id.ToString())
                 };
 
-                //claims.AddRange(user.Roles.Select(role => new Claim(ClaimTypes.Role, role)));
-
                 var identity = new ClaimsIdentity(claims, Options.AuthenticationType);
                 var identities = new List<ClaimsIdentity> { identity };
                 var principal = new ClaimsPrincipal(identities);
                 var ticket = new AuthenticationTicket(principal, Options.Scheme);
 
+                Logger.LogInformation("Successfully mapped api key {0} to user id {1}", providedApiKey, user.Id);
                 return AuthenticateResult.Success(ticket);
             }
 
+            Logger.LogInformation("Failing API Key authentication. Invalid API Key provided");
             return AuthenticateResult.Fail("Invalid API Key provided.");
         }
 
