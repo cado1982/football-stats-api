@@ -40,7 +40,7 @@ namespace FootballStatsApi.Web
             services.AddIdentity<User, Role>(options =>
             {
                 options.SignIn.RequireConfirmedAccount = true;
-                options.Password.RequiredLength(10);
+                options.Password.RequiredLength = 10;
                 options.User.RequireUniqueEmail = true;
             })
                 .AddEntityFrameworkStores<ApplicationDbContext>()
