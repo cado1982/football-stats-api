@@ -4,7 +4,15 @@
     ViewData["Title"] = "Locked out";
 }
 
-<header>
-    <h1 class="text-danger">@ViewData["Title"]</h1>
-    <p class="text-danger">This account has been locked out, please try again later.</p>
-</header>
+<div class="container my-5">
+    <form method="post" novalidate>
+        <div class="row">
+            <div class="card shadow-lg rounded col-md-8 col-lg-6 offset-md-2 offset-lg-3 p-0">
+                <h5 class="card-header">Account Locked</h5>
+                <div class="card-body">
+                    This account has been locked out, please try again later.
+                </div>
+            </div>
+        </div>
+    </form>
+</div>

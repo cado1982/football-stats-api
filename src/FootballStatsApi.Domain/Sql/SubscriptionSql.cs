@@ -14,13 +14,9 @@ namespace FootballStatsApi.Domain.Sql
 	        s.hourly_call_limit as hourlycalllimit,
 	        s.cost,
 	        s.is_active as isactive,
-	        s.is_internal as isinternal,
-	        sf.id,
-	        sf.display_name as displayname
+	        s.is_internal as isinternal
         FROM
 	        ""public"".""subscriptions"" s
-        LEFT JOIN 
-	        ""public"".""subscription_features"" sf ON sf.subscription_id = s.id
         WHERE
             internal_name = @Name AND
             s.is_internal = false;";
@@ -33,13 +29,9 @@ namespace FootballStatsApi.Domain.Sql
 	        s.hourly_call_limit as hourlycalllimit,
 	        s.cost,
 	        s.is_active as isactive,
-	        s.is_internal as isinternal,
-	        sf.id,
-	        sf.display_name as displayname
+	        s.is_internal as isinternal
         FROM
 	        ""public"".""subscriptions"" s
-        LEFT JOIN 
-	        ""public"".""subscription_features"" sf ON sf.subscription_id = s.id
         WHERE
             s.id = @Id AND
             s.is_internal = false;";

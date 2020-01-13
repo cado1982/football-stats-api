@@ -24,21 +24,7 @@ namespace FootballStatsApi.Domain.Repositories
         {
             try
             {
-                var subscription = new Subscription();
-                subscription.Features = new List<SubscriptionFeature>();
-
-                await connection.QueryAsync<Subscription, SubscriptionFeature, Subscription>(SubscriptionSql.GetByName, (s, sf) => {
-                    subscription.Cost = s.Cost;
-                    subscription.DisplayName = s.DisplayName;
-                    subscription.Features.Add(sf);
-                    subscription.HourlyCallLimit = s.HourlyCallLimit;
-                    subscription.Id = s.Id;
-                    subscription.InternalName = s.InternalName;
-                    subscription.IsActive = s.IsActive;
-                    subscription.IsInternal = s.IsInternal;
-
-                    return s;
-                }, new { Name = name });
+                var subscription = await connection.QuerySingleOrDefaultAsync<Subscription>(SubscriptionSql.GetByName, new { Name = name });
 
                 return subscription;
             }
@@ -53,21 +39,7 @@ namespace FootballStatsApi.Domain.Repositories
         {
             try
             {
-                var subscription = new Subscription();
-                subscription.Features = new List<SubscriptionFeature>();
-
-                await connection.QueryAsync<Subscription, SubscriptionFeature, Subscription>(SubscriptionSql.GetById, (s, sf) => {
-                    subscription.Cost = s.Cost;
-                    subscription.DisplayName = s.DisplayName;
-                    subscription.Features.Add(sf);
-                    subscription.HourlyCallLimit = s.HourlyCallLimit;
-                    subscription.Id = s.Id;
-                    subscription.InternalName = s.InternalName;
-                    subscription.IsActive = s.IsActive;
-                    subscription.IsInternal = s.IsInternal;
-
-                    return s;
-                }, new { Id = id });
+                var subscription = await connection.QuerySingleOrDefaultAsync<Subscription>(SubscriptionSql.GetById, new { Id = id });
 
                 return subscription;
             }

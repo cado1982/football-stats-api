@@ -1,159 +1,162 @@
 @page
 @model IndexModel
+@{
+    ViewData["Title"] = "Account";
+}
 
-    <div class="container my-5">
-        <a name="ApiKey"></a>
-        <div class="row">
-            <div class="col-md-6 mt-2 mb-5">
-                <h4 class="mb-4">Api Key</h4>
-                <p>Your Api Key can be used to make calls into the Api. It must be kept secret.</p>
-                <input asp-for="ViewModel.ApiKey.ApiKey" class="form-control" disabled />
-            </div>
+<div class="container my-5">
+    <a name="ApiKey"></a>
+    <div class="row">
+        <div class="col-md-6 mt-2 mb-5">
+            <h4 class="mb-4">Api Key</h4>
+            <p>Your Api Key can be used to make calls into the Api. It must be kept secret.</p>
+            <input asp-for="ViewModel.ApiKey.ApiKey" class="form-control" disabled />
         </div>
-        <hr />
-        <a name="Subscription"></a>
-        <div class="row">
-            <div class="col-md-6 mt-2 mb-5">
-                <h4 class="mb-4">Subscription</h4>
-                <p>You are currently using the <strong>@Model.ViewModel.Subscription.ActiveSubscription.DisplayName</strong> plan for @(Model.ViewModel.Subscription.ActiveSubscription.Cost > 0 ? "$" + Model.ViewModel.Subscription.ActiveSubscription.Cost.ToString("c") : "FREE").</p>
-                <a class="btn btn-primary" asp-page="Subscription">Manage Subscription</a>
-            </div>
-        </div>
-        <hr />
-        <a name="ChangePassword"></a>
-        <div class="row">
-            <div class="col-md-6 mt-2 mb-5">
-                <h4 class="mb-4">Change Password</h4>
-                <partial name="_StatusMessage" model="Model.ChangePasswordStatusMessage" />
-                <form id="change-password-form" asp-page-handler="ChangePassword" method="post">
-                    <div class="text-danger">@Model.ChangePasswordErrorMessage</div>
-                    <div class="form-group">
-                        <label asp-for="InputModel.ChangePassword.OldPassword"></label>
-                        <input asp-for="InputModel.ChangePassword.OldPassword" class="form-control" />
-                        <span asp-validation-for="InputModel.ChangePassword.OldPassword" class="text-danger"></span>
-                    </div>
-                    <div class="form-group">
-                        <label asp-for="InputModel.ChangePassword.NewPassword"></label>
-                        <input asp-for="InputModel.ChangePassword.NewPassword" class="form-control" />
-                        <span asp-validation-for="InputModel.ChangePassword.NewPassword" class="text-danger"></span>
-                    </div>
-                    <div class="form-group">
-                        <label asp-for="InputModel.ChangePassword.ConfirmPassword"></label>
-                        <input asp-for="InputModel.ChangePassword.ConfirmPassword" class="form-control" />
-                        <span asp-validation-for="InputModel.ChangePassword.ConfirmPassword" class="text-danger"></span>
-                    </div>
-                    <button type="submit" class="btn btn-primary">Update password</button>
-                </form>
-            </div>
-        </div>
-        <hr />
-        <a name="ChangeEmail"></a>
-        <div class="row">
-            <div class="col-md-6 mt-2 mb-5">
-                <h4 class="mb-4">Change Email</h4>
-                <partial name="_StatusMessage" model="Model.EmailChangeStatusMessage" />
-                <form id="email-form" method="post">
-                    <div class="text-danger">@Model.EmailChangeErrorMessage</div>
-                    <div class="form-group">
-                        <label asp-for="ViewModel.EmailChange.Email"></label>
-                        @if (Model.ViewModel.EmailChange.IsEmailConfirmed)
-                        {
-                            <div class="input-group">
-                                <input asp-for="ViewModel.EmailChange.Email" class="form-control" disabled />
-                                <div class="input-group-append">
-                                    <span class="input-group-text text-success font-weight-bold">✓</span>
-                                </div>
-                            </div>
-                        }
-                        else
-                        {
-                            <input asp-for="ViewModel.EmailChange.Email" class="form-control" disabled />
-                            <button id="email-verification" type="submit" asp-page-handler="SendVerificationEmail" class="btn btn-link">Send verification email</button>
-                        }
-                    </div>
-                    <div class="form-group">
-                        <label asp-for="InputModel.EmailChange.NewEmail"></label>
-                        <input asp-for="InputModel.EmailChange.NewEmail" class="form-control" />
-                        <span asp-validation-for="InputModel.EmailChange.NewEmail" class="text-danger"></span>
-                    </div>
-                    <button id="change-email-button" type="submit" asp-page-handler="ChangeEmail" class="btn btn-primary">Change email</button>
-                </form>
-
-
-            </div>
-        </div>
-        <hr />
-        <a name="TwoFactor"></a>
-        <div class="row">
-            <div class="col-md-6 mt-2 mb-5">
-
-                <h4 class="mb-4">Two Factor Authentication</h4>
-                <partial name="_StatusMessage" for="TwoFactorStatusMessage" />
-                @if (Model.InputModel.TwoFactor.Is2faEnabled)
-                {
-                    if (Model.ViewModel.TwoFactor.RecoveryCodesLeft == 0)
-                    {
-                        <div class="alert alert-danger">
-                            <strong>You have no recovery codes left.</strong>
-                            <p>You must <a asp-page="./GenerateRecoveryCodes">generate a new set of recovery codes</a> before you can log in with a recovery code.</p>
-                        </div>
-                    }
-                    else if (Model.ViewModel.TwoFactor.RecoveryCodesLeft == 1)
-                    {
-                        <div class="alert alert-danger">
-                            <strong>You have 1 recovery code left.</strong>
-                            <p>You can <a asp-page="./GenerateRecoveryCodes">generate a new set of recovery codes</a>.</p>
-                        </div>
-                    }
-                    else if (Model.ViewModel.TwoFactor.RecoveryCodesLeft <= 3)
-                    {
-                        <div class="alert alert-warning">
-                            <strong>You have @Model.ViewModel.TwoFactor.RecoveryCodesLeft recovery codes left.</strong>
-                            <p>You should <a asp-page="./GenerateRecoveryCodes">generate a new set of recovery codes</a>.</p>
-                        </div>
-                    }
-
-                    if (Model.ViewModel.TwoFactor.IsMachineRemembered)
-                    {
-                        <form method="post" style="display: inline-block">
-                            <button type="submit" asp-page-handler="TwoFactorForget" class="btn btn-primary">Forget this browser</button>
-                        </form>
-                    }
-                    <a asp-page="./Disable2fa" class="btn btn-primary">Disable 2FA</a>
-                    <a asp-page="./GenerateRecoveryCodes" class="btn btn-primary">Reset recovery codes</a>
-                }
-
-                <h5>Authenticator app</h5>
-                @if (!Model.ViewModel.TwoFactor.HasAuthenticator)
-                {
-                    <a id="enable-authenticator" asp-page="./EnableAuthenticator" class="btn btn-primary">Add authenticator app</a>
-                }
-                else
-                {
-                    <a id="enable-authenticator" asp-page="./EnableAuthenticator" class="btn btn-primary">Setup authenticator app</a>
-                    <a id="reset-authenticator" asp-page="./ResetAuthenticator" class="btn btn-primary">Reset authenticator app</a>
-                }
-            </div>
-        </div>
-        <hr />
-        <a name="PersonalData"></a>
-        <div class="row">
-            <div class="col-md-6 mt-2 mb-5">
-                <h4 class="mb-4">Personal Data</h4>
-                <p>Your account contains personal data that you have given us. This section allows you to download or delete that data.</p>
-                <p>
-                    <strong>Deleting this data will permanently remove your account, and this cannot be recovered.</strong>
-                </p>
-                <form id="download-data" asp-page="DownloadPersonalData" method="post" class="form-group">
-                    <button class="btn btn-primary" type="submit">Download Personal Data</button>
-                </form>
-                <p>
-                    <a id="delete" asp-page="DeletePersonalData" class="btn btn-primary">Delete Account</a>
-                </p>
-            </div>
-        </div>
-
     </div>
+    <hr />
+    <a name="Subscription"></a>
+    <div class="row">
+        <div class="col-md-6 mt-2 mb-5">
+            <h4 class="mb-4">Subscription</h4>
+            <p>You are currently using the <strong>@Model.ViewModel.Subscription.ActiveSubscription.DisplayName</strong> plan for @(Model.ViewModel.Subscription.ActiveSubscription.Cost > 0 ? "$" + Model.ViewModel.Subscription.ActiveSubscription.Cost.ToString("c") : "FREE").</p>
+            @*<a class="btn btn-primary" asp-page="Subscription">Manage Subscription</a>*@
+        </div>
+    </div>
+    <hr />
+    <a name="ChangePassword"></a>
+    <div class="row">
+        <div class="col-md-6 mt-2 mb-5">
+            <h4 class="mb-4">Change Password</h4>
+            <partial name="_StatusMessage" model="Model.ChangePasswordStatusMessage" />
+            <form id="change-password-form" asp-page-handler="ChangePassword" method="post">
+                <div class="text-danger">@Model.ChangePasswordErrorMessage</div>
+                <div class="form-group">
+                    <label asp-for="InputModel.ChangePassword.OldPassword"></label>
+                    <input asp-for="InputModel.ChangePassword.OldPassword" class="form-control" />
+                    <span asp-validation-for="InputModel.ChangePassword.OldPassword" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="InputModel.ChangePassword.NewPassword"></label>
+                    <input asp-for="InputModel.ChangePassword.NewPassword" class="form-control" />
+                    <span asp-validation-for="InputModel.ChangePassword.NewPassword" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="InputModel.ChangePassword.ConfirmPassword"></label>
+                    <input asp-for="InputModel.ChangePassword.ConfirmPassword" class="form-control" />
+                    <span asp-validation-for="InputModel.ChangePassword.ConfirmPassword" class="text-danger"></span>
+                </div>
+                <button type="submit" class="btn btn-primary">Update password</button>
+            </form>
+        </div>
+    </div>
+    <hr />
+    <a name="ChangeEmail"></a>
+    <div class="row">
+        <div class="col-md-6 mt-2 mb-5">
+            <h4 class="mb-4">Change Email</h4>
+            <partial name="_StatusMessage" model="Model.EmailChangeStatusMessage" />
+            <form id="email-form" method="post">
+                <div class="text-danger">@Model.EmailChangeErrorMessage</div>
+                <div class="form-group">
+                    <label asp-for="ViewModel.EmailChange.Email"></label>
+                    @if (Model.ViewModel.EmailChange.IsEmailConfirmed)
+                    {
+                        <div class="input-group">
+                            <input asp-for="ViewModel.EmailChange.Email" class="form-control" disabled />
+                            <div class="input-group-append">
+                                <span class="input-group-text text-success font-weight-bold">✓</span>
+                            </div>
+                        </div>
+                    }
+                    else
+                    {
+                        <input asp-for="ViewModel.EmailChange.Email" class="form-control" disabled />
+                        <button id="email-verification" type="submit" asp-page-handler="SendVerificationEmail" class="btn btn-link">Send verification email</button>
+                    }
+                </div>
+                <div class="form-group">
+                    <label asp-for="InputModel.EmailChange.NewEmail"></label>
+                    <input asp-for="InputModel.EmailChange.NewEmail" class="form-control" />
+                    <span asp-validation-for="InputModel.EmailChange.NewEmail" class="text-danger"></span>
+                </div>
+                <button id="change-email-button" type="submit" asp-page-handler="ChangeEmail" class="btn btn-primary">Change email</button>
+            </form>
+
+
+        </div>
+    </div>
+    <hr />
+    <a name="TwoFactor"></a>
+    <div class="row">
+        <div class="col-md-6 mt-2 mb-5">
+
+            <h4 class="mb-4">Two Factor Authentication</h4>
+            <partial name="_StatusMessage" for="TwoFactorStatusMessage" />
+            @if (Model.InputModel.TwoFactor.Is2faEnabled)
+            {
+                if (Model.ViewModel.TwoFactor.RecoveryCodesLeft == 0)
+                {
+                    <div class="alert alert-danger">
+                        <strong>You have no recovery codes left.</strong>
+                        <p>You must <a asp-page="./GenerateRecoveryCodes">generate a new set of recovery codes</a> before you can log in with a recovery code.</p>
+                    </div>
+                }
+                else if (Model.ViewModel.TwoFactor.RecoveryCodesLeft == 1)
+                {
+                    <div class="alert alert-danger">
+                        <strong>You have 1 recovery code left.</strong>
+                        <p>You can <a asp-page="./GenerateRecoveryCodes">generate a new set of recovery codes</a>.</p>
+                    </div>
+                }
+                else if (Model.ViewModel.TwoFactor.RecoveryCodesLeft <= 3)
+                {
+                    <div class="alert alert-warning">
+                        <strong>You have @Model.ViewModel.TwoFactor.RecoveryCodesLeft recovery codes left.</strong>
+                        <p>You should <a asp-page="./GenerateRecoveryCodes">generate a new set of recovery codes</a>.</p>
+                    </div>
+                }
+
+                if (Model.ViewModel.TwoFactor.IsMachineRemembered)
+                {
+                    <form method="post" style="display: inline-block">
+                        <button type="submit" asp-page-handler="TwoFactorForget" class="btn btn-primary">Forget this browser</button>
+                    </form>
+                }
+                <a asp-page="./Disable2fa" class="btn btn-primary">Disable 2FA</a>
+                <a asp-page="./GenerateRecoveryCodes" class="btn btn-primary">Reset recovery codes</a>
+            }
+
+            <h5 class="mt-3">Authenticator app</h5>
+            @if (!Model.ViewModel.TwoFactor.HasAuthenticator)
+            {
+                <a id="enable-authenticator" asp-page="./EnableAuthenticator" class="btn btn-primary">Add authenticator app</a>
+            }
+            else
+            {
+                <a id="enable-authenticator" asp-page="./EnableAuthenticator" class="btn btn-primary">Setup authenticator app</a>
+                <a id="reset-authenticator" asp-page="./ResetAuthenticator" class="btn btn-primary">Reset authenticator app</a>
+            }
+        </div>
+    </div>
+    <hr />
+    <a name="PersonalData"></a>
+    <div class="row">
+        <div class="col-md-6 mt-2 mb-5">
+            <h4 class="mb-4">Personal Data</h4>
+            <p>Your account contains personal data that you have given us. This section allows you to download or delete that data.</p>
+            <p>
+                <strong>Deleting this data will permanently remove your account, and this cannot be recovered.</strong>
+            </p>
+            <form id="download-data" asp-page="DownloadPersonalData" method="post" class="form-group">
+                <button class="btn btn-primary" type="submit">Download Personal Data</button>
+            </form>
+            <p>
+                <a id="delete" asp-page="DeletePersonalData" class="btn btn-primary">Delete Account</a>
+            </p>
+        </div>
+    </div>
+
+</div>
 
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />

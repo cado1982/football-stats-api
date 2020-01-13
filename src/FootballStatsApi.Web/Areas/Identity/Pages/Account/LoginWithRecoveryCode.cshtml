@@ -4,24 +4,28 @@
     ViewData["Title"] = "Recovery code verification";
 }
 
-<h1>@ViewData["Title"]</h1>
-<hr />
-<p>
-    You have requested to log in with a recovery code. This login will not be remembered until you provide
-    an authenticator app code at log in or disable 2FA and log in again.
-</p>
-<div class="row">
-    <div class="col-md-4">
-        <form method="post">
-            <div asp-validation-summary="All" class="text-danger"></div>
-            <div class="form-group">
-                <label asp-for="Input.RecoveryCode"></label>
-                <input asp-for="Input.RecoveryCode" class="form-control" autocomplete="off" />
-                <span asp-validation-for="Input.RecoveryCode" class="text-danger"></span>
+<div class="container my-5">
+    <form asp-action="LoginWithRecoveryCode" method="post" novalidate>
+        <div class="row">
+            <input type="hidden" asp-for="ReturnUrl" />
+            <div class="card shadow-lg rounded col-md-8 col-lg-6 offset-md-2 offset-lg-3 p-0">
+                <h5 class="card-header">Login</h5>
+                <div class="card-body">
+                    <div class="mb-4">Enter a recovery code to gain access to your account. You can then reset your authenticator or remove it completely.</div>
+                    <div class="form-group">
+                        <label asp-for="Input.RecoveryCode">Recovery Code</label>
+                        <input asp-for="Input.RecoveryCode" class="form-control form-control-lg" placeholder="Enter recovery code" autofocus />
+                        <span asp-validation-for="Input.RecoveryCode" class="text-danger"></span>
+                    </div>
+                    <div asp-validation-summary="All" class="text-danger"></div>
+                </div>
+
+                <div class="card-footer">
+                    <button type="submit" class="btn btn-primary">Login</button>
+                </div>
             </div>
-            <button type="submit" class="btn btn-primary">Log in</button>
-        </form>
-    </div>
+        </div>
+    </form>
 </div>
 
 @section Scripts {

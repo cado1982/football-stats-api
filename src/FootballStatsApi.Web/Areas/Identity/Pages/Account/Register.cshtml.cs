@@ -76,6 +76,11 @@ namespace FootballStatsApi.Web.Areas.Identity.Pages.Account
             SubscriptionId = subscriptionId;
             var subscription = await _subscriptionManager.GetSubscriptionById(subscriptionId);
 
+            if (subscription == null)
+            {
+                throw new InvalidOperationException("Subscription not found");
+            }
+
             Subscription = subscription;
 
             return Page();

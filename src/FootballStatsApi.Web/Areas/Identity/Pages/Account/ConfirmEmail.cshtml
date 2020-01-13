@@ -4,5 +4,18 @@
     ViewData["Title"] = "Confirm email";
 }
 
-<h1>@ViewData["Title"]</h1>
-<partial name="_StatusMessage" model="Model.StatusMessage" />
+<div class="container my-5">
+    <div class="row">
+        <div class="card col-md-6 offset-md-3 p-0">
+            <div class="card-header">
+                <h5>Registration Complete</h5>
+            </div>
+            <div class="card-body">
+                Thank you for verifying your account. You can now log in.
+            </div>
+            <div class="card-footer">
+                <a class="btn btn-link p-0" asp-page="Login">Log in</a>
+            </div>
+        </div>
+    </div>
+</div>

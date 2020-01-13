@@ -4,7 +4,16 @@
     ViewData["Title"] = "Log out";
 }
 
-<header>
-    <h1>@ViewData["Title"]</h1>
-    <p>You have successfully logged out of the application.</p>
-</header>
+<div class="container my-5">
+    <div class="row">
+        <div class="card shadow-lg rounded col-md-8 col-lg-6 offset-md-2 offset-lg-3 p-0">
+            <h5 class="card-header">Logged Out</h5>
+            <div class="card-body">
+                You are now logged out.
+            </div>
+            <div class="card-footer">
+                <a asp-controller="Home" asp-action="Index">Return Home</a>
+            </div>
+        </div>
+    </div>
+</div>

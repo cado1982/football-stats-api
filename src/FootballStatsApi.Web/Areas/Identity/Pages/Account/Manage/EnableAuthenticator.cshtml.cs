@@ -109,7 +109,7 @@ namespace FootballStatsApi.Web.Areas.Identity.Pages.Account.Manage
             }
             else
             {
-                return RedirectToPage("./TwoFactorAuthentication");
+                return RedirectToPage("./Index", "", "TwoFactor");
             }
         }
 

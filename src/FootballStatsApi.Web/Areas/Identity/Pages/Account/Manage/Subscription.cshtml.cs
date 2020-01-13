@@ -31,15 +31,17 @@ namespace FootballStatsApi.Web.Areas.Identity.Pages.Account.Manage
 
         public async Task<IActionResult> OnGetAsync()
         {
-            var user = await _userManager.GetUserAsync(User);
-            if (user == null)
-            {
-                return NotFound($"Unable to load user with ID '{_userManager.GetUserId(User)}'.");
-            }
+            return NotFound();
 
-            Subscriptions = await _subscriptionManager.GetAllSubscriptions();
+            //var user = await _userManager.GetUserAsync(User);
+            //if (user == null)
+            //{
+            //    return NotFound($"Unable to load user with ID '{_userManager.GetUserId(User)}'.");
+            //}
 
-            return Page();
+            //Subscriptions = await _subscriptionManager.GetAllSubscriptions();
+
+            //return Page();
         }
     }
 }

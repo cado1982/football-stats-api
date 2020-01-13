@@ -9,7 +9,7 @@
         <form method="post" class="login" novalidate>
             <div class="row">
                 <input type="hidden" asp-for="ReturnUrl" />
-                <div class="card shadow-lg rounded col-md-8 col-lg-6 offset-md-2 offset-lg-3 p-0">
+                <div class="card shadow rounded col-md-8 col-lg-6 offset-md-2 offset-lg-3 p-0">
                     <h5 class="card-header">Login</h5>
                     <div class="card-body">
                         <div class="form-group">
@@ -41,7 +41,7 @@
                     <div class="card-footer">
                         <div class="container-fluid">
                             <div class="row align-items-center">
-                                <button type="submit" class="col-md-6 btn btn-primary">Login</button>
+                                <button type="submit" class="col-md-6 btn btn-warning">Login</button>
                                 <a class="btn btn-link col-md-6 p-0 my-2 my-md-0" asp-page="ForgotPassword">Forgot your password?</a>
                             </div>
                         </div>
@@ -53,7 +53,7 @@
 
         <div class="m-5 text-center">
             <div>Don't have an account yet?</div>
-            <div><a asp-page="Register">Sign Up</a></div>
+            <div><a asp-page="Register" asp-route-subscriptionid="1">Sign Up</a></div>
         </div>
     </div>
 

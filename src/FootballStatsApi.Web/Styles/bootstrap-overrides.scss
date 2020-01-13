@@ -28,6 +28,8 @@ $headings-color: $brand-dark-color;
 
 $enable-responsive-font-sizes: true;
 
+$link-color: $brand-accent-color;
+
 // Variables must be above this and css below.
 @import "../node_modules/bootstrap/scss/bootstrap";
 
