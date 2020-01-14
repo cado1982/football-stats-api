@@ -2,6 +2,7 @@
 {
     public class FixtureShot
     {
+        public int FixtureId { get; set; }
         public int ShotId { get; set; }
         public Player Player { get; set; }
         public Player Assist { get; set; }

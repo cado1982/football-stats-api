@@ -47,26 +47,37 @@ namespace FootballStatsApi.Scraper.LeagueSummary
             };
             await _teamRepository.InsertMultipleAsync(teams, conn);
 
-            var details = new Entities.FixtureDetails
+            var details = new Entities.Fixture
             {
                 FixtureId = matchInfo.Id,
                 HomeDeepPasses = matchInfo.HomeDeepPasses,
                 AwayDeepPasses = matchInfo.AwayDeepPasses,
-                ForecastHomeWin = matchInfo.HomeWinForecast,
-                ForecastDraw = matchInfo.DrawForecast,
-                ForecastAwayWin = matchInfo.AwayWinForecast,
+                HomeWinForecast = matchInfo.HomeWinForecast,
+                DrawForecast = matchInfo.DrawForecast,
+                AwayWinForecast = matchInfo.AwayWinForecast,
                 HomePpda = matchInfo.HomePpda,
-                AwayPpda = matchInfo.AwayPpda
+                AwayPpda = matchInfo.AwayPpda,
+                AwayExpectedGoals = matchInfo.AwayExpectedGoals,
+                AwayExpectedPoints = matchInfo.AwayWinForecast * 3 + matchInfo.DrawForecast,
+                AwayGoals = matchInfo.AwayGoals,
+                AwayShots = matchInfo.AwayShots,
+                AwayShotsOnTarget = matchInfo.AwayShotsOnTarget,
+                HomeExpectedGoals = matchInfo.HomeExpectedGoals,
+                HomeExpectedPoints = matchInfo.HomeWinForecast * 3 + matchInfo.DrawForecast,
+                HomeGoals = matchInfo.HomeGoals,
+                HomeShots = matchInfo.HomeShots,
+                HomeShotsOnTarget = matchInfo.HomeShotsOnTarget
             };
 
             await _fixtureRepository.Update(details, conn);
         }
 
-        public async Task ProcessRosters(FixtureRosters rosters, FixtureMatchInfo matchInfo, IDbConnection conn)
+        public async Task ProcessRosters(FixtureRosters rosters, FixtureShots shots, FixtureMatchInfo matchInfo, IDbConnection conn)
         {
             var homePlayers = rosters.Home.Values.ToList();
             var awayPlayers = rosters.Away.Values.ToList();
             var players = homePlayers.Union(awayPlayers).ToList();
+            var allShots = shots.Home.Union(shots.Away).ToList();
 
             var playerEntities = players.Select(p => new Entities.Player
             {
@@ -93,6 +104,15 @@ namespace FootballStatsApi.Scraper.LeagueSummary
                     PositionOrder = player.PositionOrder,
                     RedCards = player.RedCard,
                     YellowCards = player.YellowCard,
+                    Assists = player.Assists,
+                    ExpectedAssists = player.ExpectedAssists,
+                    ExpectedGoals = player.ExpectedGoals,
+                    FixtureId = matchInfo.Id,
+                    Goals = player.Goals,
+                    KeyPasses = player.KeyPasses,
+                    OwnGoals = player.OwnGoals,
+                    Shots = player.Shots,
+                    ShotsOnTarget = allShots.Count(s => s.PlayerId == player.PlayerId && (s.Result == "Goal" || s.Result == "SavedShot")),
                     Replaced = rosterOutPlayer == null ? null : new Entities.Player { Id = rosterOutPlayer.PlayerId },
                     ReplacedBy = rosterInPlayer == null ? null : new Entities.Player { Id = rosterInPlayer.PlayerId },
                     Team = new Entities.Team { Id = player.TeamId }
@@ -101,7 +121,7 @@ namespace FootballStatsApi.Scraper.LeagueSummary
                 fixturePlayers.Add(fixturePlayer);
             }
 
-            await _fixtureRepository.InsertFixturePlayers(fixturePlayers, matchInfo.Id, conn);
+            await _fixtureRepository.InsertFixturePlayers(fixturePlayers, conn);
         }
 
         public async Task ProcessShots(FixtureShots shots, FixtureRosters rosters, FixtureMatchInfo matchInfo, IDbConnection conn)
@@ -143,6 +163,7 @@ namespace FootballStatsApi.Scraper.LeagueSummary
                 entity.Result = shot.Result;
                 entity.X = shot.X;
                 entity.Y = shot.Y;
+                entity.FixtureId = matchInfo.Id;
                 entity.ExpectedGoal = shot.ExpectedGoal;
                 entity.Team = new Entities.Team { Id = shot.HomeOrAway == "h" ? matchInfo.HomeTeamId : matchInfo.AwayTeamId };
                 entity.Situation = shot.Situation;
@@ -152,7 +173,7 @@ namespace FootballStatsApi.Scraper.LeagueSummary
                 entities.Add(entity);
             }
 
-            await _fixtureRepository.InsertFixtureShots(entities, matchInfo.Id, conn);
+            await _fixtureRepository.InsertFixtureShots(entities, conn);
         }
 
         public async Task ConfirmDetailsSaved(int fixtureId, IDbConnection conn)

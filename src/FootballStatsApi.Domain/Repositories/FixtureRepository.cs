@@ -20,7 +20,7 @@ namespace FootballStatsApi.Domain.Repositories
             _logger = logger;
         }
 
-        public async Task<FixtureDetails> GetFixtureDetailsAsync(int fixtureId, IDbConnection connection)
+        public async Task<Fixture> GetFixtureDetailsAsync(int fixtureId, IDbConnection connection)
         {
             try
             {
@@ -28,7 +28,7 @@ namespace FootballStatsApi.Domain.Repositories
 
                 parameters.Add("@FixtureId", fixtureId);
 
-                var players = await connection.QueryAsync<FixtureDetails, Competition, Team, Team, FixtureDetails>(FixtureSql.GetDetails, (fd, c, ht, at) =>
+                var players = await connection.QueryAsync<Fixture, Competition, Team, Team, Fixture>(FixtureSql.GetDetails, (fd, c, ht, at) =>
                 {
                     fd.Competition = c;
                     fd.HomeTeam = ht;
@@ -71,6 +71,61 @@ namespace FootballStatsApi.Domain.Repositories
             }
         }
 
+        public async Task<List<FixturePlayer>> GetFixturePlayersByCompetitionAndSeasonAsync(int competitionId, int season, IDbConnection connection)
+        {
+            try
+            {
+                var parameters = new
+                {
+                    CompetitionId = competitionId,
+                    SeasonId = season
+                };
+
+                var fixturePlayers = await connection.QueryAsync<FixturePlayer, Player, Team, Player, Player, FixturePlayer>(FixtureSql.GetPlayerDetailsForCompetitionAndSeason, (fpd, p, t, r, rb) =>
+                {
+                    fpd.Team = t;
+                    fpd.Player = p;
+                    fpd.Replaced = r;
+                    fpd.ReplacedBy = rb;
+                    return fpd;
+                }, parameters);
+
+                return fixturePlayers.ToList();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, $"Unable to get fixture players for competition {0} and season {1}", competitionId, season);
+                throw;
+            }
+        }
+
+        public async Task<List<Fixture>> GetFixturesByCompetitionAndSeasonAsync(int competitionId, int season, IDbConnection connection)
+        {
+            try
+            {
+                var parameters = new
+                {
+                    CompetitionId = competitionId,
+                    SeasonId = season
+                };
+
+                var fixtures = await connection.QueryAsync<Fixture, Competition, Team, Team, Fixture>(FixtureSql.GetAllDetailsForCompetitionAndSeason, (fd, c, ht, at) =>
+                {
+                    fd.Competition = c;
+                    fd.HomeTeam = ht;
+                    fd.AwayTeam = at;
+                    return fd;
+                }, parameters);
+
+                return fixtures.ToList();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, $"Unable to get fixture details for competition {0} and season {1}", competitionId, season);
+                throw;
+            }
+        }
+
         public async Task<List<FixtureShot>> GetFixtureShotsAsync(int fixtureId, IDbConnection connection)
         {
             try
@@ -109,19 +164,19 @@ namespace FootballStatsApi.Domain.Repositories
                 _logger.LogError(ex, $"Unable to get recently ended fixtures");
                 throw;
             }
-        }
+        }testc the scraper to make sure it's working for the new stats
 
-        public async Task InsertFixturePlayers(List<FixturePlayer> players, int fixtureId, IDbConnection connection)
+        public async Task InsertFixturePlayers(List<FixturePlayer> players, IDbConnection connection)
         {
             try
             {
                 if (players.Any(p => p.Player == null)) { throw new ArgumentException("Each FixturePlayer must have its Player property set."); }
                 if (players.Any(p => p.Team == null)) { throw new ArgumentException("Each FixturePlayer must have its Team property set."); }
 
-                await connection.ExecuteAsync(FixtureSql.InsertFixturePlayers, players.Select(p => new 
+                await connection.ExecuteAsync(FixtureSql.InsertFixturePlayers, players.Select(p => new
                 {
-                    FixtureId = fixtureId,
                     PlayerId = p.Player.Id,
+                    FixtureId = p.FixtureId,
                     TeamId = p.Team.Id,
                     Time = p.Minutes,
                     Position = p.Position,
@@ -131,48 +186,56 @@ namespace FootballStatsApi.Domain.Repositories
                     ReplacedId = p.Replaced?.Id,
                     ExpectedGoalsChain = p.ExpectedGoalsChain,
                     ExpectedGoalsBuildup = p.ExpectedGoalsBuildup,
+                    Shots = p.Shots,
+                    ShotsOnTarget = p.ShotsOnTarget,
+                    KeyPasses = p.KeyPasses,
+                    Assists = p.Assists,
+                    Goals = p.Goals,
+                    OwnGoals = p.OwnGoals,
+                    ExpectedGoals = p.ExpectedGoals,
+                    ExpectedAssists = p.ExpectedAssists,
                     PositionOrder = p.PositionOrder
                 }));
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, $"Unable to insert fixture players for fixture {fixtureId}");
+                _logger.LogError(ex, $"Unable to insert fixture players.");
                 throw;
             }
         }
 
-        public async Task InsertFixtureShots(List<FixtureShot> shots, int fixtureId, IDbConnection connection)
+        public async Task InsertFixtureShots(List<FixtureShot> shots, IDbConnection connection)
         {
             try
             {
                 if (shots.Any(f => f.Player == null)) { throw new ArgumentException("Each FixtureShot must have its Player property set."); }
                 if (shots.Any(f => f.Team == null)) { throw new ArgumentException("Each FixtureShot must have its Team property set."); }
 
-                await connection.ExecuteAsync(FixtureSql.InsertFixtureShots, shots.Select(f => new
+                await connection.ExecuteAsync(FixtureSql.InsertFixtureShots, shots.Select(s => new
                 {
-                    ShotId = f.ShotId,
-                    PlayerId = f.Player.Id,
-                    FixtureId = fixtureId,
-                    TeamId = f.Team.Id,
-                    Minute = f.Minute,
-                    Result = f.Result,
-                    X = f.X,
-                    Y = f.Y,
-                    ExpectedGoal = f.ExpectedGoal,
-                    Situation = f.Situation,
-                    ShotType = f.Type,
-                    LastAction = f.LastAction,
-                    AssistedById = f.Assist?.Id
+                    ShotId = s.ShotId,
+                    PlayerId = s.Player.Id,
+                    FixtureId = s.FixtureId,
+                    TeamId = s.Team.Id,
+                    Minute = s.Minute,
+                    Result = s.Result,
+                    X = s.X,
+                    Y = s.Y,
+                    ExpectedGoal = s.ExpectedGoal,
+                    Situation = s.Situation,
+                    ShotType = s.Type,
+                    LastAction = s.LastAction,
+                    AssistedById = s.Assist?.Id
                 }));
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, $"Unable to insert fixture shots for fixture {fixtureId}");
+                _logger.LogError(ex, $"Unable to insert fixture shots");
                 throw;
             }
         }
 
-        public async Task InsertMultipleAsync(List<FixtureDetails> fixtures, IDbConnection connection)
+        public async Task InsertMultipleAsync(List<Fixture> fixtures, IDbConnection connection)
         {
             try
             {
@@ -188,12 +251,7 @@ namespace FootballStatsApi.Domain.Repositories
                     SeasonId = f.Season,
                     CompetitionId = f.Competition.Id,
                     IsResult = f.IsResult,
-                    HomeWinForecast = f.ForecastHomeWin,
-                    DrawForecast = f.ForecastDraw,
-                    AwayWinForecast = f.ForecastAwayWin,
-                    DateTime = f.DateTime,
-                    HomePpda = f.HomePpda,
-                    AwayPpda = f.AwayPpda
+                    DateTime = f.DateTime
                 }));
             }
             catch (Exception ex)
@@ -221,22 +279,22 @@ namespace FootballStatsApi.Domain.Repositories
             }
         }
 
-        public async Task Update(FixtureDetails fixture, IDbConnection connection)
+        public async Task Update(Fixture fixture, IDbConnection connection)
         {
             try
             {
-                var parameters = new DynamicParameters();
+                //var parameters = new DynamicParameters();
 
-                parameters.Add("@FixtureId", fixture.FixtureId);
-                parameters.Add("@HomeDeep", fixture.HomeDeepPasses);
-                parameters.Add("@AwayDeep", fixture.AwayDeepPasses);
-                parameters.Add("@HomeWinForecast", fixture.ForecastHomeWin);
-                parameters.Add("@DrawForecast", fixture.ForecastDraw);
-                parameters.Add("@AwayWinForecast", fixture.ForecastAwayWin);
-                parameters.Add("@HomePpda", fixture.HomePpda);
-                parameters.Add("@AwayPpda", fixture.AwayPpda);
+                //parameters.Add("@FixtureId", fixture.FixtureId);
+                //parameters.Add("@HomeDeep", fixture.HomeDeepPasses);
+                //parameters.Add("@AwayDeep", fixture.AwayDeepPasses);
+                //parameters.Add("@HomeWinForecast", fixture.HomeWinForecast);
+                //parameters.Add("@DrawForecast", fixture.DrawForecast);
+                //parameters.Add("@AwayWinForecast", fixture.AwayWinForecast);
+                //parameters.Add("@HomePpda", fixture.HomePpda);
+                //parameters.Add("@AwayPpda", fixture.AwayPpda);
 
-                await connection.ExecuteAsync(FixtureSql.Update, parameters);
+                await connection.ExecuteAsync(FixtureSql.Update, fixture);
             }
             catch (Exception ex)
             {

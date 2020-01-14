@@ -4,6 +4,8 @@ using FootballStatsApi.Logic.Extensions;
 using FootballStatsApi.Models;
 using Microsoft.Extensions.Logging;
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace FootballStatsApi.Logic.Managers
@@ -24,39 +26,54 @@ namespace FootballStatsApi.Logic.Managers
             _connectionProvider = connectionProvider;
         }
 
-        //public async Task<FixtureBasic> GetAsync(int? competitionId, int? season, int? teamId)
+        public async Task<List<FixtureBasic>> GetFixturesBasicAsync(int competitionId, int season)
+        {
+            try
+            {
+                if (competitionId < 1) throw new ArgumentException("competitionId must be provided", nameof(competitionId));
+                if (season < 1) throw new ArgumentException("season must be provided", nameof(season));
+
+                using (var conn = await _connectionProvider.GetOpenConnectionAsync())
+                {
+                    var fixtures = await _fixtureRepository.GetFixturesByCompetitionAndSeasonAsync(competitionId, season, conn);
+                    var players = await _fixtureRepository.GetFixturePlayersByCompetitionAndSeasonAsync(competitionId, season, conn);
+
+                    var result = new List<FixtureBasic>();
+
+                    foreach (var fixture in fixtures)
+                    {
+                        var playersForFixture = players.Where(p => p.FixtureId == fixture.FixtureId);
+
+                        result.Add(fixture.ToModel(playersForFixture));
+                    }
+
+                    return result;
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Unable to get fixtures for competition {0} and season {1}", competitionId, season);
+                throw;
+            }
+        }
+
+        //public async Task<FixtureBasic> GetFixtureBasicAsync(int fixtureId)
         //{
         //    try
         //    {
         //        using (var conn = await _connectionProvider.GetOpenConnectionAsync())
         //        {
+        //            var details = await _fixtureRepository.GetFixtureDetailsAsync(fixtureId, conn);
+        //            var shots = await _fixtureRepository.GetFixtureShotsAsync(fixtureId, conn);
 
+        //            return details.ToModel(shots);
         //        }
         //    }
         //    catch (Exception ex)
         //    {
-        //        _logger.LogError(ex, "Unable to get fixtures for competition {competitionId}competitions");
+        //        _logger.LogError(ex, "Unable to get competitions");
         //        throw;
         //    }
         //}
-
-        public async Task<FixtureBasic> GetDetailsAsync(int fixtureId)
-        {
-            try
-            {
-                using (var conn = await _connectionProvider.GetOpenConnectionAsync())
-                {
-                    var details = await _fixtureRepository.GetFixtureDetailsAsync(fixtureId, conn);
-                    var shots = await _fixtureRepository.GetFixtureShotsAsync(fixtureId, conn);
-
-                    return details.ToModel(shots);
-                }
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Unable to get competitions");
-                throw;
-            }
-        }
     }
 }

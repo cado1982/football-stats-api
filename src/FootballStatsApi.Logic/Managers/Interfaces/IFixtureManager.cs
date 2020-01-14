@@ -1,11 +1,12 @@
 ﻿using FootballStatsApi.Models;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace FootballStatsApi.Logic.Managers
 {
     public interface IFixtureManager
     {
-        Task<FixtureBasic> GetDetailsAsync(int fixtureId);
-        //Task<FixtureBasic> GetAsync(int? competitionId, int? season, int? teamId);
+        //Task<FixtureBasic> GetFixtureBasicAsync(int fixtureId);
+        Task<List<FixtureBasic>> GetFixturesBasicAsync(int competitionId, int season);
     }
 }

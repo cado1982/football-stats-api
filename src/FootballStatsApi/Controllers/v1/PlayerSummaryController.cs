@@ -15,6 +15,7 @@ namespace FootballStatsApi.Controllers.v1
     [ApiController]
     [Route("v1/player-summaries")]
     [Produces("application/json")]
+    [ApiExplorerSettings(IgnoreApi = true)]
     public class PlayerSummaryController : ControllerBase
     {
         private readonly ILogger<PlayerSummaryController> _logger;

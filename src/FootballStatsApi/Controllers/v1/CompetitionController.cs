@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using Swashbuckle.AspNetCore.Annotations;
 
 namespace FootballStatsApi.Controllers.v1
 {
@@ -28,19 +29,14 @@ namespace FootballStatsApi.Controllers.v1
             _competitionManager = competitionManager;
         }
 
-        /// <summary>
-        /// Gets a list of available competitions
-        /// </summary>
-        /// <remarks>
-        /// Sample request:
-        ///     GET /competitions
-        /// </remarks>
-        /// <returns>A collection of competitions that can be queried in this api.</returns>
         [HttpGet]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        [SwaggerOperation(
+            Summary = "Gets a list of available competitions",
+            OperationId = "GetCompetitions"
+        )]
+        [SwaggerResponse(200, "A list of available competitions", typeof(List<Competition>))]
+        [SwaggerResponse(401)]
+        [SwaggerResponse(500)]
         public async Task<IActionResult> Get()
         { 
             try

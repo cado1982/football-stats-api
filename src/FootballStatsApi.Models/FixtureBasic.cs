@@ -15,6 +15,8 @@ namespace FootballStatsApi.Models
         public HomeAway<int> Shots { get; set; }
         public HomeAway<int> ShotsOnTarget { get; set; }
         public HomeAway<int> Goals { get; set; }
+        public List<Substitution> Substituions { get; set; }
+        public List<FixturePlayerBasic> Players { get; set; }
     }
 
     public class FixtureAdvanced : FixtureBasic

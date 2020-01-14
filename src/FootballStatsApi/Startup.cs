@@ -16,6 +16,7 @@ using FootballStatsApi.Domain;
 using System.Net;
 using NpgsqlTypes;
 using Dapper;
+using FootballStatsApi.Helpers;
 
 namespace FootballStatsApi
 {
@@ -31,6 +32,8 @@ namespace FootballStatsApi
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddMvc(c => c.Conventions.Add(new ApiExplorerGroupPerVersionConvention()));
+
             services.AddDbContext<ApplicationDbContext>(options => options.UseNpgsql(Configuration.GetConnectionString("Football")));
 
             var ipAddressHandler = new PassThroughHandler<IPAddress>(NpgsqlDbType.Inet);
@@ -64,11 +67,13 @@ namespace FootballStatsApi
             {
                 c.SwaggerDoc("v1", new OpenApiInfo
                 {
-                    Title = "Football Stats",
+                    Title = "Football Stats API - V1",
                     Version = "v1",
+                    TermsOfService = new Uri(Configuration["WebsiteUrl"] + "/Home/Terms"),
                     Contact = new OpenApiContact
                     {
-                        Name = "Chris Oliver"
+                        Name = "support",
+                        Email = "support@footballstatsapi.com"
                     }
                 });
 
@@ -77,13 +82,13 @@ namespace FootballStatsApi
                     {
                         new OpenApiSecurityScheme
                         {
-                            Reference = new OpenApiReference { Type = ReferenceType.SecurityScheme, Id = "api_key"}
+                            Reference = new OpenApiReference { Type = ReferenceType.SecurityScheme, Id = "API Key"}
                         },
                         new string[0]
                     }
                 });
 
-                c.AddSecurityDefinition("api_key", new OpenApiSecurityScheme
+                c.AddSecurityDefinition("API Key", new OpenApiSecurityScheme
                 {
                     Description = "API Key",
                     Name = "X-API-Key",
@@ -91,13 +96,19 @@ namespace FootballStatsApi
                     Type = SecuritySchemeType.ApiKey
                 });
 
+                c.EnableAnnotations();
+
                 // Set the comments path for the Swagger JSON and UI.
                 var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
                 var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
                 c.IncludeXmlComments(xmlPath);
             });
 
-            services.AddControllers();
+            services.AddControllers()
+                .ConfigureApiBehaviorOptions(c =>
+                {
+                    c.SuppressMapClientErrors = true;
+                });
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
@@ -109,6 +120,10 @@ namespace FootballStatsApi
 
             app.UseFileServer();
             app.UseSwagger();
+            app.UseReDoc(c =>
+            {
+                c.SpecUrl("/swagger/v1/swagger.json");
+            });
 
             app.UseAuthentication();
             app.UseAuthorization();

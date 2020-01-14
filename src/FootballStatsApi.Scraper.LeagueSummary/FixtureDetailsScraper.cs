@@ -78,7 +78,7 @@ namespace FootballStatsApi.Scraper.LeagueSummary
                         browser.Disconnect();
                     }
 
-                    await _fixtureDetailsManager.ProcessRosters(rosters, matchInfo, conn);
+                    await _fixtureDetailsManager.ProcessRosters(rosters, shots, matchInfo, conn);
                     await _fixtureDetailsManager.ProcessShots(shots, rosters, matchInfo, conn);
                     await _fixtureDetailsManager.ProcessMatchInfo(matchInfo, conn);
                     await _fixtureDetailsManager.ConfirmDetailsSaved(fixtureId, conn);
