@@ -50,8 +50,8 @@ namespace FootballStatsApi.Scraper.LeagueSummary
             var details = new Entities.Fixture
             {
                 FixtureId = matchInfo.Id,
-                HomeDeepPasses = matchInfo.HomeDeepPasses,
-                AwayDeepPasses = matchInfo.AwayDeepPasses,
+                HomeDeep = matchInfo.HomeDeepPasses,
+                AwayDeep = matchInfo.AwayDeepPasses,
                 HomeWinForecast = matchInfo.HomeWinForecast,
                 DrawForecast = matchInfo.DrawForecast,
                 AwayWinForecast = matchInfo.AwayWinForecast,
@@ -91,8 +91,8 @@ namespace FootballStatsApi.Scraper.LeagueSummary
 
             foreach (var player in players)
             {
-                var rosterOutPlayer = players.Find(p => p.PlayerId == player.RosterOut);
-                var rosterInPlayer = players.Find(p => p.PlayerId == player.RosterIn);
+                var rosterOutPlayer = players.Find(p => p.Id == player.RosterOut);
+                var rosterInPlayer = players.Find(p => p.Id == player.RosterIn);
 
                 var fixturePlayer = new Entities.FixturePlayer
                 {

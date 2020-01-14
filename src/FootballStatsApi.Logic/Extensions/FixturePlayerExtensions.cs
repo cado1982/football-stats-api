@@ -18,23 +18,14 @@ namespace FootballStatsApi.Logic.Extensions
                 RedCards = entity.RedCards,
                 YellowCards = entity.YellowCards,
                 Replaced = entity.Replaced.ToModel(),
-                ReplacedBy = entity.ReplacedBy.ToModel()
-            };
-        }
-
-        public static Entities.FixturePlayer ToEntity(this Models.FixturePlayerBasic model)
-        {
-            if (model == null) return null;
-
-            return new Entities.FixturePlayer
-            {
-                Minutes = model.Minutes,
-                Player = model.Player.ToEntity(),
-                Position = model.Position,
-                RedCards = model.RedCards,
-                YellowCards = model.YellowCards,
-                Replaced = model.Replaced.ToEntity(),
-                ReplacedBy = model.ReplacedBy.ToEntity()
+                ReplacedBy = entity.ReplacedBy.ToModel(),
+                Assists = entity.Assists,
+                Goals = entity.Goals,
+                KeyPasses = entity.KeyPasses,
+                OwnGoals = entity.OwnGoals,
+                Shots = entity.Shots,
+                ShotsOnTarget = entity.ShotsOnTarget,
+                Team = entity.Team.ToModel()
             };
         }
 
@@ -43,13 +34,6 @@ namespace FootballStatsApi.Logic.Extensions
             if (entities == null) return null;
 
             return entities.Select(e => e.ToModel());
-        }
-
-        public static IEnumerable<Entities.FixturePlayer> ToEntities(this IEnumerable<Models.FixturePlayerBasic> models)
-        {
-            if (models == null) return null;
-
-            return models.Select(m => m.ToEntity());
         }
     }
 }

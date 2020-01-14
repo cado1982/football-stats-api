@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Logging;
+﻿using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using PuppeteerSharp;
 using System;
@@ -13,11 +14,13 @@ namespace FootballStatsApi.Scraper.LeagueSummary
         private static readonly HttpClient _client = new HttpClient();
         private readonly ILogger<ChromeHelper> _logger;
         private readonly ChromeSettings _chromeSettings;
+        private readonly IConfiguration _configuration;
 
-        public ChromeHelper(ILogger<ChromeHelper> logger, ChromeSettings chromeSettings)
+        public ChromeHelper(ILogger<ChromeHelper> logger, ChromeSettings chromeSettings, IConfiguration configuration)
         {
             _logger = logger;
             _chromeSettings = chromeSettings;
+            _configuration = configuration;
         }
 
         public async Task<ConnectOptions> GetConnectOptionsAsync()
@@ -38,7 +41,7 @@ namespace FootballStatsApi.Scraper.LeagueSummary
                 var request = new HttpRequestMessage(HttpMethod.Get, uri);
                 request.Headers.Add("Host", $"localhost:{_chromeSettings.Port}");
                 
-                _logger.LogInformation($"Getting chrome ws endpoint from {uri}");
+                _logger.LogTrace($"Getting chrome ws endpoint from {uri}");
 
                 var response = await _client.SendAsync(request);
 
@@ -46,11 +49,18 @@ namespace FootballStatsApi.Scraper.LeagueSummary
 
                 var json = await response.Content.ReadAsStringAsync();
                 var metadata = JsonConvert.DeserializeObject<ChromeMetadata>(json);
-                // Localhost is changed to chrome because we're running under a docker compose network
-                // where chrome refers to the service name
-                var endpoint = metadata.WSEndpoint.Replace("localhost", "chrome");
 
-                _logger.LogInformation($"Found chrome ws endpoint: {endpoint}");
+                // Localhost is changed to chrome in prod because we're running under a docker compose network
+                // where chrome refers to the service name
+                var endpoint = metadata.WSEndpoint;
+                var isDev = _configuration["DOTNET_ENVIRONMENT"] == "Development";
+
+                if (!isDev)
+                {
+                    endpoint = endpoint.Replace("localhost", "chrome");
+                }
+                
+                _logger.LogTrace($"Found chrome ws endpoint: {endpoint}");
 
                 return endpoint;
             }

@@ -16,10 +16,14 @@ namespace FootballStatsApi.Domain.Sql
             ts.goals_against as goalsagainst,
             ts.points,
             ts.expected_goals as expectedgoals,
+            ts.non_penalty_expected_goals as nonpenaltyexpectedgoals,
             ts.expected_goals_against as expectedgoalsagainst,
+            ts.non_penalty_expected_goals_against as nonpenaltyexpectedgoalsagainst,
             ts.expected_points as expectedpoints,
             ts.ppda,
+            ts.opposition_ppda as oppositionppda,
             ts.deep_passes as deeppasses,
+            ts.opposition_deep_passes as oppositiondeeppasses,
             t.id,
             t.name
         FROM 
@@ -40,10 +44,14 @@ namespace FootballStatsApi.Domain.Sql
             ts.goals_against as goalsagainst,
             ts.points,
             ts.expected_goals as expectedgoals,
+            ts.non_penalty_expected_goals as nonpenaltyexpectedgoals,
             ts.expected_goals_against as expectedgoalsagainst,
+            ts.non_penalty_expected_goals_against as nonpenaltyexpectedgoalsagainst,
             ts.expected_points as expectedpoints,
             ts.ppda,
+            ts.opposition_ppda as oppositionppda,
             ts.deep_passes as deeppasses,
+            ts.opposition_deep_passes as oppositiondeeppasses,
             t.id,
             t.name
         FROM 
@@ -68,10 +76,14 @@ namespace FootballStatsApi.Domain.Sql
             goals_against,
             points,
             expected_goals,
+            non_penalty_expected_goals,
             expected_goals_against,
+            non_penalty_expected_goals_against,
             expected_points,
             ppda,
-            deep_passes
+            opposition_ppda,
+            deep_passes,
+            opposition_deep_passes
         ) VALUES (
             @TeamId,
             @Season,
@@ -84,10 +96,14 @@ namespace FootballStatsApi.Domain.Sql
             @GoalsAgainst,
             @Points,
             @ExpectedGoals,
+            @NonPenaltyExpectedGoals,
             @ExpectedGoalsAgainst,
+            @NonPenaltyExpectedGoalsAgainst,
             @ExpectedPoints,
             @Ppda,
-            @DeepPasses
+            @OppositionPpda,
+            @DeepPasses,
+            @OppositionDeepPasses
         )
         ON CONFLICT(team_id, season_id, competition_id) DO UPDATE SET 
             games = EXCLUDED.games,
@@ -98,9 +114,13 @@ namespace FootballStatsApi.Domain.Sql
             goals_against = EXCLUDED.goals_against,
             points = EXCLUDED.points,
             expected_goals = EXCLUDED.expected_goals,
+            non_penalty_expected_goals = EXCLUDED.non_penalty_expected_goals,
             expected_goals_against = EXCLUDED.expected_goals_against,
+            non_penalty_expected_goals_against = EXCLUDED.non_penalty_expected_goals_against,
             expected_points = EXCLUDED.expected_points,
             ppda = EXCLUDED.ppda,
-            deep_passes = EXCLUDED.deep_passes;";
+            opposition_ppda = EXCLUDED.opposition_ppda,
+            deep_passes = EXCLUDED.deep_passes,
+            opposition_deep_passes = EXCLUDED.opposition_deep_passes;";
     }
 }

@@ -84,10 +84,14 @@ namespace FootballStatsApi.Domain.Repositories
                     GoalsAgainst = s.GoalsAgainst,
                     Points = s.Points,
                     ExpectedGoals = s.ExpectedGoals,
+                    NonPenaltyExpectedGoals = s.NonPenaltyExpectedGoals,
                     ExpectedGoalsAgainst = s.ExpectedGoalsAgainst,
+                    NonPenaltyExpectedGoalsAgainst = s.NonPenaltyExpectedGoalsAgainst,
                     ExpectedPoints = s.ExpectedPoints,
                     Ppda = s.Ppda,
-                    DeepPasses = s.DeepPasses
+                    OppositionPpda = s.OppositionPpda,
+                    DeepPasses = s.DeepPasses,
+                    OppositionDeepPasses = s.OppositionDeepPasses
                 }));
             }
             catch (Exception ex)

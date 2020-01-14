@@ -52,15 +52,15 @@ namespace FootballStatsApi.Controllers.v1
             }
         }
 
-        /// <summary>
-        /// Gets the details of a fixture.
-        /// </summary>
-        /// <param name="fixture">The fixture id to retrieve.</param>
-        /// <remarks>
-        /// Sample request:
-        ///     GET /fixtures/1
-        /// </remarks>
-        /// <returns>The details of the requested fixture.</returns>
+        // <summary>
+        // Gets the details of a fixture.
+        // </summary>
+        // <param name="fixture">The fixture id to retrieve.</param>
+        // <remarks>
+        // Sample request:
+        //     GET /fixtures/1
+        // </remarks>
+        // <returns>The details of the requested fixture.</returns>
         //[HttpGet]
         //[ProducesResponseType(StatusCodes.Status200OK)]
         //[ProducesResponseType(StatusCodes.Status400BadRequest)]

@@ -9,12 +9,12 @@ using FootballStatsApi.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using Swashbuckle.AspNetCore.Annotations;
 
 namespace FootballStatsApi.Controllers.v1
 {
     [ApiController]
-    [Route("v1/team-summaries")]
-    [ApiExplorerSettings(IgnoreApi = true)]
+    [Route("v1/teams")]
     public class TeamSummaryController : ControllerBase
     {
         private readonly ILogger<TeamSummaryController> _logger;
@@ -26,17 +26,15 @@ namespace FootballStatsApi.Controllers.v1
             _teamSummaryManager = teamSummaryManager;
         }
         
-        /// <summary>
-        /// Gets a collection of team summaries.
-        /// </summary>
-        /// <param name="competition">The competition id to retrieve. Use the /competitions endpoint to retrieve a list of available competitions.</param>
-        /// <param name="season">The season to retrieve. Seasons are 4 digit numbers that represent the year the season stated.</param>
-        /// <remarks>Team summaries contain aggregate stats for a team.
-        /// Sample request: GET /team-summaries?season=2019&amp;competition=1</remarks>
-        /// <returns>A collection of team summaries for the given season and competition.</returns>
         [HttpGet]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [SwaggerOperation(
+            Summary = "Gets a collection of team stats for the given competition and season",
+            OperationId = "GetTeamsStatsByCompetitionAndSeason"
+        )]
+        [SwaggerResponse(200, "A collection of team stats", typeof(TeamSummaries))]
+        [SwaggerResponse(400)]
+        [SwaggerResponse(401)]
+        [SwaggerResponse(500)]
         public async Task<IActionResult> Get([FromQuery][Required] int competition, [FromQuery][Required][Range(2014, 2050)] int season)
         {
             try
@@ -56,20 +54,17 @@ namespace FootballStatsApi.Controllers.v1
             }
         }
 
-        /// <summary>
-        /// Gets a summary for a single team.
-        /// </summary>
-        /// <param name="team">The team id to retrieve.</param>
-        /// <param name="competition">The competition id to retrieve. Use the /competitions endpoint to retrieve a list of available competitions.</param>
-        /// <param name="season">The season to retrieve. Seasons are 4 digit numbers that represent the year the season stated.</param>
-        /// <remarks>Team summaries contain aggregate stats for individual teams.
-        /// Sample request: GET /team-summaries/123?season=2019&amp;competition=1</remarks>
-        /// <returns>A summary for a single team for the given competition and season.</returns>
         [HttpGet]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        [Route("{team}")]
-        public async Task<IActionResult> GetById([FromRoute][Required] int team, [FromQuery][Required] int competition, [FromQuery][Required][Range(2014, 2050)] int season)
+        [Route("{team_id}")]
+        [SwaggerOperation(
+            Summary = "Gets a specific team's stats for the given competition and season",
+            OperationId = "GetTeamStatsByCompetitionAndSeason"
+        )]
+        [SwaggerResponse(200, "A team's stats", typeof(TeamSummary))]
+        [SwaggerResponse(400)]
+        [SwaggerResponse(401)]
+        [SwaggerResponse(500)]
+        public async Task<IActionResult> GetById([FromRoute(Name = "team_id")][Required] int team, [FromQuery][Required] int competition, [FromQuery][Required][Range(2014, 2050)] int season)
         {
             try
             {

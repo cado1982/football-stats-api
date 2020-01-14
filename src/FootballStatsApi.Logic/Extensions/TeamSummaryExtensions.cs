@@ -24,29 +24,11 @@ namespace FootballStatsApi.Logic.Extensions
                 ExpectedGoalsAgainst = entity.ExpectedGoalsAgainst,
                 ExpectedPoints = entity.ExpectedPoints,
                 Ppda = entity.Ppda,
-                DeepPasses = entity.DeepPasses
-            };
-        }
-
-        public static Entities.TeamSummary ToEntity(this Models.TeamSummary model)
-        {
-            if (model == null) return null;
-
-            return new Entities.TeamSummary
-            {
-                Team = model.Team.ToEntity(),
-                Games = model.Games,
-                Won = model.Won,
-                Drawn = model.Drawn,
-                Lost = model.Lost,
-                GoalsFor = model.GoalsFor,
-                GoalsAgainst = model.GoalsAgainst,
-                Points = model.Points,
-                ExpectedGoals = model.ExpectedGoals,
-                ExpectedGoalsAgainst = model.ExpectedGoalsAgainst,
-                ExpectedPoints = model.ExpectedPoints,
-                Ppda = model.Ppda,
-                DeepPasses = model.DeepPasses
+                DeepPasses = entity.DeepPasses,
+                OppositionPpda = entity.OppositionPpda,
+                OppositionDeepPasses = entity.OppositionDeepPasses,
+                NonPenaltyExpectedGoals = entity.NonPenaltyExpectedGoals,
+                NonPenaltyExpectedGoalsAgainst = entity.NonPenaltyExpectedGoalsAgainst
             };
         }
 
@@ -55,13 +37,6 @@ namespace FootballStatsApi.Logic.Extensions
             if (entities == null) return null;
 
             return entities.Select(e => e.ToModel());
-        }
-
-        public static IEnumerable<Entities.TeamSummary> ToEntities(this IEnumerable<Models.TeamSummary> models)
-        {
-            if (models == null) return null;
-
-            return models.Select(m => m.ToEntity());
         }
     }
 }

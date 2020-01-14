@@ -32,7 +32,28 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "External Items", "External 
 		docker-compose.yml = docker-compose.yml
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FootballStatsApi.Logic", "FootballStatsApi.Logic\FootballStatsApi.Logic.csproj", "{7D8D10CE-156D-4383-984C-63A117B311D5}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FootballStatsApi.Logic", "FootballStatsApi.Logic\FootballStatsApi.Logic.csproj", "{7D8D10CE-156D-4383-984C-63A117B311D5}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "docs", "docs", "{386AF434-AC40-44BE-9FBC-4A2655153FE5}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "json", "json", "{F113B659-000E-4C51-B1D0-2D72A97BA640}"
+	ProjectSection(SolutionItems) = preProject
+		..\docs\json\fixtureDetails_matchInfo.json = ..\docs\json\fixtureDetails_matchInfo.json
+		..\docs\json\fixtureDetails_rostersData.json = ..\docs\json\fixtureDetails_rostersData.json
+		..\docs\json\fixtureDetails_shotsData.json = ..\docs\json\fixtureDetails_shotsData.json
+		..\docs\json\leagueSummary_datesData.json = ..\docs\json\leagueSummary_datesData.json
+		..\docs\json\leagueSummary_playersData.json = ..\docs\json\leagueSummary_playersData.json
+		..\docs\json\leagueSummary_teamsData.json = ..\docs\json\leagueSummary_teamsData.json
+		..\docs\json\playerDetails_groupsData.json = ..\docs\json\playerDetails_groupsData.json
+		..\docs\json\playerDetails_matchesData.json = ..\docs\json\playerDetails_matchesData.json
+		..\docs\json\playerDetails_minMaxData.json = ..\docs\json\playerDetails_minMaxData.json
+		..\docs\json\playerDetails_playerInfo.json = ..\docs\json\playerDetails_playerInfo.json
+		..\docs\json\playerDetails_positionData.json = ..\docs\json\playerDetails_positionData.json
+		..\docs\json\playerDetails_shotsData.json = ..\docs\json\playerDetails_shotsData.json
+		..\docs\json\teamDetails_datesData.json = ..\docs\json\teamDetails_datesData.json
+		..\docs\json\teamDetails_playerData.json = ..\docs\json\teamDetails_playerData.json
+		..\docs\json\teamDetails_statisticsData.json = ..\docs\json\teamDetails_statisticsData.json
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -83,6 +104,10 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{386AF434-AC40-44BE-9FBC-4A2655153FE5} = {A1CBEB03-2BE8-4EA7-839A-008FCEDEB302}
+		{F113B659-000E-4C51-B1D0-2D72A97BA640} = {386AF434-AC40-44BE-9FBC-4A2655153FE5}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {002EC389-C08D-4C2B-B8CF-B5F9B655B9C4}

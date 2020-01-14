@@ -15,8 +15,8 @@ namespace FootballStatsApi.Domain.Entities
         public int AwayShots { get; set; }
         public int HomeShotsOnTarget { get; set; }
         public int AwayShotsOnTarget { get; set; }
-        public int HomeDeepPasses { get; set; }
-        public int AwayDeepPasses { get; set; }
+        public int HomeDeep { get; set; }
+        public int AwayDeep { get; set; }
         public double HomePpda { get; set; }
         public double AwayPpda { get; set; }
         public double HomeExpectedGoals { get; set; }

@@ -35,7 +35,7 @@ namespace FootballStatsApi.Scraper.LeagueSummary
         {
             try
             {
-                _logger.LogDebug($"Entering Run({fixtureId})");
+                _logger.LogTrace($"Entering Run({fixtureId})");
 
                 FixtureRosters rosters = null;
                 FixtureShots shots = null;
@@ -85,7 +85,7 @@ namespace FootballStatsApi.Scraper.LeagueSummary
 
                     trans.Commit();
 
-                    _logger.LogDebug($"Exiting Run({fixtureId})");
+                    _logger.LogTrace($"Exiting Run({fixtureId})");
                 }
             }
             catch (Exception ex)

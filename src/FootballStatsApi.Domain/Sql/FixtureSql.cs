@@ -293,7 +293,7 @@
                 @Assists,
                 @Goals,
                 @OwnGoals,
-                @ExpectedGoals
+                @ExpectedGoals,
                 @ExpectedAssists,
                 @PositionOrder
             )

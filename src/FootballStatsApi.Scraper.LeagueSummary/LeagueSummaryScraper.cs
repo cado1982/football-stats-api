@@ -40,7 +40,7 @@ namespace FootballStatsApi.Scraper.LeagueSummary
         {
             try
             {
-                _logger.LogDebug($"Entering Run for competition {competitionId}");
+                _logger.LogTrace($"Entering Run for competition {competitionId}");
 
                 List<Models.Player> players = null;
                 Dictionary<string, Models.Team> teams = null;

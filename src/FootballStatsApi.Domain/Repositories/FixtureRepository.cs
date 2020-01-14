@@ -164,7 +164,7 @@ namespace FootballStatsApi.Domain.Repositories
                 _logger.LogError(ex, $"Unable to get recently ended fixtures");
                 throw;
             }
-        }testc the scraper to make sure it's working for the new stats
+        }
 
         public async Task InsertFixturePlayers(List<FixturePlayer> players, IDbConnection connection)
         {
@@ -283,17 +283,6 @@ namespace FootballStatsApi.Domain.Repositories
         {
             try
             {
-                //var parameters = new DynamicParameters();
-
-                //parameters.Add("@FixtureId", fixture.FixtureId);
-                //parameters.Add("@HomeDeep", fixture.HomeDeepPasses);
-                //parameters.Add("@AwayDeep", fixture.AwayDeepPasses);
-                //parameters.Add("@HomeWinForecast", fixture.HomeWinForecast);
-                //parameters.Add("@DrawForecast", fixture.DrawForecast);
-                //parameters.Add("@AwayWinForecast", fixture.AwayWinForecast);
-                //parameters.Add("@HomePpda", fixture.HomePpda);
-                //parameters.Add("@AwayPpda", fixture.AwayPpda);
-
                 await connection.ExecuteAsync(FixtureSql.Update, fixture);
             }
             catch (Exception ex)

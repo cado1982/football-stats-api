@@ -1,0 +1,10 @@
+{
+  "profiles": {
+    "FootballStatsApi.Scraper.LeagueSummary": {
+      "commandName": "Project",
+      "environmentVariables": {
+        "DOTNET_ENVIRONMENT": "Development"
+      }
+    }
+  }
+}

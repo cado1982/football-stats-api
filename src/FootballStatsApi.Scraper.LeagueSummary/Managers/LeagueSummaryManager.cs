@@ -98,13 +98,20 @@ namespace FootballStatsApi.Scraper.LeagueSummary
                 teamSummaryEntity.GoalsAgainst = team.History.Sum(h => h.Missed);
                 teamSummaryEntity.Points = team.History.Sum(h => h.Points);
                 teamSummaryEntity.ExpectedGoals = team.History.Sum(h => h.ExpectedGoals);
+                teamSummaryEntity.NonPenaltyExpectedGoals = team.History.Sum(h => h.NonPenaltyExpectedGoals);
                 teamSummaryEntity.ExpectedGoalsAgainst = team.History.Sum(h => h.ExpectedGoalsAgainst);
+                teamSummaryEntity.NonPenaltyExpectedGoalsAgainst = team.History.Sum(h => h.NonPenaltyExpectedGoalsAgainst);
                 teamSummaryEntity.ExpectedPoints = team.History.Sum(h => h.ExpectedPoints);
                 teamSummaryEntity.DeepPasses = team.History.Sum(h => h.Deep);
+                teamSummaryEntity.OppositionDeepPasses = team.History.Sum(h => h.DeepAllowed);
 
                 var oppositionPasses = team.History.Sum(h => h.PPDA.PassesAllowed);
                 var defensiveActions = team.History.Sum(h => h.PPDA.DefensiveActions);
                 teamSummaryEntity.Ppda = defensiveActions == 0 ? 0 : oppositionPasses / (double)defensiveActions;
+
+                var passes = team.History.Sum(h => h.PPDAAllowed.PassesAllowed);
+                var oppositionDefensiveActions = team.History.Sum(h => h.PPDAAllowed.DefensiveActions);
+                teamSummaryEntity.OppositionPpda = oppositionDefensiveActions == 0 ? 0 : passes / (double)oppositionDefensiveActions;
 
                 teamSummaryEntities.Add(teamSummaryEntity);
             }
