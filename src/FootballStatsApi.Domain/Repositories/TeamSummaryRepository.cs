@@ -20,7 +20,7 @@ namespace FootballStatsApi.Domain.Repositories
             _logger = logger;
         }
 
-        public async Task<List<TeamSummary>> GetAsync(int seasonId, int competitionId, IDbConnection connection)
+        public async Task<List<TeamSummary>> GetBySeasonAndCompetitionAsync(int seasonId, int competitionId, IDbConnection connection)
         {
             try
             {
@@ -29,7 +29,7 @@ namespace FootballStatsApi.Domain.Repositories
                 parameters.Add("@SeasonId", seasonId);
                 parameters.Add("@CompetitionId", competitionId);
 
-                var result = await connection.QueryAsync<TeamSummary, Team, TeamSummary>(TeamSummarySql.Get, (ts, t) => {
+                var result = await connection.QueryAsync<TeamSummary, Team, TeamSummary>(TeamSummarySql.GetBySeasonAndCompetition, (ts, t) => {
                     ts.Team = t;
                     return ts;
                 }, parameters);
@@ -42,7 +42,7 @@ namespace FootballStatsApi.Domain.Repositories
             }
         }
 
-        public async Task<TeamSummary> GetByIdAsync(int teamId, int seasonId, int competitionId, IDbConnection connection)
+        public async Task<TeamSummary> GetByTeamIdAndSeasonAsync(int teamId, int seasonId, IDbConnection connection)
         {
             try
             {
@@ -50,9 +50,8 @@ namespace FootballStatsApi.Domain.Repositories
 
                 parameters.Add("@TeamId", teamId);
                 parameters.Add("@SeasonId", seasonId);
-                parameters.Add("@CompetitionId", competitionId);
 
-                var result = await connection.QueryAsync<TeamSummary, Team, TeamSummary>(TeamSummarySql.GetById, (ts, t) => {
+                var result = await connection.QueryAsync<TeamSummary, Team, TeamSummary>(TeamSummarySql.GetByTeamIdAndSeason, (ts, t) => {
                     ts.Team = t;
                     return ts;
                 }, parameters);
@@ -62,7 +61,25 @@ namespace FootballStatsApi.Domain.Repositories
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, $"Unable to get team summaries for team {teamId} season {seasonId} and competition {competitionId}");
+                _logger.LogError(ex, $"Unable to get team summaries for team {0} season {1}.", teamId, seasonId);
+                throw;
+            }
+        }
+
+        public async Task<List<TeamSummary>> GetByTeamIdAsync(int teamId, IDbConnection connection)
+        {
+            try
+            {
+                var result = await connection.QueryAsync<TeamSummary, Team, TeamSummary>(TeamSummarySql.GetByTeamId, (ts, t) => {
+                    ts.Team = t;
+                    return ts;
+                }, new { TeamId = teamId });
+
+                return result.ToList();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, $"Unable to get team summaries for team {0}.", teamId);
                 throw;
             }
         }

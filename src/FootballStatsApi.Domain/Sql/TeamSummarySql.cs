@@ -6,8 +6,9 @@ namespace FootballStatsApi.Domain.Sql
 {
     public static class TeamSummarySql
     {
-        public static string Get = @"
+        public static string GetBySeasonAndCompetition = @"
         SELECT 
+            ts.season_id as season,
             ts.games,
             ts.won,
             ts.drawn,
@@ -34,8 +35,9 @@ namespace FootballStatsApi.Domain.Sql
             season_id = @SeasonId AND
             competition_id = @CompetitionId;";
 
-        public static string GetById = @"
+        public static string GetByTeamIdAndSeason = @"
         SELECT 
+            ts.season_id as season,
             ts.games,
             ts.won,
             ts.drawn,
@@ -60,8 +62,35 @@ namespace FootballStatsApi.Domain.Sql
             ""stats"".""team"" t ON t.id = ts.team_id
         WHERE
             season_id = @SeasonId AND
-            competition_id = @CompetitionId AND
             ts.team_id = @TeamId;";
+
+        public static string GetByTeamId = @"
+        SELECT 
+	        ts.season_id as season,
+	        ts.games,
+	        ts.won,
+	        ts.drawn,
+	        ts.lost,
+	        ts.goals_for as goalsfor,
+	        ts.goals_against as goalsagainst,
+	        ts.points,
+	        ts.expected_goals as expectedgoals,
+	        ts.non_penalty_expected_goals as nonpenaltyexpectedgoals,
+	        ts.expected_goals_against as expectedgoalsagainst,
+	        ts.non_penalty_expected_goals_against as nonpenaltyexpectedgoalsagainst,
+	        ts.expected_points as expectedpoints,
+	        ts.ppda,
+	        ts.opposition_ppda as oppositionppda,
+	        ts.deep_passes as deeppasses,
+	        ts.opposition_deep_passes as oppositiondeeppasses,
+	        t.id,
+	        t.name
+        FROM 
+	        stats.team_summary ts
+        INNER JOIN
+	        stats.team t ON t.id = ts.team_id
+        WHERE
+	        ts.team_id = @TeamId;";
 
         public static string InsertMultiple = @"
         INSERT INTO ""stats"".""team_summary"" (

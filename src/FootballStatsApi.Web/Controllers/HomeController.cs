@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using FootballStatsApi.Web.Models;
-using FootballStatsApi.Logic.Managers;
+using FootballStatsApi.Logic.v0.Managers;
 using FootballStatsApi.Domain.Entities.Identity;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Authorization;

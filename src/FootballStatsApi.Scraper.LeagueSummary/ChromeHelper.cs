@@ -50,12 +50,12 @@ namespace FootballStatsApi.Scraper.LeagueSummary
                 var json = await response.Content.ReadAsStringAsync();
                 var metadata = JsonConvert.DeserializeObject<ChromeMetadata>(json);
 
-                // Localhost is changed to chrome in prod because we're running under a docker compose network
+                // Localhost is changed to chrome in a container because we're running under a docker compose network
                 // where chrome refers to the service name
                 var endpoint = metadata.WSEndpoint;
-                var isDev = _configuration["DOTNET_ENVIRONMENT"] == "Development";
+                var isContainer = _configuration["DOTNET_RUNNING_IN_CONTAINER"] == "true";
 
-                if (!isDev)
+                if (isContainer)
                 {
                     endpoint = endpoint.Replace("localhost", "chrome");
                 }

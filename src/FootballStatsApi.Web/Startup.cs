@@ -15,7 +15,7 @@ using Microsoft.AspNetCore.DataProtection;
 using System.Security.Cryptography.X509Certificates;
 using FootballStatsApi.Web.Models;
 using FootballStatsApi.Domain.Repositories;
-using FootballStatsApi.Logic.Managers;
+using FootballStatsApi.Logic.v0.Managers;
 using FootballStatsApi.Domain.Helpers;
 
 namespace FootballStatsApi.Web

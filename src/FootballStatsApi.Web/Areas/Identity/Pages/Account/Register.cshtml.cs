@@ -15,8 +15,8 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Extensions.Logging;
 using FootballStatsApi.Domain.Entities.Identity;
-using FootballStatsApi.Logic.Managers;
-using FootballStatsApi.Models;
+using FootballStatsApi.Logic.v0.Managers;
+using FootballStatsApi.Models.v0;
 
 namespace FootballStatsApi.Web.Areas.Identity.Pages.Account
 {

@@ -1,4 +1,4 @@
-﻿using FootballStatsApi.Models;
+﻿using FootballStatsApi.Models.v0;
 
 namespace FootballStatsApi.Web.Areas.Identity.Models
 {

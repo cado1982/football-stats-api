@@ -9,8 +9,9 @@ namespace FootballStatsApi.Domain.Repositories
 {
     public interface ITeamSummaryRepository
     {
-        Task<List<TeamSummary>> GetAsync(int seasonId, int competitionId, IDbConnection connection);
-        Task<TeamSummary> GetByIdAsync(int teamId, int seasonId, int competitionId, IDbConnection connection);
+        Task<List<TeamSummary>> GetBySeasonAndCompetitionAsync(int seasonId, int competitionId, IDbConnection connection);
+        Task<TeamSummary> GetByTeamIdAndSeasonAsync(int teamId, int seasonId, IDbConnection connection);
+        Task<List<TeamSummary>> GetByTeamIdAsync(int teamId, IDbConnection connection);
         Task InsertMultipleAsync(List<TeamSummary> summaries, IDbConnection connection);
     }
 }

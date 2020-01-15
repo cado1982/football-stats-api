@@ -39,14 +39,10 @@ namespace FootballStatsApi.Handlers
 
             var userIdClaim = context.User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Sid);
 
-            if (userIdClaim == null) 
+            if (userIdClaim != null) 
             {
-                logger.LogError("UserId claim is missing");
-                context.Response.StatusCode = StatusCodes.Status401Unauthorized;
-                return;
+                requestLog.UserId = int.Parse(userIdClaim.Value);
             }
-
-            requestLog.UserId = int.Parse(userIdClaim.Value);
 
             using (var conn = await connectionProvider.GetOpenConnectionAsync())
             {

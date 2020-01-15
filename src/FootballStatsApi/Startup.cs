@@ -4,7 +4,7 @@ using System.Reflection;
 using FootballStatsApi.Domain.Helpers;
 using FootballStatsApi.Domain.Repositories;
 using FootballStatsApi.Handlers;
-using FootballStatsApi.Logic.Managers;
+using FootballStatsApi.Logic.v0.Managers;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -17,6 +17,9 @@ using System.Net;
 using NpgsqlTypes;
 using Dapper;
 using FootballStatsApi.Helpers;
+using System.Net.Http;
+using Microsoft.AspNetCore.Mvc.Authorization;
+using Microsoft.AspNetCore.Authorization;
 
 namespace FootballStatsApi
 {
@@ -32,7 +35,13 @@ namespace FootballStatsApi
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddMvc(c => c.Conventions.Add(new ApiExplorerGroupPerVersionConvention()));
+            services.AddMvc(c =>
+            {
+                c.Conventions.Add(new ApiExplorerGroupPerVersionConvention());
+                c.Filters.Add(new AuthorizeFilter(new AuthorizationPolicyBuilder().RequireAuthenticatedUser().Build()));
+            });
+            services.AddAuthorization();
+            services.AddHealthChecks();
 
             services.AddDbContext<ApplicationDbContext>(options => options.UseNpgsql(Configuration.GetConnectionString("Football")));
 
@@ -65,10 +74,10 @@ namespace FootballStatsApi
             // Register the Swagger generator, defining 1 or more Swagger documents
             services.AddSwaggerGen(c =>
             {
-                c.SwaggerDoc("v1", new OpenApiInfo
+                c.SwaggerDoc("v0", new OpenApiInfo
                 {
-                    Title = "Football Stats API - V1",
-                    Version = "v1",
+                    Title = "Football Stats API",
+                    Version = "v0",
                     TermsOfService = new Uri(Configuration["WebsiteUrl"] + "/Home/Terms"),
                     Contact = new OpenApiContact
                     {
@@ -122,18 +131,27 @@ namespace FootballStatsApi
             app.UseSwagger();
             app.UseReDoc(c =>
             {
-                c.SpecUrl("/swagger/v1/swagger.json");
+                c.SpecUrl("/swagger/v0/swagger.json");
             });
+
+            app.UseSwaggerUI(c =>
+            {
+                c.RoutePrefix = "";
+                c.SwaggerEndpoint("/swagger/v0/swagger.json", "v0 (Alpha)");
+            });
+
+            app.UseRouting();
+
+            app.UseMiddleware<RequestLogMiddleware>();
 
             app.UseAuthentication();
             app.UseAuthorization();
 
-            app.UseMiddleware<RequestLogMiddleware>();
             app.UseMiddleware<RateLimitMiddleware>();
 
-            app.UseRouting();
             app.UseEndpoints(endpoints =>
             {
+                endpoints.MapHealthChecks("/healthcheck");
                 endpoints.MapControllers();
             });
         }

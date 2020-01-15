@@ -5,7 +5,7 @@ using System.Security.Claims;
 using System.Text.Encodings.Web;
 using System.Text.Json;
 using System.Threading.Tasks;
-using FootballStatsApi.Logic.Managers;
+using FootballStatsApi.Logic.v0.Managers;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;

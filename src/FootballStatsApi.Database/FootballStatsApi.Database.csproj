@@ -32,6 +32,7 @@
     <None Remove="Scripts\Script0023_Add subscriptionfeatures table.sql" />
     <None Remove="Scripts\Script0024_Add additional stats.sql" />
     <None Remove="Scripts\Script0025_Add additional team summary stats.sql" />
+    <None Remove="Scripts\Script0026_Add indexes.sql" />
   </ItemGroup>
 
   <ItemGroup>
@@ -62,6 +63,7 @@
     <EmbeddedResource Include="Scripts\Script0019_Remove unnecessary stats columns.sql" />
     <EmbeddedResource Include="Scripts\Script0020_Add request log table.sql" />
     <EmbeddedResource Include="Scripts\Script0023_Add subscriptionfeatures table.sql" />
+    <EmbeddedResource Include="Scripts\Script0026_Add indexes.sql" />
     <EmbeddedResource Include="Scripts\Script0025_Add additional team summary stats.sql" />
     <EmbeddedResource Include="Scripts\Script0024_Add additional stats.sql" />
     <EmbeddedResource Include="Scripts\Script0022_Add subscriptions table internal column.sql" />

@@ -66,7 +66,6 @@ namespace FootballStatsApi.Domain.Sql
             ""stats"".""team"" t ON t.id = ps.team_id
         WHERE
             season_id = @SeasonId AND
-            competition_id = @CompetitionId AND
             ps.player_id = @PlayerId;";
 
         public static string InsertMultiple = @"

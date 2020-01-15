@@ -34,27 +34,27 @@ namespace FootballStatsApi.Domain.Repositories
             }
         }
 
-        public async Task<List<TeamBasicStats>> GetBasicStatsAsync(int competitionId, int season, IDbConnection connection)
-        {
-            try
-            {
-                var parameters = new DynamicParameters();
+        //public async Task<List<TeamBasicStats>> GetBasicStatsAsync(int competitionId, int season, IDbConnection connection)
+        //{
+        //    try
+        //    {
+        //        var parameters = new DynamicParameters();
 
-                parameters.Add("CompetitionId", competitionId);
-                parameters.Add("SeasonId", season);
+        //        parameters.Add("CompetitionId", competitionId);
+        //        parameters.Add("SeasonId", season);
 
-                var result = await connection.QueryAsync<TeamBasicStats, Team, TeamBasicStats>(TeamSql.GetBasicStatsByCompetitionAndSeason, (ts, t) => {
-                    ts.Team = t;
-                    return ts;                
-                }, parameters);
-                return result.ToList();
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, $"Unable to get basic stats for teams in competition {0} and season {1}", competitionId, season);
-                throw;
-            }
-        }
+        //        var result = await connection.QueryAsync<TeamBasicStats, Team, TeamBasicStats>(TeamSql.GetBasicStatsByCompetitionAndSeason, (ts, t) => {
+        //            ts.Team = t;
+        //            return ts;                
+        //        }, parameters);
+        //        return result.ToList();
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        _logger.LogError(ex, $"Unable to get basic stats for teams in competition {0} and season {1}", competitionId, season);
+        //        throw;
+        //    }
+        //}
 
         public async Task<List<Team>> GetTeamsAsync(int competitionId, int season, IDbConnection connection)
         {

@@ -43,27 +43,25 @@ namespace FootballStatsApi.Domain.Repositories
             }
         }
 
-        public async Task<PlayerSummary> GetByIdAsync(int playerId, int seasonId, int competitionId, IDbConnection connection)
+        public async Task<PlayerSummary> GetByIdAsync(int playerId, int seasonId, IDbConnection connection)
         {
             try
             {
-                var parameters = new DynamicParameters();
-
-                parameters.Add("@PlayerId", playerId);
-                parameters.Add("@SeasonId", seasonId);
-                parameters.Add("@CompetitionId", competitionId);
-
-                var result = await connection.QueryAsync<PlayerSummary, Player, Team, PlayerSummary>(PlayerSummarySql.Get, (ps, p, t) => {
+                var result = await connection.QueryAsync<PlayerSummary, Player, Team, PlayerSummary>(PlayerSummarySql.GetById, (ps, p, t) => {
                     ps.Player = p;
                     ps.Team = t;
                     return ps;
-                }, parameters);
+                }, new
+                {
+                    PlayerId = playerId,
+                    SeasonId = seasonId
+                });
 
                 return result.FirstOrDefault();
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, $"Unable to get player summary for player {playerId} and season {seasonId} and competition {competitionId}");
+                _logger.LogError(ex, $"Unable to get player summary for player {0} and season {1}", playerId, seasonId);
                 throw;
             }
         }

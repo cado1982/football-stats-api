@@ -1,5 +1,5 @@
 ﻿using FootballStatsApi.Domain.Entities.Identity;
-using FootballStatsApi.Models;
+using FootballStatsApi.Models.v0;
 using System;
 using System.Collections.Generic;
 using System.Linq;

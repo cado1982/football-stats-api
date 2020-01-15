@@ -12,7 +12,7 @@ using Microsoft.AspNetCore.WebUtilities;
 using System.Text;
 using Microsoft.Extensions.Logging;
 using FootballStatsApi.Web.Areas.Identity.Models;
-using FootballStatsApi.Logic.Managers;
+using FootballStatsApi.Logic.v0.Managers;
 using IndexViewModel = FootballStatsApi.Web.Areas.Identity.Models.IndexViewModel;
 using System.Web;
 

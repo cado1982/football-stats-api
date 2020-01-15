@@ -4,7 +4,7 @@ using System.Security.Claims;
 using System.Threading.Tasks;
 using FootballStatsApi.Domain.Helpers;
 using FootballStatsApi.Domain.Repositories;
-using FootballStatsApi.Logic.Managers;
+using FootballStatsApi.Logic.v0.Managers;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 
@@ -25,37 +25,33 @@ namespace FootballStatsApi.Handlers
 
             var userIdClaim = context.User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Sid);
 
-            if (userIdClaim == null) 
+            if (userIdClaim != null) 
             {
-                logger.LogError("UserId claim is missing");
-                context.Response.StatusCode = StatusCodes.Status401Unauthorized;
-                return;
-            }
+                var userId = int.Parse(userIdClaim.Value);
 
-            var userId = int.Parse(userIdClaim.Value);
-
-            using (var conn = await connectionProvider.GetOpenConnectionAsync())
-            {
-                var rateLimitStatus = await requestLogRepository.GetRateLimitInfoByUser(userId, conn);
-
-                if (rateLimitStatus == null)
+                using (var conn = await connectionProvider.GetOpenConnectionAsync())
                 {
-                    logger.LogError("Rate limit cannot be established for user {0}", userId);
-                    context.Response.StatusCode = StatusCodes.Status500InternalServerError;
-                    return;
-                }
+                    var rateLimitStatus = await requestLogRepository.GetRateLimitInfoByUser(userId, conn);
 
-                var remaining = Math.Max(0, (rateLimitStatus.IntervalCallLimit - rateLimitStatus.RequestsThisInterval));
+                    if (rateLimitStatus == null)
+                    {
+                        logger.LogError("Rate limit cannot be established for user {0}", userId);
+                        context.Response.StatusCode = StatusCodes.Status500InternalServerError;
+                        return;
+                    }
 
-                context.Response.Headers.Add("X-RateLimit-Limit", rateLimitStatus.IntervalCallLimit.ToString());
-                context.Response.Headers.Add("X-RateLimit-Remaining", Math.Max(0, remaining - 1).ToString());
-                context.Response.Headers.Add("X-RateLimit-Reset", new DateTimeOffset(rateLimitStatus.NextIntervalStart).ToUnixTimeSeconds().ToString());
+                    var remaining = Math.Max(0, (rateLimitStatus.IntervalCallLimit - rateLimitStatus.RequestsThisInterval));
 
-                if (remaining <= 0) 
-                {
-                    context.Response.StatusCode = StatusCodes.Status429TooManyRequests;
-                    context.Response.Headers.Add("Retry-After", ((int)(rateLimitStatus.NextIntervalStart - DateTime.UtcNow).TotalSeconds).ToString());
-                    return;
+                    context.Response.Headers.Add("X-RateLimit-Limit", rateLimitStatus.IntervalCallLimit.ToString());
+                    context.Response.Headers.Add("X-RateLimit-Remaining", Math.Max(0, remaining - 1).ToString());
+                    context.Response.Headers.Add("X-RateLimit-Reset", new DateTimeOffset(rateLimitStatus.NextIntervalStart).ToUnixTimeSeconds().ToString());
+
+                    if (remaining <= 0)
+                    {
+                        context.Response.StatusCode = StatusCodes.Status429TooManyRequests;
+                        context.Response.Headers.Add("Retry-After", ((int)(rateLimitStatus.NextIntervalStart - DateTime.UtcNow).TotalSeconds).ToString());
+                        return;
+                    }
                 }
             }
 
