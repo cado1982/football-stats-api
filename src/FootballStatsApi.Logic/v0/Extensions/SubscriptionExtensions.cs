@@ -20,7 +20,7 @@ namespace FootballStatsApi.Logic.v0.Extensions
                 Cost = entity.Cost,
                 IsActive = entity.IsActive,
                 IsInternal = entity.IsInternal,
-                Features = entity.Features?.Select(f => f.DisplayName).ToList()
+                Features = entity.Features?.Select(f => f.DisplayName)?.ToList()
             };
         }
 
@@ -37,7 +37,7 @@ namespace FootballStatsApi.Logic.v0.Extensions
                 Cost = model.Cost,
                 IsActive = model.IsActive,
                 IsInternal = model.IsInternal,
-                Features = model.Features?.Select(f => new Entities.SubscriptionFeature {  DisplayName = f }).ToList()
+                Features = model.Features?.Select(f => new Entities.SubscriptionFeature {  DisplayName = f })?.ToList()
             };
         }
 

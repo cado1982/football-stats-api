@@ -29,7 +29,7 @@ namespace FootballStatsApi.Web.Areas.Identity.Pages.Account.Manage
             _logger = logger;
         }
 
-        public async Task<IActionResult> OnGetAsync()
+        public IActionResult OnGet()
         {
             return NotFound();
 

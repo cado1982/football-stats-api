@@ -63,7 +63,12 @@ namespace FootballStatsApi.Domain.Repositories
                         lookup.Add(s.Id, found = s);
                         found.Features = new List<SubscriptionFeature>();
                     }
-                    found.Features.Add(sf);
+
+                    if (sf != null)
+                    {
+                        found.Features.Add(sf);
+                    }
+                    
                     return found;
                 });
 
