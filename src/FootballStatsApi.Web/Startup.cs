@@ -17,6 +17,7 @@ using FootballStatsApi.Web.Models;
 using FootballStatsApi.Domain.Repositories;
 using FootballStatsApi.Logic.v0.Managers;
 using FootballStatsApi.Domain.Helpers;
+using Microsoft.AspNetCore.HttpOverrides;
 
 namespace FootballStatsApi.Web
 {
@@ -41,6 +42,13 @@ namespace FootballStatsApi.Web
             services.AddIdentity<User, Role>()
                 .AddEntityFrameworkStores<ApplicationDbContext>()
                 .AddDefaultTokenProviders();
+
+            services.Configure<ForwardedHeadersOptions>(options =>
+            {
+                options.ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto;
+                options.KnownNetworks.Clear();
+                options.KnownProxies.Clear();
+            });   
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_3_0)
                     .AddRazorPagesOptions(options =>
@@ -116,6 +124,8 @@ namespace FootballStatsApi.Web
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
+            app.UseForwardedHeaders();
+
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
