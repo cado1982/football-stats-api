@@ -85,7 +85,7 @@ namespace FootballStatsApi
                         Email = "support@footballstatsapi.com"
                     }
                 });
-
+                
                 c.AddSecurityRequirement(new OpenApiSecurityRequirement
                 {
                     {
@@ -129,10 +129,10 @@ namespace FootballStatsApi
 
             app.UseFileServer();
             app.UseSwagger();
-            app.UseReDoc(c =>
-            {
-                c.SpecUrl("/swagger/v0/swagger.json");
-            });
+            //app.UseReDoc(c =>
+            //{
+            //    c.SpecUrl("/swagger/v0/swagger.json");
+            //});
 
             app.UseSwaggerUI(c =>
             {

@@ -10,7 +10,7 @@ namespace FootballStatsApi.Helpers
     {
         public void Apply(ControllerModel controller)
         {
-            var controllerNamespace = controller.ControllerType.Namespace; // e.g. "Controllers.V1"
+            var controllerNamespace = controller.ControllerType.Namespace; // e.g. "Controllers.V0"
             var apiVersion = controllerNamespace.Split('.').Last().ToLower();
 
             controller.ApiExplorer.GroupName = apiVersion;

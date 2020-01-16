@@ -55,6 +55,12 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "json", "json", "{F113B659-0
 		..\docs\json\teamDetails_statisticsData.json = ..\docs\json\teamDetails_statisticsData.json
 	EndProjectSection
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "nginx", "nginx", "{2394B2ED-474E-4264-8055-5EAD86773EE8}"
+	ProjectSection(SolutionItems) = preProject
+		nginx\Dockerfile = nginx\Dockerfile
+		nginx\nginx.conf = nginx\nginx.conf
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -108,6 +114,7 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{386AF434-AC40-44BE-9FBC-4A2655153FE5} = {A1CBEB03-2BE8-4EA7-839A-008FCEDEB302}
 		{F113B659-000E-4C51-B1D0-2D72A97BA640} = {386AF434-AC40-44BE-9FBC-4A2655153FE5}
+		{2394B2ED-474E-4264-8055-5EAD86773EE8} = {A1CBEB03-2BE8-4EA7-839A-008FCEDEB302}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {002EC389-C08D-4C2B-B8CF-B5F9B655B9C4}

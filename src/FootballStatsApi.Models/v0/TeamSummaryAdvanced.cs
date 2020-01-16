@@ -1,7 +1,8 @@
 ﻿namespace FootballStatsApi.Models.v0
 {
-    public class TeamBasicStatsBySeason
+    public class TeamSummaryAdvanced
     {
+        public Team Team { get; set; }
         public int Season { get; set; }
         public int Games { get; set; }
         public int Won { get; set; }

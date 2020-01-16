@@ -37,12 +37,8 @@ namespace FootballStatsApi.Web
 
             services.AddDbContext<ApplicationDbContext>(options => options.UseNpgsql(connectionString));
             services.AddDbContext<DataProtectionKeysContext>(options => options.UseNpgsql(connectionString));
-            services.AddIdentity<User, Role>(options =>
-            {
-                options.SignIn.RequireConfirmedAccount = true;
-                options.Password.RequiredLength = 10;
-                options.User.RequireUniqueEmail = true;
-            })
+            
+            services.AddIdentity<User, Role>()
                 .AddEntityFrameworkStores<ApplicationDbContext>()
                 .AddDefaultTokenProviders();
 
@@ -67,13 +63,14 @@ namespace FootballStatsApi.Web
                 options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(10);
 
                 options.Password.RequiredLength = 10;
-                options.Password.RequiredUniqueChars = 6;
+                options.Password.RequiredUniqueChars = 1;
                 options.Password.RequireUppercase = false;
                 options.Password.RequireDigit = false;
                 options.Password.RequireLowercase = false;
                 options.Password.RequireNonAlphanumeric = false;
 
                 options.SignIn.RequireConfirmedEmail = true;
+                options.SignIn.RequireConfirmedAccount = true;
                 options.SignIn.RequireConfirmedPhoneNumber = false;
             });
 

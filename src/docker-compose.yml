@@ -68,6 +68,7 @@ services:
     environment:
       ConnectionStrings__Football: Server=db;User Id=postgres;Password=admin;Database=football;
       ASPNETCORE_ENVIRONMENT: Development
+      ApiBaseUrl: http://localhost:8060,
   api:
     depends_on:
       - db
@@ -81,6 +82,7 @@ services:
     environment:
       ConnectionStrings__Football: Server=db;User Id=postgres;Password=admin;Database=football;
       ASPNETCORE_ENVIRONMENT: Development
+      WebsiteUrl: http://localhost:8070
   db:
     image: postgres:11
     container_name: fsa-db

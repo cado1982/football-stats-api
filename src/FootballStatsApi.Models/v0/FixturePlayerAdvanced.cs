@@ -1,6 +1,6 @@
-namespace FootballStatsApi.Models.v0
+﻿namespace FootballStatsApi.Models.v0
 {
-    public class FixturePlayerBasic
+    public class FixturePlayerAdvanced
     {
         public Player Player { get; set; }
         public Team Team { get; set; }
@@ -14,20 +14,9 @@ namespace FootballStatsApi.Models.v0
         public int OwnGoals { get; set; }
         public int KeyPasses { get; set; }
         public int ShotsOnTarget { get; set; }
-        //public Player Replaced { get; set; }
-        //public Player ReplacedBy { get; set; }
-    }
-
-    public class FixturePlayerAdvanced : FixturePlayerBasic
-    {
         public double ExpectedGoals { get; set; }
         public double ExpectedAssists { get; set; }
         public double ExpectedGoalsChain { get; set; }
         public double ExpectedGoalsBuildup { get; set; }
-    }
-
-    public class FixturePlayerExpert : FixturePlayerAdvanced
-    {
-        // Shot info here probably. Info on shot locations, types, etc.
     }
 }

@@ -1,9 +1,9 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 
 namespace FootballStatsApi.Models.v0
 {
-    public class FixtureBasic
+    public class FixtureAdvanced
     {
         public int FixtureId { get; set; }
         public Team HomeTeam { get; set; }
@@ -20,5 +20,6 @@ namespace FootballStatsApi.Models.v0
         public List<Substitution> Substitutions { get; set; }
         public List<FixturePlayerBasic> HomePlayers { get; set; }
         public List<FixturePlayerBasic> AwayPlayers { get; set; }
+        public FixtureForecast Forecast { get; set; }
     }
 }

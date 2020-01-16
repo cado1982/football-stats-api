@@ -12285,6 +12285,9 @@ footer {
     font-size: 0.6em; }
 
 .card-popular {
-  border: #F29F04 5px solid;
-  transform: scale(1.12); }
+  border: #F29F04 5px solid; }
+
+@media only screen and (min-width: 575px) {
+  .card-popular {
+    transform: scale(1.12); } }
 

@@ -7,19 +7,17 @@ namespace FootballStatsApi.Logic.v0.Extensions
 {
     public static class PlayerSummaryExtensions
     {
-        public static Models.v0.PlayerSummary ToModel(this Entities.PlayerSummary entity)
+        public static Models.v0.PlayerSummaryBasic ToModel(this Entities.PlayerSummary entity)
         {
             if (entity == null) return null;
 
-            return new Models.v0.PlayerSummary
+            return new Models.v0.PlayerSummaryBasic
             {
                 Player = entity.Player.ToModel(),
                 Games = entity.Games,
                 MinutesPlayed = entity.MinutesPlayed,
                 Goals = entity.Goals,
-                ExpectedGoals = entity.ExpectedGoals,
                 Assists = entity.Assists,
-                ExpectedAssists = entity.ExpectedAssists,
                 Shots = entity.Shots,
                 KeyPasses = entity.KeyPasses,
                 YellowCards = entity.YellowCards,
@@ -27,13 +25,10 @@ namespace FootballStatsApi.Logic.v0.Extensions
                 Position = entity.Position,
                 Team = entity.Team.ToModel(),
                 NonPenaltyGoals = entity.NonPenaltyGoals,
-                NonPenaltyExpectedGoals = entity.NonPenaltyExpectedGoals,
-                ExpectedGoalsChain = entity.ExpectedGoalsChain,
-                ExpectedGoalsBuildup = entity.ExpectedGoalsBuildup
             };
         }
 
-        public static Entities.PlayerSummary ToEntity(this Models.v0.PlayerSummary model)
+        public static Entities.PlayerSummary ToEntity(this Models.v0.PlayerSummaryBasic model)
         {
             if (model == null) return null;
 
@@ -43,9 +38,7 @@ namespace FootballStatsApi.Logic.v0.Extensions
                 Games = model.Games,
                 MinutesPlayed = model.MinutesPlayed,
                 Goals = model.Goals,
-                ExpectedGoals = model.ExpectedGoals,
                 Assists = model.Assists,
-                ExpectedAssists = model.ExpectedAssists,
                 Shots = model.Shots,
                 KeyPasses = model.KeyPasses,
                 YellowCards = model.YellowCards,
@@ -53,20 +46,17 @@ namespace FootballStatsApi.Logic.v0.Extensions
                 Position = model.Position,
                 Team = model.Team.ToEntity(),
                 NonPenaltyGoals = model.NonPenaltyGoals,
-                NonPenaltyExpectedGoals = model.NonPenaltyExpectedGoals,
-                ExpectedGoalsChain = model.ExpectedGoalsChain,
-                ExpectedGoalsBuildup = model.ExpectedGoalsBuildup
             };
         }
 
-        public static IEnumerable<Models.v0.PlayerSummary> ToModels(this IEnumerable<Entities.PlayerSummary> entities)
+        public static IEnumerable<Models.v0.PlayerSummaryBasic> ToModels(this IEnumerable<Entities.PlayerSummary> entities)
         {
             if (entities == null) return null;
 
             return entities.Select(e => e.ToModel());
         }
 
-        public static IEnumerable<Entities.PlayerSummary> ToEntities(this IEnumerable<Models.v0.PlayerSummary> models)
+        public static IEnumerable<Entities.PlayerSummary> ToEntities(this IEnumerable<Models.v0.PlayerSummaryBasic> models)
         {
             if (models == null) return null;
 

@@ -42,5 +42,10 @@
 
 .card-popular {
     border: $brand-accent-color 5px solid;
-    transform: scale(1.12);
 }
+
+@media only screen and (min-width: 575px) {
+    .card-popular {
+        transform: scale(1.12);
+    }
+} 

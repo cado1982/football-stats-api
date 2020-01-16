@@ -8,6 +8,7 @@ services:
     environment:
       ConnectionStrings__Football:
       ASPNETCORE_ENVIRONMENT: Production
+      WebsiteUrl: https://www.footballstatsapi.com
   web-app:
     image: registry.gitlab.com/cado82/football-stats-api/web/app:latest
     restart: "always"
@@ -23,6 +24,7 @@ services:
       SmtpPort: 25
       SmtpPassword: 
       SmtpFromAddress: noreply@footballstatsapi.com
+      ApiBaseUrl: https://api.footballstatsapi.com
   nginx:
     image: registry.gitlab.com/cado82/football-stats-api/nginx:latest
     restart: "always"

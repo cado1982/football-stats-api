@@ -29,7 +29,7 @@ namespace FootballStatsApi.Logic.v0.Managers
             _connectionProvider = connectionProvider;
         }
 
-        public async Task<List<PlayerSummary>> GetAsync(int season, int competitionId)
+        public async Task<List<PlayerSummaryBasic>> GetAsync(int season, int competitionId)
         {
             try
             {
@@ -55,7 +55,7 @@ namespace FootballStatsApi.Logic.v0.Managers
             }
         }
 
-        public async Task<PlayerSummary> GetByIdAsync(int playerId, int season)
+        public async Task<PlayerSummaryBasic> GetByIdAsync(int playerId, int season)
         {
             try
             {

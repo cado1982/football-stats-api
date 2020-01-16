@@ -11,10 +11,11 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Swashbuckle.AspNetCore.Annotations;
 
-namespace FootballStatsApi.Controllers.v1
+namespace FootballStatsApi.Controllers.v0
 {
     [ApiController]
     [Route("v0/teams")]
+    [Produces("application/json")]
     public class TeamController : ControllerBase
     {
         private readonly ILogger<TeamController> _logger;

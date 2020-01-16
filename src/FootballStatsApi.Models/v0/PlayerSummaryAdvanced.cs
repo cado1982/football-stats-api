@@ -1,8 +1,6 @@
-﻿using System;
-
-namespace FootballStatsApi.Models.v0
+﻿namespace FootballStatsApi.Models.v0
 {
-    public class PlayerSummary
+    public class PlayerSummaryAdvanced
     {
         public Player Player { get; set; }
         public int Games { get; set; }

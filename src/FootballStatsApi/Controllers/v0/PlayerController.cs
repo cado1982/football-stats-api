@@ -32,7 +32,7 @@ namespace FootballStatsApi.Controllers.v0
             Summary = "Gets a collection of player stats for the given competition and season",
             OperationId = "GetPlayersStatsByCompetitionAndSeason"
         )]
-        [SwaggerResponse(200, "A collection of player stats", typeof(List<PlayerSummary>))]
+        [SwaggerResponse(200, "A collection of player stats", typeof(List<PlayerSummaryBasic>))]
         [SwaggerResponse(400)]
         [SwaggerResponse(401)]
         [SwaggerResponse(500)]
@@ -60,7 +60,7 @@ namespace FootballStatsApi.Controllers.v0
             Summary = "Gets a specific player's stats for the given season",
             OperationId = "GetPlayerStatsBySeason"
         )]
-        [SwaggerResponse(200, "A player's stats", typeof(PlayerSummary))]
+        [SwaggerResponse(200, "A player's stats", typeof(PlayerSummaryBasic))]
         [SwaggerResponse(400)]
         [SwaggerResponse(401)]
         [SwaggerResponse(500)]

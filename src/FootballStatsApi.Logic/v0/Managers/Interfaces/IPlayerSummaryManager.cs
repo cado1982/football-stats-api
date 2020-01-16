@@ -6,7 +6,7 @@ namespace FootballStatsApi.Logic.v0.Managers
 {
     public interface IPlayerSummaryManager
     {
-        Task<List<PlayerSummary>> GetAsync(int season, int competitionId);
-        Task<PlayerSummary> GetByIdAsync(int playerId, int season);
+        Task<List<PlayerSummaryBasic>> GetAsync(int season, int competitionId);
+        Task<PlayerSummaryBasic> GetByIdAsync(int playerId, int season);
     }
 }
