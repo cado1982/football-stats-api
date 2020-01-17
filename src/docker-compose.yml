@@ -55,7 +55,7 @@ services:
       ChromeRemoteDebuggingHost: chrome
       ChromeRemoteDebuggingPort: 9222
       DOTNET_ENVIRONMENT: Development
-  web:
+  web-app:
     depends_on:
       - db
       - db-migrations
@@ -69,7 +69,7 @@ services:
       ConnectionStrings__Football: Server=db;User Id=postgres;Password=admin;Database=football;
       ASPNETCORE_ENVIRONMENT: Development
       ApiBaseUrl: http://localhost:8060,
-  api:
+  api-app:
     depends_on:
       - db
       - db-migrations
@@ -83,6 +83,17 @@ services:
       ConnectionStrings__Football: Server=db;User Id=postgres;Password=admin;Database=football;
       ASPNETCORE_ENVIRONMENT: Development
       WebsiteUrl: http://localhost:8070
+  nginx:
+    depends_on:
+      - api-app
+      - web-app
+    tty: true
+    build:
+      context: .
+      dockerfile: ./nginx/Dockerfile
+    ports:
+      - "8010:80"
+      - "8020:8080"
   db:
     image: postgres:11
     container_name: fsa-db
