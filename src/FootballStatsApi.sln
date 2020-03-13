@@ -25,6 +25,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "External Items", "External 
 	ProjectSection(SolutionItems) = preProject
 		.dockerignore = .dockerignore
 		..\.gitignore = ..\.gitignore
+		..\.gitlab-ci.yml = ..\.gitlab-ci.yml
 		docker-compose.api.integrationtests.yml = docker-compose.api.integrationtests.yml
 		docker-compose.production.footballstatsapi-1.yml = docker-compose.production.footballstatsapi-1.yml
 		docker-compose.production.fsa-orchestration.yml = docker-compose.production.fsa-orchestration.yml
