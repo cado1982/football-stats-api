@@ -68,7 +68,7 @@ services:
     environment:
       ConnectionStrings__Football: Server=db;User Id=postgres;Password=admin;Database=football;
       ASPNETCORE_ENVIRONMENT: Development
-      ApiBaseUrl: http://localhost:8060,
+      ApiBaseUrl: http://localhost:8060
   api-app:
     depends_on:
       - db
